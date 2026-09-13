@@ -1,0 +1,14 @@
+# Full texts (copyrighted, generated locally by the pipeline)
+site/data/texts/
+data/articles_full.json
+data/merged.json
+data/.key
+
+# Terrain tiles (Esri/NatGeo copyrighted, rebuilt by pipeline/dl_tiles.py)
+site/assets/tiles/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc
