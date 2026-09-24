@@ -4,12 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>毛泽东选集 · 地图与时间轴</title>
+<meta name="description" content="《毛泽东选集》一至五卷217篇：地形舆图、年谱、知识图谱与全文研读。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='4' fill='%23b03a2e'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23f5efe0' font-family='serif' font-weight='bold'%3E毛%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/leaflet.css">
 <style>
 :root{
   --paper:#f5efe0; --paper2:#efe6d0; --ink:#2b2420; --ink2:#5a4f45;
   --cinnabar:#b03a2e; --cinnabar2:#8e2f26; --gold:#a8842c;
   --border:#d8cbaa; --shadow:rgba(60,45,30,.18);
+  --tabbar-h:52px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
@@ -54,12 +57,15 @@ nav button:hover{color:var(--cinnabar)}
 nav button.on{color:var(--cinnabar);border-bottom-color:var(--cinnabar);font-weight:700}
 .searchbox{position:relative;flex:0 0 auto}
 .searchbox input{
-  font-family:inherit;width:200px;padding:7px 12px 7px 30px;
+  font-family:inherit;width:200px;padding:7px 26px 7px 30px;
   border:1px solid var(--border);border-radius:18px;background:rgba(255,252,243,.8);
   font-size:13px;color:var(--ink);outline:none;transition:.2s;
 }
 .searchbox input:focus{border-color:var(--cinnabar);width:240px;box-shadow:0 0 0 3px rgba(176,58,46,.09)}
 .searchbox .ic{position:absolute;left:10px;top:7px;color:var(--ink2);font-size:13px}
+#qClear{position:absolute;right:6px;top:5px;width:19px;height:19px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(90,79,69,.15);color:var(--ink2);font-size:11px;line-height:19px;padding:0;display:none}
+#qClear:hover{background:var(--cinnabar);color:#fff}
 
 /* ===== views fill viewport ===== */
 main{flex:1 1 auto;min-height:0;position:relative}
@@ -99,7 +105,7 @@ main{flex:1 1 auto;min-height:0;position:relative}
   box-shadow:0 4px 18px var(--shadow);padding:8px 16px;display:flex;align-items:center;gap:14px;
 }
 .histBar .hb-title{font-size:13px;color:var(--cinnabar);letter-spacing:3px;font-weight:700;white-space:nowrap}
-.histBar input[type=range]{flex:1;accent-color:var(--cinnabar);cursor:pointer;height:4px}
+.histBar input[type=range]{flex:1;accent-color:var(--cinnabar);cursor:pointer;height:4px;min-width:60px}
 .histBar .hb-year{font-size:16px;font-weight:700;color:var(--ink);min-width:74px;text-align:center;letter-spacing:1px}
 .histBar .hb-era{font-size:12.5px;min-width:130px;letter-spacing:1px;white-space:nowrap}
 .histBar button{
@@ -214,6 +220,10 @@ main{flex:1 1 auto;min-height:0;position:relative}
   background:rgba(255,252,243,.88);border:1px solid var(--border);border-radius:8px;
   padding:10px 14px;font-size:12.5px;color:var(--ink2);letter-spacing:1px}
 .glegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+.glegend .gv{cursor:pointer;display:flex;align-items:center;transition:.15s;border-radius:4px;padding:1px 3px;margin-left:-3px}
+.glegend .gv.off{opacity:.38}
+.glegend .gv:hover{background:rgba(176,58,46,.06)}
+.glegend .ghint{margin-top:4px;color:var(--ink2)}
 
 /* ===== READER / SEARCH scroll ===== */
 #view-read,#view-search{overflow-y:auto}
@@ -250,17 +260,103 @@ main{flex:1 1 auto;min-height:0;position:relative}
 #view-search .sres .d{font-size:12.5px;color:var(--ink2);margin-top:4px}
 #view-search .sres .frag{font-size:13.5px;color:var(--ink2);margin-top:6px;line-height:1.8}
 #view-search .sres .frag em{color:var(--cinnabar);font-style:normal;background:rgba(176,58,46,.09);border-radius:2px;padding:0 2px}
+.seStats{max-width:900px;margin:14px auto 0;font-size:12px;color:var(--ink2);letter-spacing:1px}
 
-/* ===== footer ===== */
-footer{flex:0 0 auto;padding:6px 22px;font-size:11.5px;color:var(--ink2);letter-spacing:1.2px;
-  border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;background:rgba(245,239,224,.9)}
-footer span{opacity:.85}
+/* ===== STATS view (new) ===== */
+#view-stats .statsWrap{height:100%;overflow-y:auto;padding:6px 4px}
+.statsGrid{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.statCard{border:1px solid var(--border);border-radius:10px;background:rgba(255,252,243,.75);
+  box-shadow:0 2px 10px var(--shadow);padding:16px 18px}
+.statCard h4{font-size:15px;color:var(--cinnabar);letter-spacing:3px;margin-bottom:4px}
+.statCard .scSub{font-size:11.5px;color:var(--ink2);letter-spacing:1px;margin-bottom:12px}
+.srowBar{display:flex;align-items:center;gap:10px;margin:7px 0;cursor:pointer}
+.srowBar:hover .srb-t{color:var(--cinnabar)}
+.srb-rank{font-size:12px;color:var(--gold);width:26px;text-align:right;flex:0 0 auto;font-weight:700}
+.srb-track{flex:1;height:15px;background:rgba(120,100,70,.08);border-radius:3px;overflow:hidden;position:relative}
+.srb-fill{height:100%;border-radius:3px}
+.srb-t{font-size:13.5px;color:var(--ink);width:150px;flex:0 0 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:.15s}
+.srb-v{font-size:12px;color:var(--ink2);flex:0 0 auto;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.statNote{max-width:1080px;margin:14px auto 0;font-size:11.5px;color:var(--ink2);letter-spacing:1px;line-height:1.8;text-align:center}
 
+/* ===== reader toolbar / progress / toc ===== */
+#readProg{position:absolute;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cinnabar),var(--gold));
+  width:0;z-index:50;transition:width .15s;pointer-events:none}
+.readTools{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;
+  background:rgba(245,239,224,.94);border:1px solid var(--border);border-radius:0 0 10px 10px;
+  padding:8px 14px;box-shadow:0 2px 10px var(--shadow);margin:-6px auto 10px;max-width:880px}
+.readTools .rtTitle{font-size:13.5px;color:var(--ink);letter-spacing:1px;flex:1;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.readTools button{
+  font-family:inherit;font-size:12.5px;padding:4px 12px;border-radius:14px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,252,243,.85);color:var(--ink2);letter-spacing:1px;transition:.15s;flex:0 0 auto;
+}
+.readTools button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.readTools button.on{background:var(--cinnabar);border-color:var(--cinnabar);color:#fff}
+.readTools .fsGrp{display:flex;gap:0}
+.readTools .fsGrp button{border-radius:0;margin-left:-1px}
+.readTools .fsGrp button:first-child{border-radius:14px 0 0 14px}
+.readTools .fsGrp button:last-child{border-radius:0 14px 14px 0}
+#readToc{
+  position:fixed;top:0;right:-320px;width:300px;height:100%;z-index:800;overflow-y:auto;
+  background:rgba(255,252,243,.98);border-left:1px solid var(--border);box-shadow:-6px 0 24px var(--shadow);
+  padding:18px 16px;transition:right .25s ease;
+}
+#readToc.on{right:0}
+#readToc h4{font-size:15px;color:var(--cinnabar);letter-spacing:3px;margin-bottom:10px}
+#readToc .tocClose{position:absolute;top:10px;right:12px;font-size:15px;color:var(--ink2);cursor:pointer}
+#readToc .tocClose:hover{color:var(--cinnabar)}
+#readToc ul{list-style:none}
+#readToc li{font-size:13.5px;color:var(--ink);padding:7px 8px;border-radius:6px;cursor:pointer;
+  line-height:1.5;border-left:2px solid transparent}
+#readToc li:hover{background:rgba(176,58,46,.06);color:var(--cinnabar)}
+#readToc li.cur{border-left-color:var(--cinnabar);color:var(--cinnabar);background:rgba(176,58,46,.05);font-weight:600}
+#tocMask{position:fixed;inset:0;background:rgba(43,36,32,.28);z-index:790;display:none}
+#tocMask.on{display:block}
+/* toast */
+#toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);z-index:900;
+  background:rgba(43,36,32,.92);color:#f5efe0;font-size:13px;letter-spacing:1px;
+  padding:9px 20px;border-radius:18px;opacity:0;transition:.25s;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== mobile bottom tabbar ===== */
+#tabbar{display:none}
 @media (max-width:1000px){
+  .hwrap{padding:8px 14px 6px;gap:12px}
+  .titleblock h1{font-size:17px;letter-spacing:3px}
+  .titleblock .sub{font-size:10.5px}
+  .seal{width:36px;height:36px;font-size:19px}
+  nav{display:none}
+  .searchbox{margin-left:auto}
+  .searchbox input{width:130px}
+  .searchbox input:focus{width:160px}
+  .view{padding:10px 10px calc(10px + var(--tabbar-h))}
+  #view-map{padding:10px 10px calc(10px + var(--tabbar-h))}
   #view-map .layout{grid-template-columns:1fr;grid-template-rows:1fr auto}
   #mapSide{max-height:40vh}
-  nav{display:none}
-  .hwrap{flex-wrap:wrap}
+  #tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;height:var(--tabbar-h);z-index:900;
+    background:rgba(255,252,243,.97);border-top:2px solid var(--cinnabar);
+    box-shadow:0 -3px 14px var(--shadow);
+  }
+  #tabbar button{
+    flex:1;font-family:inherit;background:none;border:none;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    font-size:11px;color:var(--ink2);letter-spacing:2px;
+  }
+  #tabbar button .tbIc{font-size:17px;line-height:1}
+  #tabbar button.on{color:var(--cinnabar);font-weight:700}
+  .histBar{left:8px;right:8px;bottom:8px;padding:6px 10px;gap:8px;flex-wrap:wrap}
+  .histBar .hb-title{font-size:11px;letter-spacing:1px}
+  .histBar .hb-year{font-size:13px;min-width:56px}
+  .histBar .hb-era{min-width:0;font-size:11px;flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis}
+  .readWrap{max-width:100%}
+  .readHead h2{font-size:23px;letter-spacing:2px}
+  .artText{font-size:16.5px}
+  .readTools{max-width:100%;flex-wrap:wrap}
+  .readTools .rtTitle{flex:1 1 100%;order:-1}
+  #view-stats .statsGrid{grid-template-columns:1fr}
+  footer{display:none}
+  #readToc{width:min(78vw,300px)}
 }
 </style>
 </head>
@@ -276,11 +372,13 @@ footer span{opacity:.85}
       <button data-v="map" class="on">舆图</button>
       <button data-v="tl">年谱</button>
       <button data-v="graph">图谱</button>
+      <button data-v="stats">数据</button>
       <button data-v="read" id="navRead" style="display:none">文章</button>
     </nav>
     <div class="searchbox">
       <span class="ic">&#128269;</span>
       <input id="q" type="text" placeholder="检索全文…">
+      <button id="qClear" title="清空">×</button>
     </div>
   </div>
 </header>
@@ -332,16 +430,48 @@ footer span{opacity:.85}
   <div class="gwrap">
     <div id="graphChart" style="width:100%;height:100%"></div>
     <div class="glegend">
-      <div><i style="background:#b03a2e"></i>文章（按卷着色）</div>
       <div><i style="background:#a8842c"></i>历史事件</div>
-      <div style="margin-top:4px;color:var(--ink2)">点击文章节点：入文细读</div>
+      <div class="gv" data-vol="1"><i style="background:#b03a2e"></i>卷一</div>
+      <div class="gv" data-vol="2"><i style="background:#c08457"></i>卷二</div>
+      <div class="gv" data-vol="3"><i style="background:#a8842c"></i>卷三</div>
+      <div class="gv" data-vol="4"><i style="background:#7d6a3f"></i>卷四</div>
+      <div class="gv" data-vol="5"><i style="background:#5d4a33"></i>卷五</div>
+      <div class="ghint">单击节点入文 · 双击聚焦邻域</div>
+      <div class="ghint">缩放越深，显示标题越多</div>
     </div>
   </div>
 </div>
 
-<div id="view-read" class="view"></div>
+<div id="view-stats" class="view">
+  <div class="statsWrap">
+    <div class="statsGrid" id="statsGrid"></div>
+    <div class="statNote">篇幅按原书正文字数统计 · 点条目直入全文 · 数据生成于本站语料</div>
+  </div>
+</div>
+
+<div id="view-read" class="view">
+  <div id="readProg"></div>
+</div>
 <div id="view-search" class="view"></div>
 </main>
+
+<!-- mobile tabbar -->
+<div id="tabbar">
+  <button data-v="map" class="on"><span class="tbIc">舆</span>舆图</button>
+  <button data-v="tl"><span class="tbIc">谱</span>年谱</button>
+  <button data-v="graph"><span class="tbIc">图</span>图谱</button>
+  <button data-v="stats"><span class="tbIc">数</span>数据</button>
+</div>
+
+<!-- reader toc drawer -->
+<div id="tocMask"></div>
+<div id="readToc">
+  <span class="tocClose">✕</span>
+  <h4>本篇目录</h4>
+  <ul id="tocList"></ul>
+</div>
+
+<div id="toast"></div>
 
 <footer>
   <span>资料来源：《毛泽东选集》第一至五卷（人民出版社）</span>
@@ -350,8 +480,6 @@ footer span{opacity:.85}
 </footer>
 
 <script src="assets/leaflet.js"></script>
-<script src="assets/echarts.min.js"></script>
-<script src="assets/china.json.js"></script>
 <script src="data/data.js"></script>
 <script src="app.js"></script>
 </body>
