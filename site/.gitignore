@@ -1,0 +1,18 @@
+# .gitignore — maoxuan-atlas (canonical source: deploy_nexior)
+# Vercel 本地项目绑定（含 projectId/orgId，不入公开仓库）
+.vercel
+
+# 备份快照（M1 修改前副本，保留在本地不进版本库）
+*.bak_m1
+
+# 全文（受著作权保护，由产线本地生成；仓库不分发）
+data/texts/
+
+# 地形瓦片（© Esri/NatGeo，本地缓存不进仓库）
+assets/tiles/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc

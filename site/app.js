@@ -2,6 +2,52 @@
 (function(){
 "use strict";
 
+/* ---------- A05: HTML escape helper (all dynamic text goes through this) ---------- */
+function esc(s){
+  return String(s==null?"":s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function safeDecode(s){
+  try{ return decodeURIComponent(s); }catch(e){ return s; }
+}
+
+/* ===== theme (night mode) ===== */
+var themeDark = false;
+function applyTheme(dark, save){
+  themeDark = dark;
+  var root = document.documentElement;
+  if(dark) root.classList.add("dark"); else root.classList.remove("dark");
+  var m = document.getElementById("metaTheme");
+  if(m) m.setAttribute("content", dark ? "#1b1916" : "#f5efe0");
+  var b = document.getElementById("themeBtn");
+  if(b) b.textContent = dark ? "\u2600" : "\u263E";
+  if(save) try{ localStorage.setItem("mx_theme", dark ? "dark" : "light"); }catch(e){}
+  updateGraphTheme();
+}
+(function initTheme(){
+  var saved = null;
+  try{ saved = localStorage.getItem("mx_theme"); }catch(e){}
+  var prefers = false;
+  try{ prefers = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; }catch(e){}
+  applyTheme(saved ? saved === "dark" : prefers, false);
+})();
+function toggleTheme(){ applyTheme(!themeDark, true); }
+document.addEventListener("keydown", function(e){
+  if((e.key === "d" || e.key === "D") && !typingInField() && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey){
+    toggleTheme();
+  }
+});
+
+function updateGraphTheme(){
+  if(typeof graphChartRef !== "undefined" && graphChartRef){
+    try{
+      graphChartRef.setOption({series:[{label:{color:themeDark ? "#b3a689" : "#5a4f45"}}]});
+    }catch(e){}
+  }
+}
+var graphChartRef = null;
+
 var ERAS = [
   {name:"大革命时期", from:1925, to:1927, color:"#8a6d3b"},
   {name:"土地革命战争时期", from:1927, to:1937, color:"#a8842c"},
@@ -40,7 +86,8 @@ var ROUTE = [
  ["北平",1949.6,39.90,116.40]
 ];
 
-var state = {view:"map", eraFilter:null, selPlace:null, curArt:null, tlFit:false, histYear:null, tlYear:null};
+var state = {view:"map", eraFilter:null, selPlace:null, curArt:null, tlFit:false, histYear:null, tlYear:null,
+  mapMode:(function(){ try{ return localStorage.getItem("mx_mapmode")||"2d"; }catch(e){ return "2d"; } })()};
 var $ = function(s){return document.querySelector(s)};
 
 /* ---------- toast ---------- */
@@ -64,14 +111,14 @@ function setHash(h){
 }
 function routeFromHash(){
   var h = location.hash.replace(/^#\/?/, "");
-  if(!h) return {v:"map"};
+  if(!h) return {v:"home"};
   var p = h.split("/");
   if(p[0]==="art" && p[1]) return {v:"art", id:p[1]};
   if(p[0]==="year" && p[1]) return {v:"year", y:parseInt(p[1])};
-  if(p[0]==="search" && p[1]) return {v:"search", q:decodeURIComponent(p[1])};
-  if(p[0]==="place" && p[1]) return {v:"place", p:decodeURIComponent(p[1])};
+  if(p[0]==="search" && p[1]) return {v:"search", q:safeDecode(p[1])};
+  if(p[0]==="place" && p[1]) return {v:"place", p:safeDecode(p[1])};
   if(p[0]==="view" && p[1]) return {v:p[1]};
-  return {v:"map"};
+  return {v:"home"};
 }
 function applyRoute(){
   var h = location.hash || "#";
@@ -82,22 +129,99 @@ function applyRoute(){
   if(r.v==="year"){ show("tl"); selectYear(r.y); return; }
   if(r.v==="search"){ document.getElementById("q").value = r.q; doSearch(r.q); return; }
   if(r.v==="place"){ show("map"); selectPlace(r.p); return; }
-  show(r.v==="map"||r.v==="tl"||r.v==="graph"||r.v==="stats"||r.v==="read" ? r.v : "map");
-  if(r.v==="map") document.title = "毛泽东选集 · 地图与时间轴";
+  show(r.v==="map"||r.v==="tl"||r.v==="graph"||r.v==="stats"||r.v==="read"||r.v==="cats"||r.v==="home" ? r.v : "home");
+  if(r.v==="map"||!r.v) document.title = "毛选时空研读";
 }
 window.addEventListener("popstate", applyRoute);
 window.addEventListener("hashchange", applyRoute);
 
+function renderCatalog(){
+  var v = document.getElementById("view-cats");
+  var q = (document.getElementById("catFilter")&&document.getElementById("catFilter").value.trim())||"";
+  var vol = state.catVol || 0;
+  var list = ARTS.filter(function(a){
+    if(vol && a.vol!==vol) return false;
+    if(q && a.title.indexOf(q)<0) return false;
+    return true;
+  });
+  var groups = {};
+  list.forEach(function(a){ (groups[a.vol] = groups[a.vol]||[]).push(a); });
+  var h = "<div class='catWrap'><h2 class='catTitle'>全站目录 <span class='catCnt'>共 "+list.length+" 篇"+(vol?" · 仅卷"+["一","二","三","四","五"][vol-1]:"")+"</span></h2>";
+  h += "<div class='catBar'><input id='catFilter' placeholder='检索标题…' value='"+esc(q)+"'>";
+  h += "<button data-vol='0' class='"+(vol===0?"on":"")+"'>全部</button>";
+  for(var i=1;i<=5;i++) h += "<button data-vol='"+i+"' class='"+(vol===i?"on":"")+"'>卷"+["一","二","三","四","五"][i-1]+"</button>";
+  h += "</div>";
+  if(!list.length){
+    h += "<div class='hint'>没有匹配「"+esc(q)+"」的篇目。</div>";
+  }else{
+    Object.keys(groups).sort(function(a,b){return a-b;}).forEach(function(volN){
+      var arr = groups[volN];
+      h += "<div class='catVol'><h3>第"+["一","二","三","四","五"][volN-1]+"卷 <span>"+arr.length+" 篇</span></h3><ul>";
+      arr.forEach(function(a){
+        h += "<li data-id='"+esc(a.id)+"'>"+(getBookmark(a.id)?"<i class='bm'>★</i>":"")+
+          "<span class='ct'>"+esc(a.title)+"</span>"+
+          "<span class='cd'>"+esc(a.dateRaw.replace(/[（）()]/g,""))+"</span></li>";
+      });
+      h += "</ul></div>";
+    });
+  }
+  h += "<div class='catNote'>共收录 217 篇 · 数据为本站语料统计 · 收藏标记仅保存在当前浏览器</div></div>";
+  v.innerHTML = h;
+  v.querySelectorAll("li[data-id]").forEach(function(li){
+    li.addEventListener("click", function(){ setHash("#/art/"+li.getAttribute("data-id")); });
+  });
+  v.querySelectorAll(".catBar button[data-vol]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.catVol = parseInt(b.getAttribute("data-vol"),10)||0;
+      renderCatalog();
+    });
+  });
+  var fi = v.querySelector("#catFilter");
+  if(fi){
+    fi.addEventListener("input", function(){ renderCatalog(); fi.focus(); });
+  }
+  track("page_view", {pageType:"catalog"});
+}
+function renderHome(){
+  var v = document.getElementById("view-home");
+  var last = lastReadArticle();
+  var marks = [];
+  try{ marks = Object.keys(JSON.parse(localStorage.getItem("mx_marks")||"{}")); }catch(e){}
+  var h = "<div class='homeWrap'>";
+  h += "<div class='hero'><h1>毛选时空研读</h1><p class='sub'>沿着时间、地点和文章之间的联系，开始一次有脉络的阅读。</p>";
+  h += "<div class='heroBtns'><a class='btnMain' href='#/view/cats'>开始研读 · 浏览全部篇目</a>";
+  if(last){
+    var t = "";
+    try{ t = new Date(JSON.parse(localStorage.getItem("mx_recent")||"{}")[last.id]).toLocaleDateString(); }catch(e){}
+    h += "<a class='btnCont' href='#/art/"+esc(last.id)+"'>继续上次 ·《"+esc(last.title)+"》"+(t?"（"+t+"）":"")+"</a>";
+  }
+  h += "</div><p class='heroNote'>本站收录 217 篇；数量反映当前数据库。</p></div>";
+  /* explore entries */
+  h += "<div class='homeGrid'>";
+  h += "<a class='homeCard' href='#/view/map'><i>舆</i><b>从地点找文章</b><span>文章写作之地落于真实地形</span></a>";
+  h += "<a class='homeCard' href='#/view/tl'><i>谱</i><b>从年份看脉络</b><span>1925—1957 年谱纵览</span></a>";
+  h += "<a class='homeCard' href='#/view/graph'><i>图</i><b>沿关系延伸阅读</b><span>文章与事件的关联图谱</span></a>";
+  h += "<a class='homeCard' href='#/view/stats'><i>数</i><b>本站语料统计</b><span>篇幅与地点分布</span></a>";
+  h += "</div>";
+  h += "<div class='homeNote'>资料来源：《毛泽东选集》第一至五卷（人民出版社）· 本站仅作个人学习研读之用 · 收藏与阅读位置仅保存在当前浏览器</div>";
+  h += "</div>";
+  v.innerHTML = h;
+  track("page_view", {pageType:"home"});
+}
 function show(v){
   state.view = v;
-  ["map","tl","graph","read","search","stats"].forEach(function(k){
+  ["map","tl","graph","read","search","stats","cats","home"].forEach(function(k){
     var el = document.getElementById("view-"+k);
     if(el) el.classList.toggle("on", k===v);
   });
+  if(v==="cats") renderCatalog();
+  if(v==="home") renderHome();
   document.querySelectorAll("nav button, #tabbar button").forEach(function(b){
     b.classList.toggle("on", b.getAttribute("data-v")===v);
   });
   if(v==="map" && mapObj) setTimeout(function(){ mapObj.invalidateSize(); }, 60);
+  if(v!=="map" && window.__MX3D_MODULE__){ try{ window.__MX3D_MODULE__.pause(); }catch(e){} }
+  if(v==="map" && state.mapMode==="3d") applyMapMode();
   if(v==="graph"){ ensureGraph(function(){ graphChart && graphChart.resize(); }); }
   if(v==="tl" && tlFirstShow){
     tlFirstShow = false;
@@ -143,6 +267,89 @@ placeList.forEach(function(p){
 
 /* ---------- MAP ---------- */
 var mapObj = null, markers = [], labelLayer = null, routeLayer = null;
+/* ---------- 3D map bridge (M1): lazy load + hooks ---------- */
+var mx3dLoading = false;
+function ensureMap3d(){
+  if(window.__MX3D_MODULE__) { window.__MX3D_MODULE__.build(); return; }
+  if(mx3dLoading) return;
+  mx3dLoading = true;
+  if(!window.maplibregl){
+    var css = document.createElement("link");
+    css.rel = "stylesheet"; css.href = "assets/maplibre-gl.css";
+    document.head.appendChild(css);
+    var s = document.createElement("script");
+    s.src = "assets/maplibre-gl.js";
+    s.onload = function(){ loadMap3dModule(); };
+    s.onerror = function(){ mx3dFail("三维组件下载失败，已切回二维"); };
+    document.head.appendChild(s);
+  } else { loadMap3dModule(); }
+}
+function loadMap3dModule(){
+  var m = document.createElement("script");
+  m.src = "assets/map3d.js";
+  m.onload = function(){
+    mx3dLoading = false;
+    if(window.__MX3D_MODULE__ && !window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.build();
+  };
+  m.onerror = function(){ mx3dFail("三维模块加载失败"); };
+  document.head.appendChild(m);
+}
+function mx3dFail(msg){
+  mx3dLoading = false;
+  state.mapMode = "2d";
+  try{ localStorage.setItem("mx_mapmode","2d"); }catch(e){}
+  applyMapMode();
+  toast(msg || "三维不可用，已切回二维");
+  track("map3d_fallback", {});
+}
+window.__MX3D__ = {
+  state: function(){ return state; },
+  route: function(){ return ROUTE; },
+  places: function(){ return placeList; },
+  visibleArts: function(){ return visibleArts(); },
+  selectPlace: function(pid){ selectPlace(pid); },
+  track: function(ev, p){ track(ev, p); },
+  playBtnUI: function(mode){
+    var b = document.getElementById("histPlay");
+    if(b) b.textContent = mode==="playing" ? "❚❚ 暂停" : "▶ 播放";
+  },
+  fail: function(msg){ mx3dFail(msg); }
+};
+function applyMapMode(){
+  var is3d = state.mapMode === "3d";
+  var el2 = document.getElementById("mapChart");
+  var el3 = document.getElementById("map3dChart");
+  if(el2) el2.style.display = is3d ? "none" : "";
+  if(el3) el3.style.display = is3d ? "block" : "none";
+  document.querySelectorAll("#mapModeBtns button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-mm")===state.mapMode);
+  });
+  var st = document.getElementById("mx3dStatus");
+  if(st) st.style.display = is3d ? "block" : "none";
+  var fb = document.getElementById("mx3dFollow");
+  if(fb) fb.style.display = is3d ? "block" : "none";
+  if(!is3d && window.__MX3D_MODULE__){
+    try{ window.__MX3D_MODULE__.pause(); }catch(e){}
+  }
+  if(is3d){
+    if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()){
+      window.__MX3D_MODULE__.refresh();
+      if(window.__mx3dMap){
+        setTimeout(function(){ window.__mx3dMap.resize(); }, 90);
+        setTimeout(function(){ window.__mx3dMap.resize(); }, 600);
+      }
+    } else {
+      ensureMap3d();
+    }
+  }
+}
+function setMapMode(mm){
+  if(mm===state.mapMode) return;
+  state.mapMode = mm;
+  try{ localStorage.setItem("mx_mapmode", mm); }catch(e){}
+  track("map3d_mode_switch", {mode:mm});
+  applyMapMode();
+}
 function visibleArts(){
   return ARTS.filter(function(a){
     if(state.eraFilter && a.era!==state.eraFilter) return false;
@@ -199,6 +406,7 @@ function updateMarkers(){
     markers.push(m);
   });
   drawRoute();
+  if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.refresh();
 }
 function drawRoute(){
   routeLayer.clearLayers();
@@ -209,8 +417,8 @@ function drawRoute(){
   });
   if(pts.length < 1) return;
   if(pts.length >= 2){
-    L.polyline(pts, {color:"#fff8ea", weight:7, opacity:.92, pane:"routePane", interactive:false}).addTo(routeLayer);
-    L.polyline(pts, {color:"#b03a2e", weight:3.5, opacity:.95, pane:"routePane", interactive:false}).addTo(routeLayer);
+    L.polyline(pts, {color:"#fff8ea", weight:7, opacity:.92, pane:"routePane", interactive:false, className:"routeHalo"}).addTo(routeLayer);
+    L.polyline(pts, {color:"#b03a2e", weight:3.5, opacity:.95, pane:"routePane", interactive:false, className:"routeMain"}).addTo(routeLayer);
   }
   var CN_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"];
   stops.forEach(function(r, i){
@@ -304,6 +512,9 @@ document.getElementById("histReset").addEventListener("click", function(){
   stopPlay(); setHistYear(null);
 });
 document.getElementById("histPlay").addEventListener("click", function(){
+  if(state.mapMode==="3d" && window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()){
+    window.__MX3D_MODULE__.togglePlayer(); return;
+  }
   if(playTimer){ stopPlay(); return; }
   var y = state.histYear==null ? 1925 : state.histYear;
   if(y>=1957) y = 1925;
@@ -432,14 +643,14 @@ function renderYearPanel(){
     panel.innerHTML = "<div class='ypHead'><b>"+y+" 年</b><span class='ypCnt'>此年无收录篇目</span><a class='ypClose' id='ypClose'>收起 ×</a></div>";
   }else{
     var e = eraOfYear(y);
-    var h = "<div class='ypHead'><b>"+y+" 年</b><span class='ypCnt'>"+arr.length+" 篇 · <i style='color:"+e.color+";font-style:normal'>"+e.name+"</i></span><a class='ypClose' id='ypClose'>收起 ×</a></div><div class='ypList'>";
+    var h = "<div class='ypHead'><b>"+y+" 年</b><span class='ypCnt'>"+arr.length+" 篇 · <i style='color:"+e.color+";font-style:normal'>"+esc(e.name)+"</i></span><a class='ypClose' id='ypClose'>收起 ×</a></div><div class='ypList'>";
     arr.forEach(function(a){
-      h += "<div class='ypItem' data-id='"+a.id+"'>"+
-        "<div class='ypT'>"+a.title+"</div>"+
-        "<div class='ypD'>"+a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place+"</div>"+
-        "<div class='ypW'>"+(a.why||"").slice(0,52)+"…</div></div>";
+      h += "<div class='ypItem' data-id='"+esc(a.id)+"'>"+
+        "<div class='ypT'>"+esc(a.title)+"</div>"+
+        "<div class='ypD'>"+esc(a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place)+"</div>"+
+        "<div class='ypW'>"+esc((a.why||"").slice(0,52))+"…</div></div>";
     });
-    h += "</ul>";
+    h += "</div>";
     panel.innerHTML = h;
   }
   panel.classList.add("on");
@@ -476,7 +687,7 @@ function ensureGraph(cb){
     var s = document.createElement("script");
     s.src = "assets/echarts.min.js";
     s.onload = function(){ echartsReady = true; initGraph(); cb && cb(); };
-    s.onerror = function(){ toast("图谱组件加载失败"); };
+    s.onerror = function(){ echartsLoading = false; toast("图谱组件加载失败，可重试"); };
     document.head.appendChild(s);
   }
   /* poll until ready for concurrent callers */
@@ -496,12 +707,13 @@ function graphNodes(){
       itemStyle:{color:VOLCOLOR[a.vol-1], borderColor:"rgba(245,239,224,.9)", borderWidth:1}});
   });
   var evCount = {};
-  ARTS.forEach(function(a){ if(a.event && a.event!=="—" && a.event!=="-") evCount[a.event]=(evCount[a.event]||0)+1; });
+  ARTS.forEach(function(a){ if(graphVolFilter[a.vol] && a.event && a.event!=="—" && a.event!=="-") evCount[a.event]=(evCount[a.event]||0)+1; });
   Object.keys(evCount).sort(function(a,b){return evCount[b]-evCount[a];}).forEach(function(ev){
     nodes.push({id:"ev:"+ev, name:ev, symbolSize:Math.max(10, Math.min(34, 8+evCount[ev]*3)), category:5,
       itemStyle:{color:"#a8842c", borderColor:"rgba(245,239,224,.9)", borderWidth:1.5}, isEvent:true, showLab:true});
   });
   var nodeIds = {}; nodes.forEach(function(n){ nodeIds[n.id]=1; });
+  var edgeSeen = {};                            /* A06 */
   ARTS.forEach(function(a){
     if(!graphVolFilter[a.vol]) return;
     if(a.event && a.event!=="—" && a.event!=="-" && nodeIds["ev:"+a.event])
@@ -509,14 +721,20 @@ function graphNodes(){
         lineStyle:{color:"rgba(168,132,44,.35)", width:1, curveness:.15}});
     (a.links||[]).forEach(function(t){
       var o = titleIndex[t];
-      if(o && a.id < o.id && nodeIds[a.id] && nodeIds[o.id]) links.push({source:a.id, target:o.id,
+      if(!o || o.id===a.id) return;
+      var lo = a.id < o.id ? a.id : o.id, hi = a.id < o.id ? o.id : a.id;
+      var k = lo + "|" + hi;
+      if(edgeSeen[k]) return;                   /* A06: sorted-pair dedup, both directions */
+      if(!nodeIds[lo] || !nodeIds[hi]) return;
+      edgeSeen[k] = 1;
+      links.push({source:a.id, target:o.id,
         lineStyle:{color:"rgba(176,58,46,.3)", width:1.2, curveness:.1}});
     });
   });
   return {nodes:nodes, links:links};
 }
 function initGraph(){
-  graphChart = echarts.init(document.getElementById("graphChart"));
+  graphChart = (graphChartRef = echarts.init(document.getElementById("graphChart")));
   var evCount = {};
   ARTS.forEach(function(a){ if(a.event && a.event!=="—" && a.event!=="-") evCount[a.event]=(evCount[a.event]||0)+1; });
   var g = graphNodes();
@@ -532,7 +750,7 @@ function initGraph(){
     series:[{
       type:"graph", layout:"force", roam:true, draggable:true,
       force:{repulsion:130, edgeLength:[28,70], gravity:.08, friction:.25},
-      label:{show:true, color:"#5a4f45", fontSize:10, fontFamily:"inherit",
+      label:{show:true, color:themeDark ? "#b3a689" : "#5a4f45", fontSize:10, fontFamily:"inherit",
         formatter:function(p){ return p.data.showLab ? (p.name.length>9 ? p.name.slice(0,9)+"…" : p.name) : ""; }},
       emphasis:{focus:"adjacency", label:{fontSize:12, color:"#b03a2e"}},
       lineStyle:{opacity:.5}, data:g.nodes, links:g.links,
@@ -651,20 +869,28 @@ function fmtText(raw){
   }
   return out.join("");
 }
+function loadReadMem(){
+  try{ return JSON.parse(localStorage.getItem("mx_read")||"{}"); }catch(e){ return {}; }
+}
+function storeReadMem(mem){
+  try{ localStorage.setItem("mx_read", JSON.stringify(mem)); return true; }
+  catch(e){ toast("本地保存失败：浏览器存储不可用或已满"); return false; }
+}
 function restoreScroll(id){
-  try{
-    var mem = JSON.parse(localStorage.getItem("mx_read")||"{}");
-    return mem[id] || 0;
-  }catch(e){ return 0; }
+  var v = loadReadMem()[id];
+  if(Object.prototype.toString.call(v) === "[object Array]") return v[0] || 0;  /* new [top, ts] */
+  if(typeof v === "number") return v;                                            /* legacy plain number */
+  return 0;
 }
 function saveScroll(id, top){
-  try{
-    var mem = JSON.parse(localStorage.getItem("mx_read")||"{}");
-    mem[id] = top;
-    var ks = Object.keys(mem);
-    if(ks.length > 60){ ks.sort(function(a,b){return mem[a]-mem[b];}); delete mem[ks[0]]; }
-    localStorage.setItem("mx_read", JSON.stringify(mem));
-  }catch(e){}
+  var mem = loadReadMem();
+  mem[id] = [top, Date.now()];                 /* A04: evict by access time, not depth */
+  var ks = Object.keys(mem);
+  if(ks.length > 60){
+    ks.sort(function(a,b){ return (mem[a][1]||0) - (mem[b][1]||0); });
+    for(var i=0;i<ks.length-60;i++) delete mem[ks[i]];
+  }
+  storeReadMem(mem);
 }
 function buildToc(){
   var toc = [];
@@ -678,38 +904,95 @@ function buildToc(){
   });
   return toc;
 }
+/* ---------- D01: local bookmarks & recent reads (this browser only) ---------- */
+function getBookmark(id){
+  try{ return !!JSON.parse(localStorage.getItem("mx_marks")||"{}")[id]; }catch(e){ return false; }
+}
+function toggleBookmark(id){
+  var m = {};
+  try{ m = JSON.parse(localStorage.getItem("mx_marks")||"{}"); }catch(e){}
+  if(m[id]) delete m[id]; else m[id] = Date.now();
+  try{
+    localStorage.setItem("mx_marks", JSON.stringify(m));
+    return !!m[id];
+  }catch(e){
+    toast("收藏保存失败：本地存储不可用");
+    return !!JSON.parse(localStorage.getItem("mx_marks")||"{}")[id];
+  }
+}
+function markRecent(id){
+  try{
+    var r = JSON.parse(localStorage.getItem("mx_recent")||"{}");
+    r[id] = Date.now();
+    var ks = Object.keys(r).sort(function(a,b){ return r[a]-r[b]; });
+    while(ks.length > 30) delete r[ks.shift()];
+    localStorage.setItem("mx_recent", JSON.stringify(r));
+  }catch(e){}
+}
+function lastReadArticle(){
+  /* last SUCCESSFULLY opened, preferring mx_recent recency */
+  var best = null, bestTs = -1;
+  try{
+    var r = JSON.parse(localStorage.getItem("mx_recent")||"{}");
+    Object.keys(r).forEach(function(k){ if(r[k]>bestTs && byId[k]){ bestTs=r[k]; best=byId[k]; } });
+  }catch(e){}
+  return best;
+}
+
+var articleSeq = 0;
+var lastOpenedId = null;          /* D01: last SUCCESSFULLY rendered article */
 function openArticle(id, fromRoute){
   var a = byId[id];
-  if(!a) return;
+  if(!a){ toast("未找到该篇文章"); setHash("#/view/cats"); return; }
+  /* save previous article scroll before switching (A04) */
+  if(state.curArt){
+    var vPrev = document.getElementById("view-read");
+    if(vPrev) saveScroll(state.curArt.id, vPrev.scrollTop);
+  }
   state.curArt = a;
   document.getElementById("navRead").style.display="";
   var v = document.getElementById("view-read");
-  fetch("data/texts/"+id+".txt").then(function(r){return r.text();}).then(function(txt){
+  var seq = ++articleSeq;
+  v.innerHTML = "<div class='readLoad'>正在载入《"+esc(a.title)+"》…</div>";
+  v.scrollTop = 0;
+  show("read");
+  document.title = a.title + " · 毛泽东选集";
+  if(!fromRoute) setHash("#/art/"+id);
+  fetch("data/texts/"+id+".txt").then(function(r){
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.text();
+  }).then(function(txt){
+    if(seq !== articleSeq) return;              /* stale response: drop */
+    if(state.curArt !== a) return;
+    lastOpenedId = a.id;                        /* only on success */
+    markRecent(a.id);
     var idx = txt.indexOf("\n\n");
     var body = idx>0 ? txt.slice(idx+2) : txt;
     var links = (a.links||[]).filter(function(t){return titleIndex[t];});
-    var fs = 0;
-    try{ fs = parseInt(localStorage.getItem("mx_font")||"0"); }catch(e){}
-    var h = "<div class='readTools'><span class='rtTitle'>"+a.title+"</span>"+
+    var fs = parseInt(String(localStorage.getItem("mx_font")||"0"), 10);
+    if(!(fs===0||fs===1||fs===2)) fs = 0;      /* A04: sanitize */
+    var isMarked = !!getBookmark(a.id);
+    var h = "<div id='readProg'></div><div class='readTools'><span class='rtTitle'>"+esc(a.title)+"</span>"+
       "<span class='fsGrp'><button data-fs='0' class='"+(fs===0?"on":"")+"'>小</button><button data-fs='1' class='"+(fs===1?"on":"")+"'>中</button><button data-fs='2' class='"+(fs===2?"on":"")+"'>大</button></span>"+
+      "<button id='rtMark' class='"+(isMarked?"on":"")+"'>"+(isMarked?"★ 已收藏":"☆ 收藏")+"</button>"+
       "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button></div>"+
       "<div class='readWrap'><div class='readHead'><div class='vol'>《毛泽东选集》第"+["一","二","三","四","五"][a.vol-1]+"卷</div>"+
-      "<h2>"+a.title+"</h2><div class='date'>"+a.dateRaw.replace(/[（）()]/g,"")+"</div></div>"+
-      "<div class='ctxCard'><h4>写作背景</h4><p>"+(a.why||"（待考）")+"</p>"+
+      "<h2>"+esc(a.title)+"</h2><div class='date'>"+esc(a.dateRaw.replace(/[（）()]/g,""))+"</div></div>"+
+      "<div class='ctxCard'><h4>写作背景 · 本站整理</h4><p>"+esc(a.why||"（待考）")+"</p>"+
       "<div class='ctxMeta'>"+
-      "<span>地点 <b>"+a.place+"</b></span>"+
-      "<span>时期 <b>"+a.era+"</b></span>"+
-      "<span>关联事件 <b>"+a.event+"</b></span>"+
+      "<span>地点 <b>"+esc(a.place)+"</b></span>"+
+      "<span>时期 <b>"+esc(a.era)+"</b></span>"+
+      "<span>关联事件 <b>"+esc(a.event)+"</b></span>"+
       "<span>篇幅 <b>"+a.nChars+" 字</b></span>"+
       "</div></div>"+
-      (links.length? "<div class='linkArts'><h4>关联文章</h4><div class='lks'>"+
-        links.map(function(t){return "<a data-id='"+titleIndex[t].id+"'>"+t+"</a>";}).join("")+
+      (links.length? "<div class='linkArts'><h4>关联文章 · 本站推荐</h4><div class='lks'>"+
+        links.map(function(t){return "<a data-id='"+esc(titleIndex[t].id)+"'>"+esc(t)+"</a>";}).join("")+
         "</div></div>":"")+
       "<div class='artText' style='font-size:"+FONT_SIZES[fs]+"px'>"+fmtText(body)+"</div>";
     var prev = ARTS[ARTS.indexOf(a)-1], next = ARTS[ARTS.indexOf(a)+1];
     h += "<div class='readNav'>"+
-      (prev? "<a data-id='"+prev.id+"'>← 前篇 · "+prev.title+"</a>":"<span></span>")+
-      (next? "<a data-id='"+next.id+"'>后篇 · "+next.title+" →</a>":"")+
+      (prev? "<a data-id='"+esc(prev.id)+"'>← 前篇 · "+esc(prev.title)+"</a>":"<span></span>")+
+      (next? "<a data-id='"+esc(next.id)+"'>后篇 · "+esc(next.title)+" →</a>":"")+
       "</div></div>";
     v.innerHTML = h;
     v.querySelectorAll("[data-id]").forEach(function(el){
@@ -765,19 +1048,42 @@ function openArticle(id, fromRoute){
     var saved = restoreScroll(id);
     v.scrollTop = saved;
     if(saved > 40) toast("已回到上次阅读位置");
-    show("read");
-    document.title = a.title + " · 毛泽东选集";
-    if(!fromRoute) setHash("#/art/"+id);
+    /* A04: also persist on page hide so the last meaningful position survives reload */
+    window.addEventListener("pagehide", onPageHide);
+    track("article_open", {articleId:a.id});
+    var rtMark = document.getElementById("rtMark");
+    if(rtMark) rtMark.addEventListener("click", function(){
+      var now = toggleBookmark(a.id);
+      rtMark.classList.toggle("on", now);
+      rtMark.textContent = now ? "★ 已收藏" : "☆ 收藏";
+      track("bookmark_toggle", {articleId:a.id, newState:now});
+      toast(now ? "已收藏《"+a.title+"》" : "已取消收藏");
+    });
+  }).catch(function(err){
+    if(seq !== articleSeq) return;              /* stale failure: drop */
+    if(state.curArt !== a) return;
+    v.innerHTML = "<div class='readErr'><h3>《"+esc(a.title)+"》加载失败</h3>"+
+      "<p>"+esc(String(err && err.message || err))+"</p>"+
+      "<button class='retryBtn' id='retryArt'>重试</button> "+
+      "<a href='#/view/cats'>返回目录</a></div>";
+    var rb = document.getElementById("retryArt");
+    if(rb) rb.addEventListener("click", function(){ openArticle(id, true); });
+    track("article_error", {articleId:id, code:String(err&&err.message||err).slice(0,60)});
   });
 }
-/* reading progress bar + scroll memory */
+/* reading progress bar + scroll memory (A04: lookup prog each event; DOM is rebuilt per article) */
+function onPageHide(){
+  var v = document.getElementById("view-read");
+  if(state.curArt && v && state.view==="read") saveScroll(state.curArt.id, v.scrollTop);
+}
 (function(){
   var v = document.getElementById("view-read");
-  var prog = document.getElementById("readProg");
   var lastSave = 0;
   v.addEventListener("scroll", function(){
+    var prog = document.getElementById("readProg");
+    if(!prog) return;
     var max = v.scrollHeight - v.clientHeight;
-    if(max <= 0) return;
+    if(max <= 0){ prog.style.width = "100%"; return; }
     prog.style.width = Math.round(v.scrollTop/max*100) + "%";
     var now = Date.now();
     if(state.curArt && now - lastSave > 1200){
@@ -787,8 +1093,14 @@ function openArticle(id, fromRoute){
   });
 })();
 /* keyboard: arrows for prev/next article, esc to close toc */
+function typingInField(){
+  var el = document.activeElement;
+  if(!el) return false;
+  var tag = el.tagName;
+  return tag==="INPUT" || tag==="TEXTAREA" || tag==="SELECT" || el.isContentEditable;
+}
 document.addEventListener("keydown", function(e){
-  if(document.activeElement && document.activeElement.tagName==="INPUT") return;
+  if(typingInField()) return;                   /* A08 */
   if(state.view!=="read" || !state.curArt) {
     if(e.key==="Escape"){
       document.getElementById("readToc").classList.remove("on");
@@ -818,42 +1130,92 @@ document.getElementById("tocMask").addEventListener("click", function(){
 
 /* ---------- SEARCH (tiered) ---------- */
 var textCache = {}, textLoaded = false, textLoading = false;
+var textCbs = [];
 function preloadTexts(cb){
-  if(textLoaded){ cb && cb(); return; }
-  if(textLoading) return;
+  if(cb) textCbs.push(cb);
+  if(textLoaded){ flushTextCbs(); return; }
+  if(textLoading) return;               /* later callers queued, never dropped */
   textLoading = true;
   var pending = ARTS.length;
+  textLoadFail = 0;
   ARTS.forEach(function(a){
-    if(textCache[a.id]){ pending--; if(!pending){ textLoaded=true; cb&&cb(); } return; }
-    fetch("data/texts/"+a.id+".txt").then(function(r){return r.text();}).then(function(t){
+    if(textCache[a.id]){ pending--; if(!pending) finishTextLoad(); return; }
+    fetch("data/texts/"+a.id+".txt").then(function(r){
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.text();
+    }).then(function(t){
       textCache[a.id]=t;
-    }).catch(function(){}).then(function(){
+    }).catch(function(){ textLoadFail++; }).then(function(){
       pending--;
-      if(!pending){ textLoaded=true; cb&&cb(); }
+      if(!pending) finishTextLoad();
     });
   });
 }
+var textLoadFail = 0;
+function finishTextLoad(){
+  textLoaded = true;
+  textLoading = false;
+  flushTextCbs();
+}
+function flushTextCbs(){
+  var cbs = textCbs; textCbs = [];
+  cbs.forEach(function(cb){ try{ cb(); }catch(e){} });
+}
+/* ---------- F01: unified analytics interface (NOT WIRED: no receiver configured) ----------
+   Events: page_view{pageType}, article_open{articleId}, article_error{articleId,code},
+           bookmark_toggle{articleId,newState}, search_result_open{resultType}
+   Never sends note text, search query, article body or any personal field.
+   Status: UNWIRED - set window.MX_ANALYTICS_ENDPOINT to enable. */
+var MX_EVENTS = {page_view:["pageType"], article_open:["articleId"], article_error:["articleId","code"],
+  bookmark_toggle:["articleId","newState"], search_result_open:["resultType"],
+  map3d_mode_switch:["mode"], map3d_place_open:["place"], map3d_stop_click:["stop"],
+  map3d_tour_toggle:["mode"], map3d_tour_station:["stop","year"],
+  map3d_follow_toggle:["on"], map3d_fallback:["reason"]};
+var trackSeq = {};
+function track(ev, props){
+  if(!MX_EVENTS[ev]) return;
+  var p = {};
+  (MX_EVENTS[ev]||[]).forEach(function(k){ if(props && props[k]!=null) p[k]=props[k]; });
+  if(!window.MX_ANALYTICS_ENDPOINT){
+    if(window.console && console.debug) console.debug("[track:unwired]", ev, p);
+    return;
+  }
+  try{
+    var key = ev + ":" + (p.articleId || p.pageType || "");
+    var now = Date.now();
+    if(trackSeq[key] && now - trackSeq[key] < 3000) return;  /* dedupe burst */
+    trackSeq[key] = now;
+    var body = JSON.stringify({event:ev, props:p, ts:now, ref:document.referrer || ""});
+    if(navigator.sendBeacon) navigator.sendBeacon(window.MX_ANALYTICS_ENDPOINT, body);
+    else fetch(window.MX_ANALYTICS_ENDPOINT, {method:"POST", body:body, keepalive:true}).catch(function(){});
+  }catch(e){}
+}
+
+var searchSeq = 0;
 function doSearch(q){
   if(!q || q.length<2){ show("map"); return; }
+  var seq = ++searchSeq;                       /* A02: stale query can never overwrite */
   var res = document.getElementById("view-search");
   var hitsMeta = ARTS.filter(function(a){
     return a.title.indexOf(q)>=0 || (a.why||"").indexOf(q)>=0 || (a.event||"").indexOf(q)>=0 || a.place.indexOf(q)>=0;
   });
-  var statEl = "<div class='seStats' id='seStats'>命中 " + hitsMeta.length + " 篇（标题/背景/地点）· 全文检索中…</div>";
-  var h = statEl + "<ul class='sres'>";
-  hitsMeta.forEach(function(a){
-    h += srow(a, hl(a.title, q), a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place+" · "+a.event, "", q);
-  });
-  h += "</ul>";
-  if(!hitsMeta.length) h = statEl;
+  /* container with .sres ALWAYS present so late appends cannot be lost (A02) */
+  var h = "<div class='seStats' id='seStats'>命中 " + hitsMeta.length + " 篇（标题/背景/地点）· 全文检索中…</div>" +
+          "<ul class='sres' id='sresList'></ul>";
   res.innerHTML = h;
-  res.querySelectorAll("li[data-id]").forEach(function(li){
-    li.addEventListener("click", function(){ setHash("#/art/"+li.getAttribute("data-id")); });
+  var ul = res.querySelector("#sresList");
+  var rowsHtml = "";
+  hitsMeta.forEach(function(a){
+    rowsHtml += srow(a, hl(esc(a.title), q), esc(a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place+" · "+a.event), "", q);
   });
+  ul.innerHTML = rowsHtml;
+  bindSearchRows(res);
   show("search");
+  track("page_view", {pageType:"search"});
   /* async full-text pass */
   preloadTexts(function(){
-    if(document.getElementById("q").value.trim() !== q) return; /* query changed */
+    if(seq !== searchSeq) return;              /* a newer query started: discard */
+    if(document.getElementById("q").value.trim() !== q) return;
     var seenIds = {}; hitsMeta.forEach(function(a){seenIds[a.id]=1;});
     var extra = "", fullHits = 0;
     ARTS.forEach(function(a){
@@ -864,26 +1226,33 @@ function doSearch(q){
       if(i<0) return;
       fullHits++;
       var s = Math.max(0, i-40);
-      var frag = t.slice(s, i+70).replace(/\n/g," ");
-      extra += srow(a, a.title, a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place, frag, q);
+      var frag = esc(t.slice(s, i+70).replace(/\n/g," "));
+      extra += srow(a, esc(a.title), esc(a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place), frag, q);
     });
-    var ul = res.querySelector(".sres");
-    if(extra && ul) ul.insertAdjacentHTML("beforeend", extra);
+    if(extra) ul.insertAdjacentHTML("beforeend", extra);
     var st = document.getElementById("seStats");
-    if(st) st.textContent = "命中 " + hitsMeta.length + " 篇（标题/背景/地点）+ " + fullHits + " 篇（全文）";
-    if(!hitsMeta.length && !fullHits) res.innerHTML = "<div class='hint' style='padding:40px 10px;max-width:900px;margin:0 auto'>未检出「"+q+"」相关篇章。</div>";
-    res.querySelectorAll("li[data-id]").forEach(function(li){
-      li.addEventListener("click", function(){ setHash("#/art/"+li.getAttribute("data-id")); });
-    });
+    var msg = "命中 " + hitsMeta.length + " 篇（标题/背景/地点）+ " + fullHits + " 篇（全文）";
+    if(textLoadFail>0) msg += " · 有 " + textLoadFail + " 篇正文加载失败，结果可能不完整";
+    if(st) st.textContent = msg;
+    if(!hitsMeta.length && !fullHits)
+      res.innerHTML = "<div class='hint' style='padding:40px 10px;max-width:900px;margin:0 auto'>未检出「"+esc(q)+"」相关篇章。</div>";
+    bindSearchRows(res);
+  });
+}
+function bindSearchRows(res){
+  res.querySelectorAll("li[data-id]").forEach(function(li){
+    li.onclick = function(){ track("search_result_open",{resultType:"search"}); setHash("#/art/"+li.getAttribute("data-id")); };
   });
 }
 function srow(a, t, d, frag, q){
-  return "<li data-id='"+a.id+"'><div class='t'>"+t+"</div><div class='d'>"+d+"</div>"+
+  return "<li data-id='"+esc(a.id)+"'><div class='t'>"+t+"</div><div class='d'>"+d+"</div>"+
     (frag? "<div class='frag'>"+hl(frag,q)+"</div>":"")+"</li>";
 }
+/* hl: input already escaped once by caller; highlight by splitting on escaped needle */
 function hl(s, q){
   if(!q) return s;
-  return s.split(q).join("<em>"+q+"</em>");
+  var needle = esc(q);
+  return s.split(needle).join("<em>"+needle+"</em>");
 }
 document.getElementById("q").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
@@ -903,7 +1272,7 @@ qClear.addEventListener("click", function(){
 
 /* ---------- global shortcuts ---------- */
 document.addEventListener("keydown", function(e){
-  if(document.activeElement && document.activeElement.tagName==="INPUT") return;
+  if(typingInField() || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;  /* A08 */
   if(e.key==="/"){ e.preventDefault(); document.getElementById("q").focus(); return; }
   if(e.key==="1") setHash("#/view/map");
   if(e.key==="2") setHash("#/view/tl");
@@ -917,6 +1286,28 @@ document.getElementById("volLegend").innerHTML =
 initMap();
 renderTimeline();
 renderStats();
-show("map");
+document.querySelectorAll("#mapModeBtns button").forEach(function(b){
+  b.addEventListener("click", function(){ setMapMode(b.getAttribute("data-mm")); });
+});
+document.getElementById("mx3dFollow").addEventListener("click", function(){
+  if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.toggleFollow();
+});
+applyMapMode();          /* honor persisted 2d/3d choice */
+show("home");
 applyRoute();
+track("page_view", {pageType:"first"});
+
+/* ===== PWA + theme button ===== */
+(function(){
+  var tb = document.getElementById("themeBtn");
+  if(tb) tb.addEventListener("click", toggleTheme);
+  if("serviceWorker" in navigator){
+    var proto = location.protocol;
+    if(proto === "https:" || proto === "http:"){
+      window.addEventListener("load", function(){
+        navigator.serviceWorker.register("sw.js").catch(function(){});
+      });
+    }
+  }
+})();
 })();
