@@ -1,0 +1,9 @@
+{
+  "name": "maoxuan-atlas",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test:wp05": "node api/test-wp05.js"
+  }
+}
