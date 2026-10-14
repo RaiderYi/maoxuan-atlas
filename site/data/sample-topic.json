@@ -1,0 +1,8185 @@
+{
+ "articles": {
+  "v1n03": {
+   "articleId": "v1n03",
+   "title": "中国的红色政权为什么能够存在？",
+   "volume": 1,
+   "date": {
+    "raw": "（一九二八年十月五日）",
+    "y": 1928,
+    "m": 10,
+    "d": 5,
+    "precision": "day"
+   },
+   "textChecksum": "eeeec95c08a25956",
+   "nParagraphs": 234,
+   "nChars": 6448,
+   "paragraphs": [
+    {
+     "id": "pv1n03-001",
+     "articleId": "v1n03",
+     "seq": 1,
+     "text": "中国的红色政权为什么能够存在？",
+     "checksum": "3ec2bfb17ae1ae09",
+     "charCount": 15,
+     "isHeadNote": true
+    },
+    {
+     "id": "pv1n03-002",
+     "articleId": "v1n03",
+     "seq": 2,
+     "text": "（一九二八年十月五日）",
+     "checksum": "8f36499dfb5af2b0",
+     "charCount": 11,
+     "isHeadNote": true
+    },
+    {
+     "id": "pv1n03-003",
+     "articleId": "v1n03",
+     "seq": 3,
+     "text": "这是毛泽东为中共湘赣边界第二次代表大会写的决议的一部分，",
+     "checksum": "d63176505330698d",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-004",
+     "articleId": "v1n03",
+     "seq": 4,
+     "text": "原题为《政治问题和边界党的任务》。",
+     "checksum": "a2b2da164c128420",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-005",
+     "articleId": "v1n03",
+     "seq": 5,
+     "text": "一　国内的政治状况",
+     "checksum": "ebd96bc211fac5df",
+     "charCount": 9,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-006",
+     "articleId": "v1n03",
+     "seq": 6,
+     "text": "现在国民党新军阀的统治，依然是城市买办阶级和乡村豪绅阶级",
+     "checksum": "12b38ea387bb6bd5",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-007",
+     "articleId": "v1n03",
+     "seq": 7,
+     "text": "的统治，对外投降帝国主义，对内以新军阀代替旧军阀，对工农阶级",
+     "checksum": "5be797361c945202",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-008",
+     "articleId": "v1n03",
+     "seq": 8,
+     "text": "的经济的剥削和政治的压迫比从前更加厉害。从广东出发的资产阶级",
+     "checksum": "f36550ce709f2db3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-009",
+     "articleId": "v1n03",
+     "seq": 9,
+     "text": "民主革命，到半路被买办豪绅阶级篡夺了领导权，立即转向反革命路",
+     "checksum": "c1db0bd668f93227",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-010",
+     "articleId": "v1n03",
+     "seq": 10,
+     "text": "上，全国工农平民以至资产阶级⑴，依然在反革命统治底下，没有得",
+     "checksum": "e131fb27cb7a1ccf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-011",
+     "articleId": "v1n03",
+     "seq": 11,
+     "text": "到丝毫政治上经济上的解放。",
+     "checksum": "d8dc35136e90005a",
+     "charCount": 13,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-012",
+     "articleId": "v1n03",
+     "seq": 12,
+     "text": "国民党新军阀蒋桂冯阎四派⑵，在北京天津没有打下以前，有一",
+     "checksum": "c430e285d917069b",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-013",
+     "articleId": "v1n03",
+     "seq": 13,
+     "text": "个对张作霖⑶的临时的团结。北京天津打下以后，这个团结立即解",
+     "checksum": "9463af8cae54bc61",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-014",
+     "articleId": "v1n03",
+     "seq": 14,
+     "text": "散，变为四派内部激烈斗争的局面，蒋桂两派且在酝酿战争中。中国",
+     "checksum": "b018d0a88f309db7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-015",
+     "articleId": "v1n03",
+     "seq": 15,
+     "text": "内部各派军阀的矛盾和斗争，反映着帝国主义各国的矛盾和斗争。故",
+     "checksum": "d6951f58c3c9c6d8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-016",
+     "articleId": "v1n03",
+     "seq": 16,
+     "text": "只要各国帝国主义分裂中国的状况存在，各派军阀就无论如何不能妥",
+     "checksum": "92d8f4dec6cdb0c5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-017",
+     "articleId": "v1n03",
+     "seq": 17,
+     "text": "协，所有妥协都是暂时的。今天的暂时的妥协，即酝酿着明天的更大",
+     "checksum": "a76e684109255e83",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-018",
+     "articleId": "v1n03",
+     "seq": 18,
+     "text": "的战争。",
+     "checksum": "6a43774e8edb75dd",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-019",
+     "articleId": "v1n03",
+     "seq": 19,
+     "text": "中国迫切需要一个资产阶级的民主革命，这个革命必须由无产阶",
+     "checksum": "5b8c1d608f1a9d07",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-020",
+     "articleId": "v1n03",
+     "seq": 20,
+     "text": "级领导才能完成。从广东出发向长江发展的一九二六年到一九二七年",
+     "checksum": "526067f87e340081",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-021",
+     "articleId": "v1n03",
+     "seq": 21,
+     "text": "的革命，因为无产阶级没有坚决地执行自己的领导权，被买办豪绅阶",
+     "checksum": "6070ab377f019df9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-022",
+     "articleId": "v1n03",
+     "seq": 22,
+     "text": "级夺取了领导，以反革命代替了革命。资产阶级民主革命乃遭遇到暂",
+     "checksum": "5323d82d3fa7c1fc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-023",
+     "articleId": "v1n03",
+     "seq": 23,
+     "text": "时的失败。中国无产阶级和农民在此次失败中，受到很大的打击，中",
+     "checksum": "688722b142fc0108",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-024",
+     "articleId": "v1n03",
+     "seq": 24,
+     "text": "国资产阶级（非买办豪绅阶级）也受了打击。但最近数个月来，工农",
+     "checksum": "ac016ae48746e8a0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-025",
+     "articleId": "v1n03",
+     "seq": 25,
+     "text": "阶级在共产党领导之下的有组织的城市罢工和农村暴动，在南北各地",
+     "checksum": "121d8853cc282dc9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-026",
+     "articleId": "v1n03",
+     "seq": 26,
+     "text": "发展起来。军阀军队中的士兵因饥寒而酝酿着很大的不安。同时资产",
+     "checksum": "d7845a0be496c203",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-027",
+     "articleId": "v1n03",
+     "seq": 27,
+     "text": "阶级在汪精卫、陈公博一派鼓动之下，亦在沿海沿江各地发展着颇大",
+     "checksum": "cdf251cd1b2ba83b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-028",
+     "articleId": "v1n03",
+     "seq": 28,
+     "text": "的改良主义⑷运动。这种运动的发展是新的事实。",
+     "checksum": "30590d886d0b9d5b",
+     "charCount": 22,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-029",
+     "articleId": "v1n03",
+     "seq": 29,
+     "text": "中国的民主革命的内容，依国际及中央的指示，包括推翻帝国主",
+     "checksum": "32b37ca24c0b42aa",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-030",
+     "articleId": "v1n03",
+     "seq": 30,
+     "text": "义及其工具军阀在中国的统治，完成民族革命，并实行土地革命，消",
+     "checksum": "a30fae624ec3b821",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-031",
+     "articleId": "v1n03",
+     "seq": 31,
+     "text": "灭豪绅阶级对农民的封建的剥削。这种革命的实际运动，在一九二八",
+     "checksum": "d3ffe8cfb20ec2e0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-032",
+     "articleId": "v1n03",
+     "seq": 32,
+     "text": "年五月济南惨案⑸以后，是一天一天在发展的。",
+     "checksum": "da1f154483eb6873",
+     "charCount": 21,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-033",
+     "articleId": "v1n03",
+     "seq": 33,
+     "text": "二　中国红色政权⑹发生和存在的原因",
+     "checksum": "20a253b88a92dc53",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-034",
+     "articleId": "v1n03",
+     "seq": 34,
+     "text": "一国之内，在四围白色政权的包围中，有一小块或若干小块红色",
+     "checksum": "3796c297c0a322fa",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-035",
+     "articleId": "v1n03",
+     "seq": 35,
+     "text": "政权的区域长期地存在，这是世界各国从来没有的事。这种奇事的发",
+     "checksum": "8370dbef3c0134bb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-036",
+     "articleId": "v1n03",
+     "seq": 36,
+     "text": "生，有其独特的原因。而其存在和发展，亦必有相当的条件。第一，",
+     "checksum": "414647c0fa051b80",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-037",
+     "articleId": "v1n03",
+     "seq": 37,
+     "text": "它的发生不能在任何帝国主义的国家，也不能在任何帝国主义直接统",
+     "checksum": "ffee79e254d09f7c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-038",
+     "articleId": "v1n03",
+     "seq": 38,
+     "text": "治的殖民地⑺，必然是在帝国主义间接统治的经济落后的半殖民地的",
+     "checksum": "4d8db6b8415cd242",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-039",
+     "articleId": "v1n03",
+     "seq": 39,
+     "text": "中国。因为这种奇怪现象必定伴着另外一件奇怪现象，那就是白色政",
+     "checksum": "812be4f31f20d9a7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-040",
+     "articleId": "v1n03",
+     "seq": 40,
+     "text": "权之间的战争。帝国主义和国内买办豪绅阶级支持着的各派新旧军",
+     "checksum": "a60575a37d40f140",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-041",
+     "articleId": "v1n03",
+     "seq": 41,
+     "text": "阀，从民国元年以来，相互间进行着继续不断的战争，这是半殖民地",
+     "checksum": "1f3c698639adfbc1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-042",
+     "articleId": "v1n03",
+     "seq": 42,
+     "text": "中国的特征之一。不但全世界帝国主义国家没有一国有这种现象，就",
+     "checksum": "6ff64ae3e60a0115",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-043",
+     "articleId": "v1n03",
+     "seq": 43,
+     "text": "是帝国主义直接统治的殖民地也没有一处有这种现象，仅仅帝国主义",
+     "checksum": "32a603844e1a4ce2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-044",
+     "articleId": "v1n03",
+     "seq": 44,
+     "text": "间接统治的中国这样的国家才有这种现象。这种现象产生的原因有两",
+     "checksum": "c8116916263804c9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-045",
+     "articleId": "v1n03",
+     "seq": 45,
+     "text": "种，即地方的农业经济（不是统一的资本主义经济）和帝国主义划分",
+     "checksum": "a9d5318caf8b2a4b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-046",
+     "articleId": "v1n03",
+     "seq": 46,
+     "text": "势力范围的分裂剥削政策。因为有了白色政权间的长期的分裂和战",
+     "checksum": "e564960f8761688c",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-047",
+     "articleId": "v1n03",
+     "seq": 47,
+     "text": "争，便给了一种条件，使一小块或若干小块的共产党领导的红色区",
+     "checksum": "347c73737fa99d44",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-048",
+     "articleId": "v1n03",
+     "seq": 48,
+     "text": "域，能够在四围白色政权包围的中间发生和坚持下来。湘赣边界的割",
+     "checksum": "426c21d9592fea8e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-049",
+     "articleId": "v1n03",
+     "seq": 49,
+     "text": "据⑻，就是这许多小块中间的一小块。有些同志在困难和危急的时",
+     "checksum": "b77b5be91303c199",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-050",
+     "articleId": "v1n03",
+     "seq": 50,
+     "text": "候，往往怀疑这样的红色政权的存在，而发生悲观的情绪。这是没有",
+     "checksum": "58232065125c1c0b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-051",
+     "articleId": "v1n03",
+     "seq": 51,
+     "text": "找出这种红色政权所以发生和存在的正确的解释的缘故。我们只须知",
+     "checksum": "a929342a511d1a55",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-052",
+     "articleId": "v1n03",
+     "seq": 52,
+     "text": "道中国白色政权的分裂和战争是继续不断的，则红色政权的发生、存",
+     "checksum": "84292e4efed437e7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-053",
+     "articleId": "v1n03",
+     "seq": 53,
+     "text": "在并且日益发展，便是无疑的了。第二，中国红色政权首先发生和能",
+     "checksum": "c7e5eaa4e5ea26a7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-054",
+     "articleId": "v1n03",
+     "seq": 54,
+     "text": "够长期地存在的地方，不是那种并未经过民主革命影响的地方，例如",
+     "checksum": "7558fa55c8f3670d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-055",
+     "articleId": "v1n03",
+     "seq": 55,
+     "text": "四川、贵州、云南及北方各省，而是在一九二六和一九二七两年资产",
+     "checksum": "4acca7dc7cd6a03c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-056",
+     "articleId": "v1n03",
+     "seq": 56,
+     "text": "阶级民主革命过程中工农兵士群众曾经大大地起来过的地方，例如湖",
+     "checksum": "aed1e5b0faf1723a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-057",
+     "articleId": "v1n03",
+     "seq": 57,
+     "text": "南、广东、湖北、江西等省。这些省份的许多地方，曾经有过很广大",
+     "checksum": "287cbef2dcaf869b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-058",
+     "articleId": "v1n03",
+     "seq": 58,
+     "text": "的工会和农民协会的组织，有过工农阶级对地主豪绅阶级和资产阶级",
+     "checksum": "f1a3b8745d7201f6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-059",
+     "articleId": "v1n03",
+     "seq": 59,
+     "text": "的许多经济的政治的斗争。所以广州产生过三天的城市民众政权，而",
+     "checksum": "acd2ee015a9dac6d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-060",
+     "articleId": "v1n03",
+     "seq": 60,
+     "text": "海陆丰、湘东、湘南、湘赣边界、湖北的黄安等地都有过农民的割",
+     "checksum": "3f1436a9d8768f88",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-061",
+     "articleId": "v1n03",
+     "seq": 61,
+     "text": "据。至于此刻的红军，也是由经过民主的政治训练和接受过工农群众",
+     "checksum": "70b76135f206621c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-062",
+     "articleId": "v1n03",
+     "seq": 62,
+     "text": "影响的国民革命军中分化出来的。那些毫未经过民主的政治训练、毫",
+     "checksum": "9cf594a2590aaaa1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-063",
+     "articleId": "v1n03",
+     "seq": 63,
+     "text": "未接受过工农影响的军队，例如阎锡山、张作霖的军队，此时便决然",
+     "checksum": "94ffb7107021e70e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-064",
+     "articleId": "v1n03",
+     "seq": 64,
+     "text": "不能分化出可以造成红军的成分来。第三，小地方民众政权之能否长",
+     "checksum": "195eef8254f35ade",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-065",
+     "articleId": "v1n03",
+     "seq": 65,
+     "text": "期地存在，则决定于全国革命形势是否向前发展这一个条件。全国革",
+     "checksum": "ba3f51e4230ec89b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-066",
+     "articleId": "v1n03",
+     "seq": 66,
+     "text": "命形势是向前发展的，则小块红色区域的长期存在，不但没有疑义，",
+     "checksum": "2807e04342a30a8a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-067",
+     "articleId": "v1n03",
+     "seq": 67,
+     "text": "而且必然地要作为取得全国政权的许多力量中间的一个力量。全国革",
+     "checksum": "e2f420b402c6722f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-068",
+     "articleId": "v1n03",
+     "seq": 68,
+     "text": "命形势若不是继续地向前发展，而有一个比较长期的停顿，则小块红",
+     "checksum": "4e8893e825445a7c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-069",
+     "articleId": "v1n03",
+     "seq": 69,
+     "text": "色区域的长期存在是不可能的。现在中国革命形势是跟着国内买办豪",
+     "checksum": "b4487b34ae4b29ec",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-070",
+     "articleId": "v1n03",
+     "seq": 70,
+     "text": "绅阶级和国际资产阶级的继续的分裂和战争，而继续地向前发展的。",
+     "checksum": "090cfc6996ef5c68",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-071",
+     "articleId": "v1n03",
+     "seq": 71,
+     "text": "所以，不但小块红色区域的长期存在没有疑义，而且这些红色区域将",
+     "checksum": "4a96e9b72cbce9e3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-072",
+     "articleId": "v1n03",
+     "seq": 72,
+     "text": "继续发展，日渐接近于全国政权的取得。第四，相当力量的正式红军",
+     "checksum": "8cce5c8a9e125405",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-073",
+     "articleId": "v1n03",
+     "seq": 73,
+     "text": "的存在，是红色政权存在的必要条件。若只有地方性质的赤卫队⑼而",
+     "checksum": "cef848d2c9c8ec62",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-074",
+     "articleId": "v1n03",
+     "seq": 74,
+     "text": "没有正式的红军，则只能对付挨户团⑽，而不能对付正式的白色军",
+     "checksum": "4a793530d0d522a0",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-075",
+     "articleId": "v1n03",
+     "seq": 75,
+     "text": "队。所以虽有很好的工农群众，若没有相当力量的正式武装，便决然",
+     "checksum": "ff92fc15d6be70ea",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-076",
+     "articleId": "v1n03",
+     "seq": 76,
+     "text": "不能造成割据局面，更不能造成长期的和日益发展的割据局面。所以",
+     "checksum": "46b32c3060356ecf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-077",
+     "articleId": "v1n03",
+     "seq": 77,
+     "text": "“工农武装割据”的思想，是共产党和割据地方的工农群众必须充分",
+     "checksum": "c6aa768bfc38f142",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-078",
+     "articleId": "v1n03",
+     "seq": 78,
+     "text": "具备的一个重要的思想。第五，红色政权的长期的存在并且发展，除",
+     "checksum": "e27f95f5ed9e0401",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-079",
+     "articleId": "v1n03",
+     "seq": 79,
+     "text": "了上述条件之外，还须有一个要紧的条件，就是共产党组织的有力量",
+     "checksum": "ea4868d6c4bc1f3d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-080",
+     "articleId": "v1n03",
+     "seq": 80,
+     "text": "和它的政策的不错误。",
+     "checksum": "6a8401da679fd280",
+     "charCount": 10,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-081",
+     "articleId": "v1n03",
+     "seq": 81,
+     "text": "三　湘赣边界的割据和八月的失败",
+     "checksum": "29684747a8f3df2f",
+     "charCount": 15,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-082",
+     "articleId": "v1n03",
+     "seq": 82,
+     "text": "军阀间的分裂和战争，削弱了白色政权的统治势力。因此，小地",
+     "checksum": "63e7dcebb6bf42bd",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-083",
+     "articleId": "v1n03",
+     "seq": 83,
+     "text": "方红色政权得以乘时产生出来。但军阀之间的战争不是每天不停的。",
+     "checksum": "7136529893c73c9c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-084",
+     "articleId": "v1n03",
+     "seq": 84,
+     "text": "每当一省或几省之间的白色政权有一个暂时稳定的时候，那一省的统",
+     "checksum": "b2bcc3064b1a1a87",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-085",
+     "articleId": "v1n03",
+     "seq": 85,
+     "text": "治阶级或几省的统治阶级必然联合起来用尽力量来消灭这个红色政",
+     "checksum": "14614fc720732f7a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-086",
+     "articleId": "v1n03",
+     "seq": 86,
+     "text": "权。在为建立和坚持红色政权所必须的各种条件尚不完备的地方，便",
+     "checksum": "4d2e87504192fa0f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-087",
+     "articleId": "v1n03",
+     "seq": 87,
+     "text": "有被敌人推倒的危险。本年四月以前乘时而起的许多红色政权，如广",
+     "checksum": "e02b3718c5fa8c7c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-088",
+     "articleId": "v1n03",
+     "seq": 88,
+     "text": "州、海陆丰、湘赣边界、湘南、醴陵、黄安各地，都先后受到白色政",
+     "checksum": "cc77386f4c6072b2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-089",
+     "articleId": "v1n03",
+     "seq": 89,
+     "text": "权的摧残，就是这个道理。四月以后湘赣边界的割据，正值南方统治",
+     "checksum": "7e367def8c7d5dcf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-090",
+     "articleId": "v1n03",
+     "seq": 90,
+     "text": "势力暂时稳定的时候，湘赣两省派来“进剿”的军队，随时都有八九",
+     "checksum": "f6880965351e811f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-091",
+     "articleId": "v1n03",
+     "seq": 91,
+     "text": "个团以上的兵力，多的到过十八个团。然而我们以不足四个团的兵力",
+     "checksum": "eceab88be8ee2326",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-092",
+     "articleId": "v1n03",
+     "seq": 92,
+     "text": "和敌人斗争四个月之久，使割据地区一天一天扩大，土地革命一天一",
+     "checksum": "4d805939c7ae3b45",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-093",
+     "articleId": "v1n03",
+     "seq": 93,
+     "text": "天深入，民众政权的组织一天一天推广，红军和赤卫队一天一天壮",
+     "checksum": "4b52fb4c47ecb42c",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-094",
+     "articleId": "v1n03",
+     "seq": 94,
+     "text": "大，原因就在于湘赣边界的共产党（地方的党和军队的党）的政策是",
+     "checksum": "ac9c16fa924e628f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-095",
+     "articleId": "v1n03",
+     "seq": 95,
+     "text": "正确的。当时党的特委和军委的政策是：坚决地和敌人作斗争，创造",
+     "checksum": "9544fa4b210958a5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-096",
+     "articleId": "v1n03",
+     "seq": 96,
+     "text": "罗霄山脉⑾中段政权，反对逃跑主义；深入割据地区的土地革命；军",
+     "checksum": "75600f89cf1842e2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-097",
+     "articleId": "v1n03",
+     "seq": 97,
+     "text": "队党帮助地方党的发展，正规军队帮助地方武装的发展；集中红军相",
+     "checksum": "abc86edd93649461",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-098",
+     "articleId": "v1n03",
+     "seq": 98,
+     "text": "机应付当前之敌，反对分兵，避免被敌人各个击破；割据地区的扩大",
+     "checksum": "c6b598e34d4494a0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-099",
+     "articleId": "v1n03",
+     "seq": 99,
+     "text": "采取波浪式的推进政策，反对冒进政策。因为这些策略的适当，加上",
+     "checksum": "07d47c5d7b865739",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-100",
+     "articleId": "v1n03",
+     "seq": 100,
+     "text": "地形之利于斗争，湘赣两省进攻军队之不尽一致，于是才有四月至七",
+     "checksum": "6428646719567ac4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-101",
+     "articleId": "v1n03",
+     "seq": 101,
+     "text": "月四个月中的各次胜利⑿。虽以数倍于我之敌，不但不能破坏此割",
+     "checksum": "b250a3b0540151b0",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-102",
+     "articleId": "v1n03",
+     "seq": 102,
+     "text": "据，并且不能阻止此割据的日益扩大，此割据对湘赣两省的影响则有",
+     "checksum": "ae849250401481ed",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-103",
+     "articleId": "v1n03",
+     "seq": 103,
+     "text": "日益加大之势。八月失败，完全在于一部分同志不明了当时正是统治",
+     "checksum": "d44bb64d150d7118",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-104",
+     "articleId": "v1n03",
+     "seq": 104,
+     "text": "阶级暂时稳定的时候，反而采取统治阶级政治破裂时候的战略，分兵",
+     "checksum": "9968910a910316ff",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-105",
+     "articleId": "v1n03",
+     "seq": 105,
+     "text": "冒进，致边界和湘南同归失败。湖南省委代表杜修经同志不察当时环",
+     "checksum": "affcd6c6a2d9aeca",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-106",
+     "articleId": "v1n03",
+     "seq": 106,
+     "text": "境，不顾特委、军委及永新县委联席会议的决议，只知形式地执行湖",
+     "checksum": "c2208af6cfbe6f3c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-107",
+     "articleId": "v1n03",
+     "seq": 107,
+     "text": "南省委的命令，附和红军第二十九团逃避斗争欲回家乡的意见，其错",
+     "checksum": "89c2734f5cfc6888",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-108",
+     "articleId": "v1n03",
+     "seq": 108,
+     "text": "误实在非常之大。这种失败的形势，因为九月以后特委和军委采取了",
+     "checksum": "8b2259534fef4cad",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-109",
+     "articleId": "v1n03",
+     "seq": 109,
+     "text": "纠正错误的步骤，而挽救过来了。",
+     "checksum": "2b14d6df456342b1",
+     "charCount": 15,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-110",
+     "articleId": "v1n03",
+     "seq": 110,
+     "text": "四　湘赣边界的割据局面在湘鄂赣三省的地位",
+     "checksum": "bee9eef19a5e0999",
+     "charCount": 20,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-111",
+     "articleId": "v1n03",
+     "seq": 111,
+     "text": "以宁冈为中心的湘赣边界工农武装割据，其意义决不限于边界数",
+     "checksum": "3a2aac8d350d26dd",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-112",
+     "articleId": "v1n03",
+     "seq": 112,
+     "text": "县，这种割据在湘鄂赣三省工农暴动夺取三省政权的过程中是有很大",
+     "checksum": "e205adf27e271353",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-113",
+     "articleId": "v1n03",
+     "seq": 113,
+     "text": "的意义的。使边界土地革命和民众政权的影响远及于湘赣两省的下游",
+     "checksum": "d8c749bc1f0f4675",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-114",
+     "articleId": "v1n03",
+     "seq": 114,
+     "text": "乃至于湖北；使红军从斗争中日益增加其数量和提高其质量，能在将",
+     "checksum": "c3071d37d80d9ba8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-115",
+     "articleId": "v1n03",
+     "seq": 115,
+     "text": "来三省总的暴动中执行它的必要的使命；使各县地方武装即赤卫队和",
+     "checksum": "61a2ceab034a67a6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-116",
+     "articleId": "v1n03",
+     "seq": 116,
+     "text": "工农暴动队的数量增加质量提高起来，此时能够与挨户团和小量军队",
+     "checksum": "2995298f286d2c8c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-117",
+     "articleId": "v1n03",
+     "seq": 117,
+     "text": "作战，将来能够保全边界政权；使地方工作人材逐渐减少依靠红军中",
+     "checksum": "6250946434b9422f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-118",
+     "articleId": "v1n03",
+     "seq": 118,
+     "text": "工作人材的帮助，能完全自立，以边界的人材任边界的工作，进一步",
+     "checksum": "110bdd778f895967",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-119",
+     "articleId": "v1n03",
+     "seq": 119,
+     "text": "能够供给红军的工作人材和扩大割据区域的工作人材——这些都是边",
+     "checksum": "ab2661df8d9d244c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-120",
+     "articleId": "v1n03",
+     "seq": 120,
+     "text": "界党在湘鄂赣三省暴动发展中极其重要的任务。",
+     "checksum": "e5ad678f6c19d492",
+     "charCount": 21,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-121",
+     "articleId": "v1n03",
+     "seq": 121,
+     "text": "五　经济问题",
+     "checksum": "b1bf821d61d1fbc7",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-122",
+     "articleId": "v1n03",
+     "seq": 122,
+     "text": "在白色势力的四面包围中，军民日用必需品和现金的缺乏，成了",
+     "checksum": "4d9253e696cb54a2",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-123",
+     "articleId": "v1n03",
+     "seq": 123,
+     "text": "极大的问题。一年以来，边界政权割据的地区，因为敌人的严密封",
+     "checksum": "f7f2e06c1b780312",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-124",
+     "articleId": "v1n03",
+     "seq": 124,
+     "text": "锁，食盐、布匹、药材等日用必需品，无时不在十分缺乏和十分昂贵",
+     "checksum": "ac453ed71de71375",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-125",
+     "articleId": "v1n03",
+     "seq": 125,
+     "text": "之中，因此引起工农小资产阶级⒀群众和红军士兵群众的生活的不",
+     "checksum": "f84fd1321ec695f6",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-126",
+     "articleId": "v1n03",
+     "seq": 126,
+     "text": "安，有时真是到了极度。红军一面要打仗，一面又要筹饷。每天除粮",
+     "checksum": "909730e301adc84f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-127",
+     "articleId": "v1n03",
+     "seq": 127,
+     "text": "食外的五分钱伙食费都感到缺乏，营养不足，病的甚多，医院伤兵，",
+     "checksum": "af4a09e6be32972a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-128",
+     "articleId": "v1n03",
+     "seq": 128,
+     "text": "其苦更甚。这种困难，在全国总政权没有取得以前当然是不能免的，",
+     "checksum": "2c345cb619f1bdcb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-129",
+     "articleId": "v1n03",
+     "seq": 129,
+     "text": "但是这种困难的比较地获得解决，使生活比较地好一点，特别是红军",
+     "checksum": "9153c3d810a409d0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-130",
+     "articleId": "v1n03",
+     "seq": 130,
+     "text": "的给养使之比较地充足一点，则是迫切地需要的。边界党如不能对经",
+     "checksum": "0b6175714317447e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-131",
+     "articleId": "v1n03",
+     "seq": 131,
+     "text": "济问题有一个适当的办法，在敌人势力的稳定还有一个比较长的期间",
+     "checksum": "09d949eb8d792695",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-132",
+     "articleId": "v1n03",
+     "seq": 132,
+     "text": "的条件下，割据将要遇到很大的困难。这个经济问题的相当的解决，",
+     "checksum": "2dd038e6d6ac01c8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-133",
+     "articleId": "v1n03",
+     "seq": 133,
+     "text": "实在值得每个党员注意。",
+     "checksum": "52a50567a7f17f89",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-134",
+     "articleId": "v1n03",
+     "seq": 134,
+     "text": "六　军事根据地问题",
+     "checksum": "bea1bc7bf412ea01",
+     "charCount": 9,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-135",
+     "articleId": "v1n03",
+     "seq": 135,
+     "text": "边界党还有一个任务，就是大小五井⒁和九陇两个军事根据地的",
+     "checksum": "eadfdafae7420466",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-136",
+     "articleId": "v1n03",
+     "seq": 136,
+     "text": "巩固。永新、酃县、宁冈、遂川四县交界的大小五井山区，和永新、",
+     "checksum": "988213d25cdbbf2b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-137",
+     "articleId": "v1n03",
+     "seq": 137,
+     "text": "宁冈、茶陵、莲花四县交界的九陇山区，这两个地形优越的地方，特",
+     "checksum": "241fc9d74f5c5431",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-138",
+     "articleId": "v1n03",
+     "seq": 138,
+     "text": "别是既有民众拥护、地形又极险要的大小五井，不但在边界此时是重",
+     "checksum": "c620f64081be935b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-139",
+     "articleId": "v1n03",
+     "seq": 139,
+     "text": "要的军事根据地，就是在湘鄂赣三省暴动发展的将来，亦将仍然是重",
+     "checksum": "ecae31bf86fd7b24",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-140",
+     "articleId": "v1n03",
+     "seq": 140,
+     "text": "要的军事根据地。巩固此根据地的方法：第一，修筑完备的工事；第",
+     "checksum": "00236e2d886b770b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-141",
+     "articleId": "v1n03",
+     "seq": 141,
+     "text": "二，储备充足的粮食；第三，建设较好的红军医院。把这三件事切实",
+     "checksum": "be49acb95452b44c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-142",
+     "articleId": "v1n03",
+     "seq": 142,
+     "text": "做好，是边界党应该努力的。",
+     "checksum": "ccaaaa315cb8f33e",
+     "charCount": 13,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-143",
+     "articleId": "v1n03",
+     "seq": 143,
+     "text": "-----------------",
+     "checksum": "1309755be1f7a30d",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-144",
+     "articleId": "v1n03",
+     "seq": 144,
+     "text": "注　　释",
+     "checksum": "9116dbd44516ce8c",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-145",
+     "articleId": "v1n03",
+     "seq": 145,
+     "text": "〔1〕毛泽东在这里指的是民族资产阶级。毛泽东在一九三五年十",
+     "checksum": "d80ea324daf3bbc0",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-146",
+     "articleId": "v1n03",
+     "seq": 146,
+     "text": "二月作的《论反对日本帝国主义的策略》和一九三九年十二月作的",
+     "checksum": "64242be0743c31a2",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-147",
+     "articleId": "v1n03",
+     "seq": 147,
+     "text": "《中国革命和中国共产党》中，对于买办大资产阶级与民族资产阶级",
+     "checksum": "6fce11c2dedb8203",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-148",
+     "articleId": "v1n03",
+     "seq": 148,
+     "text": "的区别，曾作了详细的说明。",
+     "checksum": "658d962a244b521d",
+     "charCount": 13,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-149",
+     "articleId": "v1n03",
+     "seq": 149,
+     "text": "〔2〕蒋派指蒋介石派。桂派指广西军阀李宗仁、白崇禧派。冯派",
+     "checksum": "358688f5cfc199de",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-150",
+     "articleId": "v1n03",
+     "seq": 150,
+     "text": "指冯玉祥派。阎派指山西军阀阎锡山派。他们曾经联合对张作霖作",
+     "checksum": "ec3c73a1659d5b6b",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-151",
+     "articleId": "v1n03",
+     "seq": 151,
+     "text": "战，于一九二八年六月占领了北京和天津。",
+     "checksum": "d3b9e136d19129cb",
+     "charCount": 19,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-152",
+     "articleId": "v1n03",
+     "seq": 152,
+     "text": "〔3〕张作霖（一八七五——一九二八），辽宁海城人，奉系军阀",
+     "checksum": "e32d5042d2caca35",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-153",
+     "articleId": "v1n03",
+     "seq": 153,
+     "text": "首领。一九二四年吴佩孚在第二次直奉战争中被打败后，张作霖成为",
+     "checksum": "e083bf790df32993",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-154",
+     "articleId": "v1n03",
+     "seq": 154,
+     "text": "北方最有势力的一个军阀。一九二六年他联合吴佩孚入据北京。一九",
+     "checksum": "854f9c5acc4297e1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-155",
+     "articleId": "v1n03",
+     "seq": 155,
+     "text": "二八年六月从北京退回东北，在路上被向来利用他做工具的日本帝国",
+     "checksum": "434ea0a2f026e80f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-156",
+     "articleId": "v1n03",
+     "seq": 156,
+     "text": "主义者所炸死。",
+     "checksum": "55aebb8f863c0e68",
+     "charCount": 7,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-157",
+     "articleId": "v1n03",
+     "seq": 157,
+     "text": "〔4〕一九二八年五月济南惨案发生及蒋介石公开对日妥协之后，",
+     "checksum": "ca5a648d04fafd94",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-158",
+     "articleId": "v1n03",
+     "seq": 158,
+     "text": "曾经追随蒋介石参加一九二七年反革命政变的民族资产阶级，有一部",
+     "checksum": "19e9cf0e929cd439",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-159",
+     "articleId": "v1n03",
+     "seq": 159,
+     "text": "分因为自己的利益，开始逐步形成蒋介石政权的在野反对派，他们既",
+     "checksum": "a8eea95b44fbcc62",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-160",
+     "articleId": "v1n03",
+     "seq": 160,
+     "text": "不满意蒋介石政权的大地主、大资产阶级的反革命统治，又反对无产",
+     "checksum": "0e4b0cd80a622389",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-161",
+     "articleId": "v1n03",
+     "seq": 161,
+     "text": "阶级领导的人民民主革命。他们发动了一个改良主义运动，幻想在革",
+     "checksum": "a27bfdaa1bafea00",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-162",
+     "articleId": "v1n03",
+     "seq": 162,
+     "text": "命和反革命两条道路之外，另找一条有利于中国资本主义发展的道",
+     "checksum": "dd02c18a73d1167b",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-163",
+     "articleId": "v1n03",
+     "seq": 163,
+     "text": "路。当时，同蒋介石争权夺利的汪精卫、陈公博等政客，曾在这个运",
+     "checksum": "d38f8b0474d308a1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-164",
+     "articleId": "v1n03",
+     "seq": 164,
+     "text": "动中进行投机活动，形成了国民党中的所谓“改组派”。",
+     "checksum": "2153a7ccd7baa16b",
+     "charCount": 25,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-165",
+     "articleId": "v1n03",
+     "seq": 165,
+     "text": "〔5〕一九二八年蒋介石在英美帝国主义支持下，北上攻打张作",
+     "checksum": "2a507c5e3f641800",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-166",
+     "articleId": "v1n03",
+     "seq": 166,
+     "text": "霖。日本帝国主义为阻止英美势力向北方发展，出兵山东，侵占济",
+     "checksum": "25d375ac83d53f18",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-167",
+     "articleId": "v1n03",
+     "seq": 167,
+     "text": "南、青岛和胶济路沿线，截断津浦铁路。五月三日，日本侵略军在济",
+     "checksum": "4f24548ad2fdcf7a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-168",
+     "articleId": "v1n03",
+     "seq": 168,
+     "text": "南进行大屠杀，在这前后十几天内，共惨杀中国军民数千人。这次屠",
+     "checksum": "0d28ba5bb9e464d9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-169",
+     "articleId": "v1n03",
+     "seq": 169,
+     "text": "杀事件被称为“济南惨案”。",
+     "checksum": "6b1853cf307c55ad",
+     "charCount": 13,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-170",
+     "articleId": "v1n03",
+     "seq": 170,
+     "text": "〔6〕中国红色政权在组织形式上，和苏联的苏维埃政权是相同",
+     "checksum": "3a38dcc94eee0da2",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-171",
+     "articleId": "v1n03",
+     "seq": 171,
+     "text": "的。苏维埃即代表会议，是俄国工人阶级在一九○五年革命时创造的",
+     "checksum": "34358985d136df57",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-172",
+     "articleId": "v1n03",
+     "seq": 172,
+     "text": "一种政治制度。列宁根据马克思主义的原理，从巴黎公社和一九○五",
+     "checksum": "f4907e1d7b676c66",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-173",
+     "articleId": "v1n03",
+     "seq": 173,
+     "text": "年俄国革命的经验中，得出这样的结论：苏维埃是工农革命政府的最",
+     "checksum": "d615f2d68527565f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-174",
+     "articleId": "v1n03",
+     "seq": 174,
+     "text": "好的组织形式，是从资本主义到社会主义的过渡时期中最适当的国家",
+     "checksum": "ecef79d545a01ca5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-175",
+     "articleId": "v1n03",
+     "seq": 175,
+     "text": "政权的组织形式。一九一七年俄国十月社会主义革命，在布尔什维克",
+     "checksum": "60ac14326a85af05",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-176",
+     "articleId": "v1n03",
+     "seq": 176,
+     "text": "党的领导下，第一次在世界上建立了无产阶级专政的社会主义的苏维",
+     "checksum": "94c5f097ed908648",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-177",
+     "articleId": "v1n03",
+     "seq": 177,
+     "text": "埃共和国。在中国，一九二七年革命失败以后，中国共产党以毛泽东",
+     "checksum": "b5db178aa8807afa",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-178",
+     "articleId": "v1n03",
+     "seq": 178,
+     "text": "为代表所领导的各地人民革命起义，即以代表会议为工农民主政权的",
+     "checksum": "f778513577a25b8a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-179",
+     "articleId": "v1n03",
+     "seq": 179,
+     "text": "组织形式。但是，这时的中国革命仍然处于民主革命阶段，这种政权",
+     "checksum": "1f14a8429e1eac93",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-180",
+     "articleId": "v1n03",
+     "seq": 180,
+     "text": "的性质，是无产阶级领导的反帝反封建的工农民主专政，同苏联的无",
+     "checksum": "34d0c268e2fa1ef8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-181",
+     "articleId": "v1n03",
+     "seq": 181,
+     "text": "产阶级专政的政权性质是有区别的。",
+     "checksum": "7ee10c48a307e782",
+     "charCount": 16,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-182",
+     "articleId": "v1n03",
+     "seq": 182,
+     "text": "〔7〕在第二次世界大战期间，原来属于英、美、法、荷各帝国主",
+     "checksum": "2594ab2e7046a1c0",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-183",
+     "articleId": "v1n03",
+     "seq": 183,
+     "text": "义统治下的东方许多殖民地，被日本帝国主义者所占领，那里的工",
+     "checksum": "ff97124ed52e24bb",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-184",
+     "articleId": "v1n03",
+     "seq": 184,
+     "text": "人、农民、城市小资产阶级群众及民族资产阶级分子在共产党领导",
+     "checksum": "90e15219577f9e9e",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-185",
+     "articleId": "v1n03",
+     "seq": 185,
+     "text": "下，利用英、美、法、荷各帝国主义与日本帝国主义的矛盾，组织了",
+     "checksum": "a6bebac3f6a98355",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-186",
+     "articleId": "v1n03",
+     "seq": 186,
+     "text": "反法西斯侵略的广泛统一战线，建立了抗日根据地，进行了艰苦的抗",
+     "checksum": "74c58731f76a2c33",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-187",
+     "articleId": "v1n03",
+     "seq": 187,
+     "text": "日游击战争，已开始改变了第二次世界大战以前的政治情况。第二次",
+     "checksum": "4cd3c5bb44820009",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-188",
+     "articleId": "v1n03",
+     "seq": 188,
+     "text": "世界大战结束，日本帝国主义被逐出，英、美、法、荷各帝国主义企",
+     "checksum": "e658cf476283939a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-189",
+     "articleId": "v1n03",
+     "seq": 189,
+     "text": "图继续原来的殖民地统治，但各殖民地人民已在抗日战争中锻炼出了",
+     "checksum": "9cdf33ea1dc5d44b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-190",
+     "articleId": "v1n03",
+     "seq": 190,
+     "text": "一种相当有力的武装力量，他们不愿意照旧生活下去；而由于苏联的",
+     "checksum": "fa2cc6d8cdf8aac1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-191",
+     "articleId": "v1n03",
+     "seq": 191,
+     "text": "强大，由于除美国以外的一切帝国主义国家在战争中或被推翻或被削",
+     "checksum": "dd617259bfe15dde",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-192",
+     "articleId": "v1n03",
+     "seq": 192,
+     "text": "弱，更由于中国革命的胜利使帝国主义阵线在中国被突破，因而使整",
+     "checksum": "ecfcf010be59b468",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-193",
+     "articleId": "v1n03",
+     "seq": 193,
+     "text": "个帝国主义制度已在世界上发生很大的动摇。这样，就使东方各殖民",
+     "checksum": "234f91d98a9224da",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-194",
+     "articleId": "v1n03",
+     "seq": 194,
+     "text": "地至少是某些殖民地的人民也和中国差不多一样地有可能长期坚持大",
+     "checksum": "c2ddef6a01114e15",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-195",
+     "articleId": "v1n03",
+     "seq": 195,
+     "text": "小不一的革命根据地和革命政权，有可能长期坚持由乡村包围城市的",
+     "checksum": "da0c8772cdb19655",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-196",
+     "articleId": "v1n03",
+     "seq": 196,
+     "text": "革命战争，并有可能由此逐步推进而取得城市、取得该殖民地全国范",
+     "checksum": "245aaca8cd12c727",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-197",
+     "articleId": "v1n03",
+     "seq": 197,
+     "text": "围内的胜利。根据这种新的情况，毛泽东于一九二八年对于在帝国主",
+     "checksum": "826a74a700a29aa2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-198",
+     "articleId": "v1n03",
+     "seq": 198,
+     "text": "义直接统治的殖民地条件下这一个问题上所作的观察，已有了改变。",
+     "checksum": "854d86171894ad81",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-199",
+     "articleId": "v1n03",
+     "seq": 199,
+     "text": "〔8〕这是指一九二七年蒋介石、汪精卫相继叛变革命以后，各地",
+     "checksum": "abe3d62b2ed2f109",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-200",
+     "articleId": "v1n03",
+     "seq": 200,
+     "text": "人民在共产党领导下，最初爆发起来的对反革命势力的反击行动。在",
+     "checksum": "bab3428af3b0e5bf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-201",
+     "articleId": "v1n03",
+     "seq": 201,
+     "text": "广州，一九二七年十二月十一日，工人和革命士兵在一部分市郊农民",
+     "checksum": "073c9d111b535107",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-202",
+     "articleId": "v1n03",
+     "seq": 202,
+     "text": "的配合下联合起义，建立过为时三天的人民政权。广东省东部沿海的",
+     "checksum": "86e5a5ee109e32b1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-203",
+     "articleId": "v1n03",
+     "seq": 203,
+     "text": "海丰、陆丰等地的农民，在一九二七年五月和九月举行起义，都曾经",
+     "checksum": "eb3a921d31a9f1e5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-204",
+     "articleId": "v1n03",
+     "seq": 204,
+     "text": "建立过革命政权；在这年十月举行的起义中建立的革命政权，一直坚",
+     "checksum": "da4c8e141cb27a55",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-205",
+     "articleId": "v1n03",
+     "seq": 205,
+     "text": "持到一九二八年三月。在湖南省东部，一九二七年九月，起义的农民",
+     "checksum": "a488033b0c4cfb27",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-206",
+     "articleId": "v1n03",
+     "seq": 206,
+     "text": "曾经占据过浏阳、平江、醴陵、株洲一带，醴陵农民并于一九二八年",
+     "checksum": "dade9c3e9431952b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-207",
+     "articleId": "v1n03",
+     "seq": 207,
+     "text": "二三月间建立过农村革命政权。湖北省东北部的黄安（今红安）、麻",
+     "checksum": "8bdc0c2187787549",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-208",
+     "articleId": "v1n03",
+     "seq": 208,
+     "text": "城等地的起义农民，曾经在一九二七年十一月占领黄安县城，建立革",
+     "checksum": "9bb0f727571ec07c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-209",
+     "articleId": "v1n03",
+     "seq": 209,
+     "text": "命政权二十多天。在湖南省南部，一九二八年一月，宜章、郴县、耒",
+     "checksum": "7a79f1af08a35fb1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-210",
+     "articleId": "v1n03",
+     "seq": 210,
+     "text": "阳、永兴、资兴等县的起义农民，建立过革命政权达三月之久。关于",
+     "checksum": "e210232e88021248",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-211",
+     "articleId": "v1n03",
+     "seq": 211,
+     "text": "湘赣边界的革命斗争，参见本卷《井冈山的斗争》。",
+     "checksum": "f08e2e5a195e590b",
+     "charCount": 23,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-212",
+     "articleId": "v1n03",
+     "seq": 212,
+     "text": "〔9〕 赤卫队是革命根据地中群众的武装组织，不脱离生产。",
+     "checksum": "f22a14a125a93df2",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-213",
+     "articleId": "v1n03",
+     "seq": 213,
+     "text": "〔10〕 参见本卷《湖南农民运动考察报告》注〔16〕。",
+     "checksum": "87e521c01f783d67",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-214",
+     "articleId": "v1n03",
+     "seq": 214,
+     "text": "〔11〕罗霄山脉是江西、湖南两省边界的大山脉，井冈山位于罗",
+     "checksum": "ec4149283c3f7a42",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-215",
+     "articleId": "v1n03",
+     "seq": 215,
+     "text": "霄山脉的中段。",
+     "checksum": "bfeb249066659c5c",
+     "charCount": 7,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-216",
+     "articleId": "v1n03",
+     "seq": 216,
+     "text": "〔12〕一九二八年四月，毛泽东率领的军队和朱德率领的军队在",
+     "checksum": "11468b6dfe851ef2",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-217",
+     "articleId": "v1n03",
+     "seq": 217,
+     "text": "井冈山会师后，合编为工农革命军第四军（六月改称红军第四军）。",
+     "checksum": "f75afa970c997c80",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-218",
+     "articleId": "v1n03",
+     "seq": 218,
+     "text": "四五月间，第四军在遂川的五斗江、永新的草市坳和永新城，先后打",
+     "checksum": "eba3039a45708502",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-219",
+     "articleId": "v1n03",
+     "seq": 219,
+     "text": "败江西国民党军队的第二、三次“进剿”。六月二十三日，红四军在",
+     "checksum": "94605189f967d876",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-220",
+     "articleId": "v1n03",
+     "seq": 220,
+     "text": "宁冈、永新交界的七溪岭和龙源口地区，打败江西敌军第四次“进",
+     "checksum": "ebb237f53e05ad97",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-221",
+     "articleId": "v1n03",
+     "seq": 221,
+     "text": "剿”。江西的国民党军队在遭到多次失败以后，又联合湖南的国民党",
+     "checksum": "9d31a11d8ce8d703",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-222",
+     "articleId": "v1n03",
+     "seq": 222,
+     "text": "反动派，调集四个师的兵力，对井冈山发动第一次“会剿”。七月",
+     "checksum": "8bebfe0128ad3640",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-223",
+     "articleId": "v1n03",
+     "seq": 223,
+     "text": "间，“会剿”的敌军先后侵占宁冈、永新、莲花等县城。红四军以两",
+     "checksum": "b2e5b830a5c2455c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-224",
+     "articleId": "v1n03",
+     "seq": 224,
+     "text": "个团的兵力出击湖南敌军后方的酃县，以一个团的兵力对付江西敌",
+     "checksum": "171177be18584289",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-225",
+     "articleId": "v1n03",
+     "seq": 225,
+     "text": "军，同时发动广大群众到处包围袭击敌军。结果，湖南敌军仓皇退守",
+     "checksum": "9e13f45286ab43a0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-226",
+     "articleId": "v1n03",
+     "seq": 226,
+     "text": "茶陵；江西敌军也被围困于永新地区。",
+     "checksum": "a1a56773db733a98",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-227",
+     "articleId": "v1n03",
+     "seq": 227,
+     "text": "〔13〕毛泽东这里所说的小资产阶级，是指农民以外的手工业",
+     "checksum": "baf533d07675308c",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-228",
+     "articleId": "v1n03",
+     "seq": 228,
+     "text": "者、小商人、各种自由职业者和小资产阶级出身的知识分子。中国的",
+     "checksum": "72b0e9a3b0d74ada",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-229",
+     "articleId": "v1n03",
+     "seq": 229,
+     "text": "这类社会成分主要在城镇，但在乡村中也占有相当数量。参见本卷",
+     "checksum": "a47e974bdb498db5",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-230",
+     "articleId": "v1n03",
+     "seq": 230,
+     "text": "《中国社会各阶级的分析》和本书第二卷《中国革命和中国共产",
+     "checksum": "28ac7671c3bb11c3",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-231",
+     "articleId": "v1n03",
+     "seq": 231,
+     "text": "党》。",
+     "checksum": "f4d3f7c2409438fe",
+     "charCount": 3,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-232",
+     "articleId": "v1n03",
+     "seq": 232,
+     "text": "〔14〕 大小五井山区就是指介于江西西部的永新、宁冈、遂川和",
+     "checksum": "a864f5fd24fccb9f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-233",
+     "articleId": "v1n03",
+     "seq": 233,
+     "text": "湖南东部的酃县四县之间的井冈山，井冈山上有大井、小井、上井、",
+     "checksum": "4942b8e7adeaa3d0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n03-234",
+     "articleId": "v1n03",
+     "seq": 234,
+     "text": "中井、下井等地。",
+     "checksum": "4214baf819a83b03",
+     "charCount": 8,
+     "isHeadNote": false
+    }
+   ],
+   "sections": [
+    {
+     "paragraphId": "pv1n03-005",
+     "label": "一　国内的政治状况"
+    },
+    {
+     "paragraphId": "pv1n03-033",
+     "label": "二　中国红色政权⑹发生和存在的原因"
+    },
+    {
+     "paragraphId": "pv1n03-081",
+     "label": "三　湘赣边界的割据和八月的失败"
+    },
+    {
+     "paragraphId": "pv1n03-110",
+     "label": "四　湘赣边界的割据局面在湘鄂赣三省的地位"
+    },
+    {
+     "paragraphId": "pv1n03-121",
+     "label": "五　经济问题"
+    },
+    {
+     "paragraphId": "pv1n03-134",
+     "label": "六　军事根据地问题"
+    }
+   ]
+  },
+  "v1n04": {
+   "articleId": "v1n04",
+   "title": "井冈山的斗争",
+   "volume": 1,
+   "date": {
+    "raw": "（一九二八年十一月二十五日）",
+    "y": 1928,
+    "m": 11,
+    "d": 25,
+    "precision": "day"
+   },
+   "textChecksum": "d6444a85c0efa889",
+   "nParagraphs": 645,
+   "nChars": 17928,
+   "paragraphs": [
+    {
+     "id": "pv1n04-001",
+     "articleId": "v1n04",
+     "seq": 1,
+     "text": "井冈山的斗争",
+     "checksum": "a5585b732a029d5a",
+     "charCount": 6,
+     "isHeadNote": true
+    },
+    {
+     "id": "pv1n04-002",
+     "articleId": "v1n04",
+     "seq": 2,
+     "text": "（一九二八年十一月二十五日）",
+     "checksum": "3f5a7e1980027a6f",
+     "charCount": 14,
+     "isHeadNote": true
+    },
+    {
+     "id": "pv1n04-003",
+     "articleId": "v1n04",
+     "seq": 3,
+     "text": "这是毛泽东写给中共中央的报告。",
+     "checksum": "c86a038ef33ee328",
+     "charCount": 15,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-004",
+     "articleId": "v1n04",
+     "seq": 4,
+     "text": "湘赣边界的割据和八月失败",
+     "checksum": "e18f761e36ef0240",
+     "charCount": 12,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-005",
+     "articleId": "v1n04",
+     "seq": 5,
+     "text": "一国之内，在四围白色政权的包围中间，产生一小块或若干小块",
+     "checksum": "53a4d44cce89657e",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-006",
+     "articleId": "v1n04",
+     "seq": 6,
+     "text": "的红色政权区域，在目前的世界上只有中国有这种事。我们分析它发",
+     "checksum": "f4a5baccf8861846",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-007",
+     "articleId": "v1n04",
+     "seq": 7,
+     "text": "生的原因之一，在于中国有买办豪绅阶级间的不断的分裂和战争。只",
+     "checksum": "03fb694f212efad8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-008",
+     "articleId": "v1n04",
+     "seq": 8,
+     "text": "要买办豪绅阶级间的分裂和战争是继续的，则工农武装割据的存在和",
+     "checksum": "6b5d2f5d55365d2f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-009",
+     "articleId": "v1n04",
+     "seq": 9,
+     "text": "发展也将是能够继续的。此外，工农武装割据的存在和发展，还需要",
+     "checksum": "b9ec8e1df031a47a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-010",
+     "articleId": "v1n04",
+     "seq": 10,
+     "text": "具备下列的条件：（1）有很好的群众；（2）有很好的党；（3）有相",
+     "checksum": "f2a8f2c7702e0302",
+     "charCount": 32,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-011",
+     "articleId": "v1n04",
+     "seq": 11,
+     "text": "当力量的红军；（4）有便利于作战的地势；（5）有足够给养的经济",
+     "checksum": "5d7a601498509b74",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-012",
+     "articleId": "v1n04",
+     "seq": 12,
+     "text": "力。",
+     "checksum": "81595eb8281c0137",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-013",
+     "articleId": "v1n04",
+     "seq": 13,
+     "text": "在统治阶级政权的暂时稳定的时期和破裂的时期，割据地区对四",
+     "checksum": "8f0c98eb8b4508b2",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-014",
+     "articleId": "v1n04",
+     "seq": 14,
+     "text": "围统治阶级必须采取不同的战略。在统治阶级内部发生破裂时期，例",
+     "checksum": "52b03c846096c381",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-015",
+     "articleId": "v1n04",
+     "seq": 15,
+     "text": "如两湖在李宗仁唐生智战争时期⑴，广东在张发奎李济深战争时期",
+     "checksum": "d4aba107edb9d38e",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-016",
+     "articleId": "v1n04",
+     "seq": 16,
+     "text": "⑵，我们的战略可以比较地冒进，用军事发展割据的地方可以比较地",
+     "checksum": "ac482e575f527e58",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-017",
+     "articleId": "v1n04",
+     "seq": 17,
+     "text": "广大。但是仍然需要注意建立中心区域的坚实基础，以备白色恐怖到",
+     "checksum": "c5ba42a7f4b613ba",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-018",
+     "articleId": "v1n04",
+     "seq": 18,
+     "text": "来时有所恃而不恐。若在统治阶级政权比较稳定的时期，例如今年四",
+     "checksum": "d7f0e833d0dac628",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-019",
+     "articleId": "v1n04",
+     "seq": 19,
+     "text": "月以后的南方各省，则我们的战略必须是逐渐地推进的。这时在军事",
+     "checksum": "05fac4982a6be95a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-020",
+     "articleId": "v1n04",
+     "seq": 20,
+     "text": "上最忌分兵冒进，在地方工作方面（分配土地，建立政权，发展党，",
+     "checksum": "bcef0ba1defba83d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-021",
+     "articleId": "v1n04",
+     "seq": 21,
+     "text": "组织地方武装）最忌把人力分得四散，而不注意建立中心区域的坚实",
+     "checksum": "1930086b338b01dd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-022",
+     "articleId": "v1n04",
+     "seq": 22,
+     "text": "基础。各地许多小块红色区域的失败，不是客观上条件不具备，就是",
+     "checksum": "e57eb6b4593d92c6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-023",
+     "articleId": "v1n04",
+     "seq": 23,
+     "text": "主观上策略有错误。至于策略之所以错误，全在未曾把统治阶级政权",
+     "checksum": "af712bc9213595ff",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-024",
+     "articleId": "v1n04",
+     "seq": 24,
+     "text": "暂时稳定的时期和破裂的时期这两个不同的时期分别清楚。有些同志",
+     "checksum": "93198188badba644",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-025",
+     "articleId": "v1n04",
+     "seq": 25,
+     "text": "在统治阶级政权暂时稳定的时期，也主张分兵冒进，甚至主张只用赤",
+     "checksum": "66a5e56f05074b45",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-026",
+     "articleId": "v1n04",
+     "seq": 26,
+     "text": "卫队⑶保卫大块地方，好像完全不知道敌人方面除了挨户团⑷之外还",
+     "checksum": "3f76f839c01c0dad",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-027",
+     "articleId": "v1n04",
+     "seq": 27,
+     "text": "有正式军队集中来打的一回事。在地方工作方面，则完全不注意建立",
+     "checksum": "89bb972f091aa9ae",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-028",
+     "articleId": "v1n04",
+     "seq": 28,
+     "text": "中心区域的坚实的基础，不顾主观力量的可能，只图无限量的推广。",
+     "checksum": "c96dbbd0bb4b702f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-029",
+     "articleId": "v1n04",
+     "seq": 29,
+     "text": "如果遇到什么人在军事方面主张采取逐步推广的政策，在地方工作方",
+     "checksum": "f57e270ce76c7e04",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-030",
+     "articleId": "v1n04",
+     "seq": 30,
+     "text": "面主张集中力量建立中心区域的坚实基础，以求自立于不败之地，则",
+     "checksum": "21848fc2b4e79b02",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-031",
+     "articleId": "v1n04",
+     "seq": 31,
+     "text": "谥之曰“保守主义”。他们的这种错误意见，就是今年八月湘赣边界",
+     "checksum": "8934991536195366",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-032",
+     "articleId": "v1n04",
+     "seq": 32,
+     "text": "失败以及同时红军第四军在湘南失败的根本原因。",
+     "checksum": "90c1b41d900f7d5b",
+     "charCount": 22,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-033",
+     "articleId": "v1n04",
+     "seq": 33,
+     "text": "湘赣边界的工作，从去年十月做起。开头，各县完全没有了党的",
+     "checksum": "ec5ca718779501ce",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-034",
+     "articleId": "v1n04",
+     "seq": 34,
+     "text": "组织，地方武装只袁文才、王佐各六十枝坏枪在井冈山附近，永新、",
+     "checksum": "18da657c6881ffdc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-035",
+     "articleId": "v1n04",
+     "seq": 35,
+     "text": "莲花、茶陵、酃县四县农民自卫军枪枝全数缴给了豪绅阶级，群众革",
+     "checksum": "fe4508cda974cfb5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-036",
+     "articleId": "v1n04",
+     "seq": 36,
+     "text": "命情绪已经被压下去了。到今年二月，宁冈、永新、茶陵、遂川都有",
+     "checksum": "cf8bf5155a7d08cd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-037",
+     "articleId": "v1n04",
+     "seq": 37,
+     "text": "了党的县委，酃县有了特别区委，莲花亦开始建立了党的组织，和万",
+     "checksum": "ed702651cb3ab47f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-038",
+     "articleId": "v1n04",
+     "seq": 38,
+     "text": "安县委发生了关系。地方武装，除酃县外，各县都有了少数。在宁",
+     "checksum": "e4750d8f6f72e626",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-039",
+     "articleId": "v1n04",
+     "seq": 39,
+     "text": "冈、茶陵、遂川、永新，特别是遂川、永新二县，进行了很多次打倒",
+     "checksum": "d21370e80769a090",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-040",
+     "articleId": "v1n04",
+     "seq": 40,
+     "text": "豪绅、发动群众的游击暴动，成绩都还好。这个时期，土地革命还没",
+     "checksum": "5f973c6aec3c111f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-041",
+     "articleId": "v1n04",
+     "seq": 41,
+     "text": "有深入。政权机关称为工农兵政府。军中组织了士兵委员会⑸。部队",
+     "checksum": "8e83d1f46b2d4f24",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-042",
+     "articleId": "v1n04",
+     "seq": 42,
+     "text": "分开行动时，则组织行动委员会指挥之。这时党的高级指导机关，是",
+     "checksum": "edc7c5785e6b47cc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-043",
+     "articleId": "v1n04",
+     "seq": 43,
+     "text": "秋收起义时湖南省委任命的前敌委员会（毛泽东任书记）。三月上",
+     "checksum": "b058e7d2a0108600",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-044",
+     "articleId": "v1n04",
+     "seq": 44,
+     "text": "旬，前委因湘南特委的要求而取消，改组为师委（何挺颖为书记），",
+     "checksum": "ce09aae7fc6c16af",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-045",
+     "articleId": "v1n04",
+     "seq": 45,
+     "text": "变成单管军中党的机关，对地方党不能过问。同时毛部又因湘南特委",
+     "checksum": "0659a1d2396d67bb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-046",
+     "articleId": "v1n04",
+     "seq": 46,
+     "text": "的要求调往湘南，遂使边界被敌占领者一个多月。三月底湘南失败，",
+     "checksum": "0b9a0e52ebb881ba",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-047",
+     "articleId": "v1n04",
+     "seq": 47,
+     "text": "四月朱、毛两部及湘南农军退到宁冈，再开始边界的割据。",
+     "checksum": "072d354f1b379fd2",
+     "charCount": 26,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-048",
+     "articleId": "v1n04",
+     "seq": 48,
+     "text": "四月以后，湘赣边界的割据，正值南方统治势力暂时稳定的时",
+     "checksum": "f017d3b198d2cee9",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-049",
+     "articleId": "v1n04",
+     "seq": 49,
+     "text": "候，湘赣两省派来“进剿”的反动军队，至少有八九个团，多的时候",
+     "checksum": "613cc259b1d25cec",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-050",
+     "articleId": "v1n04",
+     "seq": 50,
+     "text": "到过十八个团。然而我们以不足四个团的兵力，和敌人斗争了四个月",
+     "checksum": "2b0837d72d8b9983",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-051",
+     "articleId": "v1n04",
+     "seq": 51,
+     "text": "之久，使割据地区一天一天扩大，土地革命一天一天深入，民众政权",
+     "checksum": "6b04730a5e2d7327",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-052",
+     "articleId": "v1n04",
+     "seq": 52,
+     "text": "一天一天推广，红军和赤卫队一天一天扩大，原因就在于边界党（地",
+     "checksum": "77ecd058a213d96a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-053",
+     "articleId": "v1n04",
+     "seq": 53,
+     "text": "方的党和军队的党）的政策是正确的。当时边界特委（毛泽东为书",
+     "checksum": "201ac53bed2bc2c7",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-054",
+     "articleId": "v1n04",
+     "seq": 54,
+     "text": "记）和军委（陈毅为书记）的政策是：坚决地和敌人作斗争，造成罗",
+     "checksum": "fc7dd0546480d3e8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-055",
+     "articleId": "v1n04",
+     "seq": 55,
+     "text": "霄山脉中段政权，反对逃跑主义；深入割据地区的土地革命；军队的",
+     "checksum": "ac32c800261127ea",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-056",
+     "articleId": "v1n04",
+     "seq": 56,
+     "text": "党帮助地方党的发展，军队的武装帮助地方武装的发展；对统治势力",
+     "checksum": "ef33a2dbcd542268",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-057",
+     "articleId": "v1n04",
+     "seq": 57,
+     "text": "比较强大的湖南取守势，对统治势力比较薄弱的江西取攻势；用大力",
+     "checksum": "fec632c18c9fd884",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-058",
+     "articleId": "v1n04",
+     "seq": 58,
+     "text": "经营永新，创造群众的割据，布置长期斗争；集中红军相机迎击当前",
+     "checksum": "60ece5e3fcd1d785",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-059",
+     "articleId": "v1n04",
+     "seq": 59,
+     "text": "之敌，反对分兵，避免被敌人各个击破；割据地区的扩大采取波浪式",
+     "checksum": "edbb99d111ab9bef",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-060",
+     "articleId": "v1n04",
+     "seq": 60,
+     "text": "的推进政策，反对冒进政策。因为这些策略的适当，加以边界地形的",
+     "checksum": "90a77309999f5c71",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-061",
+     "articleId": "v1n04",
+     "seq": 61,
+     "text": "利于斗争，湘赣两省进攻军队的不尽一致，于是才有四月至七月四个",
+     "checksum": "4ebb68484a4e76ff",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-062",
+     "articleId": "v1n04",
+     "seq": 62,
+     "text": "月的各次军事胜利⑹和群众割据的发展。虽以数倍于我之敌，不但不",
+     "checksum": "ca188f32c8998b9d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-063",
+     "articleId": "v1n04",
+     "seq": 63,
+     "text": "能破坏此割据，且亦不能阻止此割据的发展。此割据对湘赣两省的影",
+     "checksum": "59d4d411fca00ae9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-064",
+     "articleId": "v1n04",
+     "seq": 64,
+     "text": "响，则有日益扩大之势。八月失败，完全在于一部分同志不明了当时",
+     "checksum": "f24f0547e328a87e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-065",
+     "articleId": "v1n04",
+     "seq": 65,
+     "text": "正是统治阶级暂时稳定时期，反而采取在统治阶级破裂时期的政策，",
+     "checksum": "b4182b9c149f57fd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-066",
+     "articleId": "v1n04",
+     "seq": 66,
+     "text": "分兵向湘南冒进，致使边界和湘南同归失败。湖南省委代表杜修经和",
+     "checksum": "f3f40ee814d8c724",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-067",
+     "articleId": "v1n04",
+     "seq": 67,
+     "text": "省委派充边界特委书记的杨开明，乘力持异议的毛泽东、宛希先诸人",
+     "checksum": "d28af408fd84ce5b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-068",
+     "articleId": "v1n04",
+     "seq": 68,
+     "text": "远在永新的时候，不察当时的环境，不顾军委、特委、永新县委联席",
+     "checksum": "602841be30bf2a16",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-069",
+     "articleId": "v1n04",
+     "seq": 69,
+     "text": "会议不同意湖南省委主张的决议，只知形式地执行湖南省委向湘南去",
+     "checksum": "6acca0046baac723",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-070",
+     "articleId": "v1n04",
+     "seq": 70,
+     "text": "的命令，附和红军第二十九团（成分是宜章农民）逃避斗争欲回家乡",
+     "checksum": "124d3abfc9bf83ef",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-071",
+     "articleId": "v1n04",
+     "seq": 71,
+     "text": "的情绪，因而招致边界和湘南两方面的失败。",
+     "checksum": "c887785859dfcde2",
+     "charCount": 20,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-072",
+     "articleId": "v1n04",
+     "seq": 72,
+     "text": "原来七月中旬，湖南敌人第八军吴尚侵入宁冈，再进永新，求战",
+     "checksum": "584716e29ee9cc8a",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-073",
+     "articleId": "v1n04",
+     "seq": 73,
+     "text": "不得（我军从间道出击不值），畏我群众，仓卒经莲花退回茶陵。这",
+     "checksum": "8163ae3db51085b4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-074",
+     "articleId": "v1n04",
+     "seq": 74,
+     "text": "时红军大队正由宁冈进攻酃县、茶陵，并在酃县变计折赴湘南，而江",
+     "checksum": "6eaeab9638daed77",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-075",
+     "articleId": "v1n04",
+     "seq": 75,
+     "text": "西敌人第三军王均、金汉鼎部五个团，第六军胡文斗部六个团，又协",
+     "checksum": "d65cf207e126c11f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-076",
+     "articleId": "v1n04",
+     "seq": 76,
+     "text": "力进攻永新。此时我军只有一个团在永新，在广大群众的掩护之下，",
+     "checksum": "8e39162b65c2bcf4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-077",
+     "articleId": "v1n04",
+     "seq": 77,
+     "text": "用四面游击的方式，将此十一团敌军困在永新县城附近三十里内至二",
+     "checksum": "17d4a487d4ef3816",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-078",
+     "articleId": "v1n04",
+     "seq": 78,
+     "text": "十五天之久。最后因敌人猛攻，才失去永新，随后又失去莲花、宁",
+     "checksum": "5f86afff18978ead",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-079",
+     "articleId": "v1n04",
+     "seq": 79,
+     "text": "冈。这时江西敌人忽然发生内讧，胡文斗的第六军仓皇退去，随即和",
+     "checksum": "a5f693f562cbee12",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-080",
+     "articleId": "v1n04",
+     "seq": 80,
+     "text": "王均的第三军战于樟树。留下的赣军五个团，亦仓皇退至永新城内。",
+     "checksum": "9f7bc29d5e5eec03",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-081",
+     "articleId": "v1n04",
+     "seq": 81,
+     "text": "设我大队不往湘南，击溃此敌，使割据地区推广至吉安、安福、萍",
+     "checksum": "57ec868e7957b16b",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-082",
+     "articleId": "v1n04",
+     "seq": 82,
+     "text": "乡，和平江、浏阳衔接起来，是完全有可能的。大队已不在，我一团",
+     "checksum": "0b6460f16d3b39a2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-083",
+     "articleId": "v1n04",
+     "seq": 83,
+     "text": "兵复疲惫不堪，乃决留一部分会同袁、王两部守井冈山，而由我率兵",
+     "checksum": "e34b9cc26f3bf9f4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-084",
+     "articleId": "v1n04",
+     "seq": 84,
+     "text": "一部往桂东方向迎还大队。此时大队已由湘南退向桂东，八月二十三",
+     "checksum": "b24880d831a7105b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-085",
+     "articleId": "v1n04",
+     "seq": 85,
+     "text": "日我们在桂东得到会合。",
+     "checksum": "03d15aeb85e7cfbb",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-086",
+     "articleId": "v1n04",
+     "seq": 86,
+     "text": "红军大队七月中刚到酃县时，第二十九团官兵即因政治动摇，欲",
+     "checksum": "242586c4e0937ace",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-087",
+     "articleId": "v1n04",
+     "seq": 87,
+     "text": "回湘南家乡，不受约束；第二十八团反对往湘南，欲往赣南，但也不",
+     "checksum": "1d75945cf8b05913",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-088",
+     "articleId": "v1n04",
+     "seq": 88,
+     "text": "愿回永新。杜修经导扬第二十九团的错误意见，军委亦未能加以阻",
+     "checksum": "dd9565f92910e6fe",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-089",
+     "articleId": "v1n04",
+     "seq": 89,
+     "text": "止，大队遂于七月十七日由酃县出发，向郴州前进。七月二十四日与",
+     "checksum": "e3cd0b8dbec1441a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-090",
+     "articleId": "v1n04",
+     "seq": 90,
+     "text": "敌范石生战于郴州，先胜后败，撤出战斗。第二十九团随即自由行",
+     "checksum": "cf924c652a16ca47",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-091",
+     "articleId": "v1n04",
+     "seq": 91,
+     "text": "动，跑向宜章家乡，结果一部在乐昌被土匪胡凤章消灭，一部散在郴",
+     "checksum": "eccb417476455a08",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-092",
+     "articleId": "v1n04",
+     "seq": 92,
+     "text": "宜各地，不知所终，当日收集的不过百人。幸主力第二十八团损失不",
+     "checksum": "7e804da609f25812",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-093",
+     "articleId": "v1n04",
+     "seq": 93,
+     "text": "大，于八月十八日占领桂东。二十三日，会合从井冈山来的部队，议",
+     "checksum": "a8a612331bda9a69",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-094",
+     "articleId": "v1n04",
+     "seq": 94,
+     "text": "决经崇义、上犹重回井冈山。当到崇义时，营长袁崇全率一步兵连一",
+     "checksum": "e0eb9cca726ef19b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-095",
+     "articleId": "v1n04",
+     "seq": 95,
+     "text": "炮兵连叛变，虽然追回了这两个连，但牺牲了团长王尔琢。八月三十",
+     "checksum": "452492c6504f0de0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-096",
+     "articleId": "v1n04",
+     "seq": 96,
+     "text": "日敌湘赣两军各一部乘我军欲归未归之际，攻击井冈山。我守军不足",
+     "checksum": "9d85c5aecea25661",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-097",
+     "articleId": "v1n04",
+     "seq": 97,
+     "text": "一营，凭险抵抗，将敌击溃，保存了这个根据地。",
+     "checksum": "61a5dc84f72312f6",
+     "charCount": 22,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-098",
+     "articleId": "v1n04",
+     "seq": 98,
+     "text": "此次失败的原因是：（1）一部官兵动摇思家，失掉战斗力；一部",
+     "checksum": "f4d5fa455cb6b18a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-099",
+     "articleId": "v1n04",
+     "seq": 99,
+     "text": "官兵不愿往湘南，缺乏积极性。（2）盛暑远征，兵力疲惫。（3）从",
+     "checksum": "336e82c16531fa65",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-100",
+     "articleId": "v1n04",
+     "seq": 100,
+     "text": "酃县冒进数百里，和边界失去联系，成了孤军。（4）湘南群众未起",
+     "checksum": "fb60be82ec7a67d1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-101",
+     "articleId": "v1n04",
+     "seq": 101,
+     "text": "来，成了单纯的军事冒险。（5）敌情不明。（6）准备不好，官兵不",
+     "checksum": "1f33c7dfb6e93e4a",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-102",
+     "articleId": "v1n04",
+     "seq": 102,
+     "text": "了解作战的意义。",
+     "checksum": "c7d0676bb95444cb",
+     "charCount": 8,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-103",
+     "articleId": "v1n04",
+     "seq": 103,
+     "text": "割据地区的现势",
+     "checksum": "ab730aa80885afdb",
+     "charCount": 7,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-104",
+     "articleId": "v1n04",
+     "seq": 104,
+     "text": "今年四月以来，红色区域逐渐推广。六月二十三日龙源口（永新",
+     "checksum": "efff78ccceb5f47e",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-105",
+     "articleId": "v1n04",
+     "seq": 105,
+     "text": "宁冈交界）一战，第四次击破江西敌人之后，我区有宁冈、永新、莲",
+     "checksum": "63dfe478863cd971",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-106",
+     "articleId": "v1n04",
+     "seq": 106,
+     "text": "花三个全县，吉安、安福各一小部，遂川北部，酃县东南部，是为边",
+     "checksum": "7bded8f9d30683a0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-107",
+     "articleId": "v1n04",
+     "seq": 107,
+     "text": "界全盛时期。在红色区域，土地大部分配了，小部在分配中。区乡政",
+     "checksum": "82925466f08f1b36",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-108",
+     "articleId": "v1n04",
+     "seq": 108,
+     "text": "权普遍建立。宁冈、永新、莲花、遂川都有县政府，并成立了边界政",
+     "checksum": "074d07067fea2d56",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-109",
+     "articleId": "v1n04",
+     "seq": 109,
+     "text": "府。乡村普遍组织了工农暴动队，区县两级则有赤卫队。七月赣敌进",
+     "checksum": "5c9ceab687d5e394",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-110",
+     "articleId": "v1n04",
+     "seq": 110,
+     "text": "攻，八月湘赣两敌会攻井冈山，边界各县的县城及平原地区尽为敌",
+     "checksum": "29561b2e0a450d84",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-111",
+     "articleId": "v1n04",
+     "seq": 111,
+     "text": "据。为虎作伥的保安队、挨户团横行无忌，白色恐怖布满城乡。党的",
+     "checksum": "62d4856b379d6304",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-112",
+     "articleId": "v1n04",
+     "seq": 112,
+     "text": "组织和政权的组织大部塌台。富农和党内的投机分子纷纷反水⑺。八",
+     "checksum": "3317189cae3e8eeb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-113",
+     "articleId": "v1n04",
+     "seq": 113,
+     "text": "月三十日井冈山一战，湘敌始退往酃县，赣敌仍盘踞各县城及大部乡",
+     "checksum": "ece613a6258d7989",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-114",
+     "articleId": "v1n04",
+     "seq": 114,
+     "text": "村。然而山区是敌人始终无法夺取的，这在宁冈有西北两区，在永新",
+     "checksum": "103198a09cecb71e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-115",
+     "articleId": "v1n04",
+     "seq": 115,
+     "text": "有北乡的天龙区、西乡的小江区、南乡的万年山区，在莲花有上西",
+     "checksum": "a8d907e8981b7e60",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-116",
+     "articleId": "v1n04",
+     "seq": 116,
+     "text": "区，在遂川有井冈山区，在酃县有青石冈和大院区。七、八两月，红",
+     "checksum": "4ecc621fe06adce7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-117",
+     "articleId": "v1n04",
+     "seq": 117,
+     "text": "军一个团配合各县赤卫队、暴动队大小数十战，仅失枪三十枝，最后",
+     "checksum": "19baa7705db14af0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-118",
+     "articleId": "v1n04",
+     "seq": 118,
+     "text": "退入山区。",
+     "checksum": "79730fda3e61c1f8",
+     "charCount": 5,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-119",
+     "articleId": "v1n04",
+     "seq": 119,
+     "text": "我军经崇义、上犹向井冈山回军之际，赣南敌军独立第七师刘士",
+     "checksum": "f2d6c91b552b7a3f",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-120",
+     "articleId": "v1n04",
+     "seq": 120,
+     "text": "毅部追至遂川。九月十三日，我军击败刘士毅，缴枪数百，占领遂",
+     "checksum": "5520902247b8f59f",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-121",
+     "articleId": "v1n04",
+     "seq": 121,
+     "text": "川。九月二十六日回到井冈山。十月一日，与敌熊式辉部周浑元旅战",
+     "checksum": "847c627f70e7fbf3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-122",
+     "articleId": "v1n04",
+     "seq": 122,
+     "text": "于宁冈获胜，收复宁冈全县。此时湘敌驻桂东的阎仲儒部有一百二十",
+     "checksum": "d63c67d0ac52fd28",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-123",
+     "articleId": "v1n04",
+     "seq": 123,
+     "text": "六人投入我军，编为特务营，毕占云为营长。十一月九日，我军又击",
+     "checksum": "883a25da48649d5c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-124",
+     "articleId": "v1n04",
+     "seq": 124,
+     "text": "破周旅一个团于宁冈城和龙源口。翌日进占永新，随即退回宁冈。目",
+     "checksum": "5417d6b87a08a93f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-125",
+     "articleId": "v1n04",
+     "seq": 125,
+     "text": "前我区南自遂川井冈山南麓，北至莲花边界，包括宁冈全县，遂川、",
+     "checksum": "ccb18b6be13ec28d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-126",
+     "articleId": "v1n04",
+     "seq": 126,
+     "text": "酃县、永新各一部，成一南北狭长的整块。莲花的上西区，永新的天",
+     "checksum": "162b9eb2680b7d6d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-127",
+     "articleId": "v1n04",
+     "seq": 127,
+     "text": "龙区、万年山区，则和整块不甚连属。敌人企图以军事进攻和经济封",
+     "checksum": "4906fa4e480b2280",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-128",
+     "articleId": "v1n04",
+     "seq": 128,
+     "text": "锁消灭我们的根据地，我们正在准备打破敌人的进攻。",
+     "checksum": "a13866341c128a1d",
+     "charCount": 24,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-129",
+     "articleId": "v1n04",
+     "seq": 129,
+     "text": "军事问题",
+     "checksum": "0ac2e8da2d52cae3",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-130",
+     "articleId": "v1n04",
+     "seq": 130,
+     "text": "边界的斗争，完全是军事的斗争，党和群众不得不一齐军事化。",
+     "checksum": "4e34e551d0ebded6",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-131",
+     "articleId": "v1n04",
+     "seq": 131,
+     "text": "怎样对付敌人，怎样作战，成了日常生活的中心问题。所谓割据，必",
+     "checksum": "de58a8a54401f5b0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-132",
+     "articleId": "v1n04",
+     "seq": 132,
+     "text": "须是武装的。哪一处没有武装，或者武装不够，或者对付敌人的策略",
+     "checksum": "9d1839318611d4c5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-133",
+     "articleId": "v1n04",
+     "seq": 133,
+     "text": "错了，地方就立即被敌人占去了。这种斗争，一天比一天激烈，问题",
+     "checksum": "70e814e349208d44",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-134",
+     "articleId": "v1n04",
+     "seq": 134,
+     "text": "也就非常地繁复和严重。",
+     "checksum": "7824694c5357c899",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-135",
+     "articleId": "v1n04",
+     "seq": 135,
+     "text": "边界红军的来源：（一）潮汕叶贺旧部⑻；（二）前武昌国民政",
+     "checksum": "adc25792035f7e60",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-136",
+     "articleId": "v1n04",
+     "seq": 136,
+     "text": "府警卫团⑼；（三）平浏的农民⑽；（四）湘南的农民⑾和水口山的",
+     "checksum": "38d31f1b5edfa1e8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-137",
+     "articleId": "v1n04",
+     "seq": 137,
+     "text": "工人⑿；（五）许克祥、唐生智、白崇禧、朱培德、吴尚、熊式辉等",
+     "checksum": "9cea8ecb140f45e4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-138",
+     "articleId": "v1n04",
+     "seq": 138,
+     "text": "部的俘虏兵；（六）边界各县的农民。但是叶贺旧部、警卫团和平浏",
+     "checksum": "57988bb41a61a28c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-139",
+     "articleId": "v1n04",
+     "seq": 139,
+     "text": "农民，经过一年多的战斗，只剩下三分之一。湘南农民，伤亡也大。",
+     "checksum": "85d47db2db5211da",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-140",
+     "articleId": "v1n04",
+     "seq": 140,
+     "text": "因此，前四项虽然至今还是红军第四军的骨干，但已远不如后二项",
+     "checksum": "0b47143ea0a1bd7a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-141",
+     "articleId": "v1n04",
+     "seq": 141,
+     "text": "多。后二项中又以敌军俘虏为多，设无此项补充，则兵员大成问题。",
+     "checksum": "3d5636436c7dd53b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-142",
+     "articleId": "v1n04",
+     "seq": 142,
+     "text": "虽然如此，兵的增加和枪的增加仍不相称，枪不容易损失，兵有伤、",
+     "checksum": "51092c31dc91a76f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-143",
+     "articleId": "v1n04",
+     "seq": 143,
+     "text": "亡、病、逃，损失甚易。湖南省委答应送安源工人⒀来此，亟盼实",
+     "checksum": "cdf2f9f7ebd1880f",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-144",
+     "articleId": "v1n04",
+     "seq": 144,
+     "text": "行。",
+     "checksum": "c784c3a7bfd5b34a",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-145",
+     "articleId": "v1n04",
+     "seq": 145,
+     "text": "红军成分，一部是工人、农民，一部是游民无产者。游民成分太",
+     "checksum": "280397f03b29370b",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-146",
+     "articleId": "v1n04",
+     "seq": 146,
+     "text": "多，当然不好。但因天天在战斗，伤亡又大，游民分子却有战斗力，",
+     "checksum": "e87e028dba2ba8d3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-147",
+     "articleId": "v1n04",
+     "seq": 147,
+     "text": "能找到游民补充已属不易。在此种情形下，只有加紧政治训练的一",
+     "checksum": "401e33111ceb65bd",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-148",
+     "articleId": "v1n04",
+     "seq": 148,
+     "text": "法。",
+     "checksum": "479f75a2b56e6366",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-149",
+     "articleId": "v1n04",
+     "seq": 149,
+     "text": "红军士兵大部分是由雇佣军队来的，但一到红军即变了性质。首",
+     "checksum": "7290041a41bb6b7c",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-150",
+     "articleId": "v1n04",
+     "seq": 150,
+     "text": "先是红军废除了雇佣制，使士兵感觉不是为他人打仗，而是为自己为",
+     "checksum": "f579651553da7c4f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-151",
+     "articleId": "v1n04",
+     "seq": 151,
+     "text": "人民打仗。红军至今没有什么正规的薪饷制，只发粮食、油盐柴菜钱",
+     "checksum": "68983a322bda7c40",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-152",
+     "articleId": "v1n04",
+     "seq": 152,
+     "text": "和少数的零用钱。红军官兵中的边界本地人都分得了土地，只是远籍",
+     "checksum": "e5a2e2bbe7d30c63",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-153",
+     "articleId": "v1n04",
+     "seq": 153,
+     "text": "人分配土地颇为困难。",
+     "checksum": "1456f14655a3e4ac",
+     "charCount": 10,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-154",
+     "articleId": "v1n04",
+     "seq": 154,
+     "text": "经过政治教育，红军士兵都有了阶级觉悟，都有了分配土地、建",
+     "checksum": "4c195686c4afbbcd",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-155",
+     "articleId": "v1n04",
+     "seq": 155,
+     "text": "立政权和武装工农等项常识，都知道是为了自己和工农阶级而作战。",
+     "checksum": "4d3236d45d8ec8b9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-156",
+     "articleId": "v1n04",
+     "seq": 156,
+     "text": "因此，他们能在艰苦的斗争中不出怨言。连、营、团都有了士兵会，",
+     "checksum": "ae761b9693966cc8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-157",
+     "articleId": "v1n04",
+     "seq": 157,
+     "text": "代表士兵利益，并做政治工作和民众工作。",
+     "checksum": "ac1d147d1f673378",
+     "charCount": 19,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-158",
+     "articleId": "v1n04",
+     "seq": 158,
+     "text": "党代表制度⒁，经验证明不能废除。特别是在连一级，因党的支",
+     "checksum": "a3c0768f320a5edc",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-159",
+     "articleId": "v1n04",
+     "seq": 159,
+     "text": "部建设在连上，党代表更为重要。他要督促士兵委员会进行政治训",
+     "checksum": "80d229c01b833763",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-160",
+     "articleId": "v1n04",
+     "seq": 160,
+     "text": "练，指导民运工作，同时要担任党的支部书记。事实证明，哪一个连",
+     "checksum": "b1c5e64856ae7262",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-161",
+     "articleId": "v1n04",
+     "seq": 161,
+     "text": "的党代表较好，哪一个连就较健全，而连长在政治上却不易有这样大",
+     "checksum": "a1697c8f52231e85",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-162",
+     "articleId": "v1n04",
+     "seq": 162,
+     "text": "的作用。因为下级干部死伤太多，敌军俘虏兵往往过来不久，就要当",
+     "checksum": "5e5fbd608abe3828",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-163",
+     "articleId": "v1n04",
+     "seq": 163,
+     "text": "连排长；今年二三月间的俘虏兵，现在有当了营长的。从表面看，似",
+     "checksum": "667b57389f966387",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-164",
+     "articleId": "v1n04",
+     "seq": 164,
+     "text": "乎既称红军，就可以不要党代表了，实在大谬不然。第二十八团在湘",
+     "checksum": "e880f0f58fa418c1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-165",
+     "articleId": "v1n04",
+     "seq": 165,
+     "text": "南曾经取消了党代表，后来又恢复了。改称指导员，则和国民党的指",
+     "checksum": "72bc0c1df2c7b7ca",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-166",
+     "articleId": "v1n04",
+     "seq": 166,
+     "text": "导员相混，为俘虏兵所厌恶。且易一名称，于制度的本质无关。故我",
+     "checksum": "ce8c4e13ef2c932c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-167",
+     "articleId": "v1n04",
+     "seq": 167,
+     "text": "们决定不改。党代表伤亡太多，除自办训练班训练补充外，希望中央",
+     "checksum": "62c180e3e0c8c77f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-168",
+     "articleId": "v1n04",
+     "seq": 168,
+     "text": "和两省委派可充党代表的同志至少三十人来。",
+     "checksum": "253ded41dc2c2370",
+     "charCount": 20,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-169",
+     "articleId": "v1n04",
+     "seq": 169,
+     "text": "普通的兵要训练半年一年才能打仗，我们的兵，昨天入伍今天就",
+     "checksum": "48e3591bcd9da0b9",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-170",
+     "articleId": "v1n04",
+     "seq": 170,
+     "text": "要打仗，简直无所谓训练。军事技术太差，作战只靠勇敢。长时间的",
+     "checksum": "e2cbebc5d2cf175e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-171",
+     "articleId": "v1n04",
+     "seq": 171,
+     "text": "休息训练是不可能的，只有设法避开一些战斗，争取时间训练，看可",
+     "checksum": "d26d68bdb92d506a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-172",
+     "articleId": "v1n04",
+     "seq": 172,
+     "text": "能否。为着训练下级军官，现在办了一个百五十人的教导队，准备经",
+     "checksum": "3ba9b42cf8fbd3b3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-173",
+     "articleId": "v1n04",
+     "seq": 173,
+     "text": "常办下去。希望中央和两省委多派连排长以上的军官来。",
+     "checksum": "5a8fe0d323caf886",
+     "charCount": 25,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-174",
+     "articleId": "v1n04",
+     "seq": 174,
+     "text": "湖南省委要我们注意士兵的物质生活，至少要比普通工农的生活",
+     "checksum": "596aee278a1af079",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-175",
+     "articleId": "v1n04",
+     "seq": 175,
+     "text": "好些。现在则相反，除粮食外，每天每人只有五分大洋的油盐柴菜",
+     "checksum": "d3c5df72c9d844bb",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-176",
+     "articleId": "v1n04",
+     "seq": 176,
+     "text": "钱，还是难乎为继。仅仅发油盐柴菜钱，每月也需现洋万元以上，全",
+     "checksum": "2f140c56fad1fbe5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-177",
+     "articleId": "v1n04",
+     "seq": 177,
+     "text": "靠打土豪供给⒂。现在全军五千人的冬衣，有了棉花，还缺少布。这",
+     "checksum": "160cb1381025df97",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-178",
+     "articleId": "v1n04",
+     "seq": 178,
+     "text": "样冷了，许多士兵还是穿两层单衣。好在苦惯了。而且什么人都是一",
+     "checksum": "f09ecceb75ed6133",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-179",
+     "articleId": "v1n04",
+     "seq": 179,
+     "text": "样苦，从军长到伙夫，除粮食外一律吃五分钱的伙食。发零用钱，两",
+     "checksum": "ea3222fedec6ab24",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-180",
+     "articleId": "v1n04",
+     "seq": 180,
+     "text": "角即一律两角，四角即一律四角⒃。因此士兵也不怨恨什么人。",
+     "checksum": "1081a05af8611998",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-181",
+     "articleId": "v1n04",
+     "seq": 181,
+     "text": "作战一次，就有一批伤兵。由于营养不足、受冻和其他原因，官",
+     "checksum": "a0b1a63ad7e3dc69",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-182",
+     "articleId": "v1n04",
+     "seq": 182,
+     "text": "兵病的很多。医院设在山上，用中西两法治疗，医生药品均缺。现在",
+     "checksum": "99f5b6be1bffcb4b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-183",
+     "articleId": "v1n04",
+     "seq": 183,
+     "text": "医院中共有八百多人。湖南省委答应办药，至今不见送到。仍祈中央",
+     "checksum": "3c81ac737badc67e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-184",
+     "articleId": "v1n04",
+     "seq": 184,
+     "text": "和两省委送几个西医和一些碘片来。",
+     "checksum": "3e83035325a4f57e",
+     "charCount": 16,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-185",
+     "articleId": "v1n04",
+     "seq": 185,
+     "text": "红军的物质生活如此菲薄，战斗如此频繁，仍能维持不敝，除党",
+     "checksum": "684cb8cc17ddd146",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-186",
+     "articleId": "v1n04",
+     "seq": 186,
+     "text": "的作用外，就是靠实行军队内的民主主义。官长不打士兵，官兵待遇",
+     "checksum": "c0f6d189e6e0a066",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-187",
+     "articleId": "v1n04",
+     "seq": 187,
+     "text": "平等，士兵有开会说话的自由，废除烦琐的礼节，经济公开。士兵管",
+     "checksum": "7cd9187ca0063e90",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-188",
+     "articleId": "v1n04",
+     "seq": 188,
+     "text": "理伙食，仍能从每日五分的油盐柴菜钱中节余一点作零用，名曰“伙",
+     "checksum": "59bd1658ea5525c7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-189",
+     "articleId": "v1n04",
+     "seq": 189,
+     "text": "食尾子”，每人每日约得六七十文。这些办法，士兵很满意。尤其是",
+     "checksum": "53d0eb8ec55ae441",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-190",
+     "articleId": "v1n04",
+     "seq": 190,
+     "text": "新来的俘虏兵，他们感觉国民党军队和我们军队是两个世界。他们虽",
+     "checksum": "9214be68535d3c9d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-191",
+     "articleId": "v1n04",
+     "seq": 191,
+     "text": "然感觉红军的物质生活不如白军，但是精神得到了解放。同样一个",
+     "checksum": "52cacc88504bd0b3",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-192",
+     "articleId": "v1n04",
+     "seq": 192,
+     "text": "兵，昨天在敌军不勇敢，今天在红军很勇敢，就是民主主义的影响。",
+     "checksum": "bf28adfbdc9f2885",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-193",
+     "articleId": "v1n04",
+     "seq": 193,
+     "text": "红军像一个火炉，俘虏兵过来马上就熔化了。中国不但人民需要民主",
+     "checksum": "94ddad9cdb1469e2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-194",
+     "articleId": "v1n04",
+     "seq": 194,
+     "text": "主义，军队也需要民主主义。军队内的民主主义制度，将是破坏封建",
+     "checksum": "4e0630fbf812411f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-195",
+     "articleId": "v1n04",
+     "seq": 195,
+     "text": "雇佣军队的一个重要的武器⒄。",
+     "checksum": "a661d33d94372396",
+     "charCount": 14,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-196",
+     "articleId": "v1n04",
+     "seq": 196,
+     "text": "党的组织，现分连支部、营委、团委、军委四级。连有支部，班",
+     "checksum": "287014c4ce7b4d9d",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-197",
+     "articleId": "v1n04",
+     "seq": 197,
+     "text": "有小组。红军所以艰难奋战而不溃散，“支部建在连上”是一个重要",
+     "checksum": "c799aa038e2d94db",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-198",
+     "articleId": "v1n04",
+     "seq": 198,
+     "text": "原因。两年前，我们在国民党军中的组织，完全没有抓住士兵，即在",
+     "checksum": "697f16f774667c9b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-199",
+     "articleId": "v1n04",
+     "seq": 199,
+     "text": "叶挺部⒅也还是每团只有一个支部，故经不起严重的考验。现在红军",
+     "checksum": "1f41987644d46018",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-200",
+     "articleId": "v1n04",
+     "seq": 200,
+     "text": "中党员和非党员约为一与三之比，即平均四个人中有一个党员。最近",
+     "checksum": "eae0b508395668ec",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-201",
+     "articleId": "v1n04",
+     "seq": 201,
+     "text": "决定在战斗兵中发展党员数量，达到党员非党员各半的目的⒆。现在",
+     "checksum": "ecf51abf70268ccf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-202",
+     "articleId": "v1n04",
+     "seq": 202,
+     "text": "连支部缺乏好的书记，请中央从各地不能立足的活动分子中派遣多人",
+     "checksum": "a8585cf3746d1004",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-203",
+     "articleId": "v1n04",
+     "seq": 203,
+     "text": "来此充当。湘南来的工作人员，几乎尽数在军中做党的工作。可是八",
+     "checksum": "ebf3535dc7ab835d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-204",
+     "articleId": "v1n04",
+     "seq": 204,
+     "text": "月间在湘南跑散了一些，所以现在不能调出人去。",
+     "checksum": "dd8ecb47f62d213b",
+     "charCount": 22,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-205",
+     "articleId": "v1n04",
+     "seq": 205,
+     "text": "地方武装有赤卫队和工农暴动队。暴动队以梭镖、鸟枪为武器，",
+     "checksum": "4739d3b5b153f46c",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-206",
+     "articleId": "v1n04",
+     "seq": 206,
+     "text": "乡为单位，每乡一队，人数以乡的大小为比例。职务是镇压反革命，",
+     "checksum": "51bf31337abec973",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-207",
+     "articleId": "v1n04",
+     "seq": 207,
+     "text": "保卫乡政权，敌人来了帮助红军或赤卫队作战。暴动队始于永新，原",
+     "checksum": "215077f9caaf83cd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-208",
+     "articleId": "v1n04",
+     "seq": 208,
+     "text": "是秘密的，夺取全县以后，公开了。这个制度现已推行于边界各县，",
+     "checksum": "136fc17668c4c1a4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-209",
+     "articleId": "v1n04",
+     "seq": 209,
+     "text": "名称未改。赤卫队的武器主要是五响枪，也有九响和单响枪。各县枪",
+     "checksum": "69d2ef6c29e33c74",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-210",
+     "articleId": "v1n04",
+     "seq": 210,
+     "text": "数：宁冈百四十，永新二百二十，莲花四十三，茶陵五十，酃县九",
+     "checksum": "3f718bbc4c848f51",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-211",
+     "articleId": "v1n04",
+     "seq": 211,
+     "text": "十，遂川百三十，万安十，共六百八十三。大部是红军发给的，小部",
+     "checksum": "52f78d25a695dca1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-212",
+     "articleId": "v1n04",
+     "seq": 212,
+     "text": "是自己从敌人夺取的。各县赤卫队大都经常地和豪绅的保安队、挨户",
+     "checksum": "b0e330945e1ae47d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-213",
+     "articleId": "v1n04",
+     "seq": 213,
+     "text": "团作战，战斗力日益增强。马日事变⒇以前，各县有农民自卫军。枪",
+     "checksum": "c062208a9e1a3578",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-214",
+     "articleId": "v1n04",
+     "seq": 214,
+     "text": "数：攸县三百，茶陵三百，酃县六十，遂川五十，永新八十，莲花六",
+     "checksum": "041a12c5a8ffd147",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-215",
+     "articleId": "v1n04",
+     "seq": 215,
+     "text": "十，宁冈（袁文才部）六十，井冈山（王佐部）六十，共九百七十。",
+     "checksum": "08f7fa1709393aca",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-216",
+     "articleId": "v1n04",
+     "seq": 216,
+     "text": "马日事变后，除袁、王两部无损失外，仅遂川保存六枝，莲花保存一",
+     "checksum": "5a3c0185b9bc4471",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-217",
+     "articleId": "v1n04",
+     "seq": 217,
+     "text": "枝，其余概被豪绅缴去。农民自卫军如此没有把握枪枝的能力，这是",
+     "checksum": "1a2213104a6a43d3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-218",
+     "articleId": "v1n04",
+     "seq": 218,
+     "text": "机会主义路线的结果。现在各县赤卫队的枪枝还是很不够，不如豪绅",
+     "checksum": "b848803beeddcd9b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-219",
+     "articleId": "v1n04",
+     "seq": 219,
+     "text": "的枪多，红军必须继续在武器上给赤卫队以帮助。在不降低红军战斗",
+     "checksum": "e3017d8403045d37",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-220",
+     "articleId": "v1n04",
+     "seq": 220,
+     "text": "力的条件之下，必须尽量帮助人民武装起来。我们业经规定红军每营",
+     "checksum": "45846e4d9252157a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-221",
+     "articleId": "v1n04",
+     "seq": 221,
+     "text": "用四连制，每连步枪七十五枝，加上特务连，机关枪连，迫击炮连，",
+     "checksum": "fab7edbf1561357c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-222",
+     "articleId": "v1n04",
+     "seq": 222,
+     "text": "团部和三个营部，每团有步枪一千零七十五枝。作战缴获的枪，则尽",
+     "checksum": "a49798db2f7db17d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-223",
+     "articleId": "v1n04",
+     "seq": 223,
+     "text": "量武装地方。赤卫队的指挥官，由各县派人进红军所办的教导队受训",
+     "checksum": "673bd367614d2d0d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-224",
+     "articleId": "v1n04",
+     "seq": 224,
+     "text": "后充当。由红军派远地人到地方去当队长，必须逐渐减少。朱培德、",
+     "checksum": "7b223029d4f97ee2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-225",
+     "articleId": "v1n04",
+     "seq": 225,
+     "text": "吴尚亦在武装保安队和挨户团，边界各县豪绅武装的数量和战斗力，",
+     "checksum": "f6dee7ad37065514",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-226",
+     "articleId": "v1n04",
+     "seq": 226,
+     "text": "颇为可观。我们红色地方武装的扩大，更是刻不容缓。",
+     "checksum": "545cbb90ab371ca4",
+     "charCount": 24,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-227",
+     "articleId": "v1n04",
+     "seq": 227,
+     "text": "红军以集中为原则，赤卫队以分散为原则。当此反动政权暂时稳",
+     "checksum": "d309e4f921eaea58",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-228",
+     "articleId": "v1n04",
+     "seq": 228,
+     "text": "定时期，敌人能集中大量军力来打红军，红军分散是不利的。我们的",
+     "checksum": "7ac6076beb0cade8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-229",
+     "articleId": "v1n04",
+     "seq": 229,
+     "text": "经验，分兵几乎没有一次不失败，集中兵力以击小于我或等于我或稍",
+     "checksum": "2aa3f767f6add1f1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-230",
+     "articleId": "v1n04",
+     "seq": 230,
+     "text": "大于我之敌，则往往胜利。中央指示我们发展的游击区域，纵横数千",
+     "checksum": "567ba049e51292c9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-231",
+     "articleId": "v1n04",
+     "seq": 231,
+     "text": "里，失之太广，这大概是对我们力量估计过大的缘故。赤卫队则以分",
+     "checksum": "2cc0ab60db2ff136",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-232",
+     "articleId": "v1n04",
+     "seq": 232,
+     "text": "散为有利，现在各县赤卫队都采取分散作战办法。",
+     "checksum": "19413ff35bc913c7",
+     "charCount": 22,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-233",
+     "articleId": "v1n04",
+     "seq": 233,
+     "text": "对敌军的宣传，最有效的方法是释放俘虏和医治伤兵。敌军的士",
+     "checksum": "328ff0439c1051a8",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-234",
+     "articleId": "v1n04",
+     "seq": 234,
+     "text": "兵和营、连、排长被我们俘虏过来，即对他们进行宣传工作，分为愿",
+     "checksum": "836043b47a9cf8a9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-235",
+     "articleId": "v1n04",
+     "seq": 235,
+     "text": "留愿去两种，愿去的即发路费释放。这样就把敌人所谓“共匪见人就",
+     "checksum": "763ddcc145ab6607",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-236",
+     "articleId": "v1n04",
+     "seq": 236,
+     "text": "杀”的欺骗，立即打破。杨池生的《九师旬刊》，对于我们的这种办",
+     "checksum": "577d4cf6885f2c67",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-237",
+     "articleId": "v1n04",
+     "seq": 237,
+     "text": "法有“毒矣哉”的惊叹。红军士兵们对于所捉俘虏的抚慰和欢送，十",
+     "checksum": "4d4dbbf3822e1b5e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-238",
+     "articleId": "v1n04",
+     "seq": 238,
+     "text": "分热烈，在每次“欢送新弟兄大会”上，俘虏兵演说也回报我们以热",
+     "checksum": "f346b4c099282987",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-239",
+     "articleId": "v1n04",
+     "seq": 239,
+     "text": "烈的感激。医治敌方伤兵，效力也很大。聪明的敌人例如李文彬，近",
+     "checksum": "f2ff21266a5ef0bf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-240",
+     "articleId": "v1n04",
+     "seq": 240,
+     "text": "来也仿效我们的办法，不杀俘虏，医治被俘伤兵。不过，在再作战",
+     "checksum": "f10d2476e3d17996",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-241",
+     "articleId": "v1n04",
+     "seq": 241,
+     "text": "时，我们的人还是有拖枪回来的，这样的事已有过两回。此外，文字",
+     "checksum": "cfaaee1ff0349c1f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-242",
+     "articleId": "v1n04",
+     "seq": 242,
+     "text": "宣传，如写标语等，也尽力在做。每到一处，壁上写满了口号。惟缺",
+     "checksum": "29deb83e5e235025",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-243",
+     "articleId": "v1n04",
+     "seq": 243,
+     "text": "绘图的技术人材，请中央和两省委送几个来。",
+     "checksum": "279848a1d01a2875",
+     "charCount": 20,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-244",
+     "articleId": "v1n04",
+     "seq": 244,
+     "text": "军事根据地：第一个根据地是井冈山，介在宁冈、酃县、遂川、",
+     "checksum": "5ea76d075c688a82",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-245",
+     "articleId": "v1n04",
+     "seq": 245,
+     "text": "永新四县之交。北麓是宁冈的茅坪，南麓是遂川的黄坳，两地相距九",
+     "checksum": "36f6da61d959a4d3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-246",
+     "articleId": "v1n04",
+     "seq": 246,
+     "text": "十里。东麓是永新的拿山，西麓是酃县的水口，两地相距百八十里。",
+     "checksum": "fe113cf138245a27",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-247",
+     "articleId": "v1n04",
+     "seq": 247,
+     "text": "四周从拿山起经龙源口（以上永新）、新城、茅坪、大陇（以上宁",
+     "checksum": "732c5b09feb7590d",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-248",
+     "articleId": "v1n04",
+     "seq": 248,
+     "text": "冈）、十都、水口、下村（以上酃县）、营盘圩、戴家埔、大汾、堆",
+     "checksum": "2eb2e3122bddc19a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-249",
+     "articleId": "v1n04",
+     "seq": 249,
+     "text": "子前、黄坳、五斗江、车坳（以上遂川）到拿山，共计五百五十里。",
+     "checksum": "10f4907c0c030630",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-250",
+     "articleId": "v1n04",
+     "seq": 250,
+     "text": "山上大井、小井、上井、中井、下井、茨坪、下庄、行洲、草坪、白",
+     "checksum": "e2fe187f50e8fb94",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-251",
+     "articleId": "v1n04",
+     "seq": 251,
+     "text": "银湖、罗浮各地，均有水田和村庄，为自来土匪、散军窟宅之所，现",
+     "checksum": "49000676dff30b4a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-252",
+     "articleId": "v1n04",
+     "seq": 252,
+     "text": "在作了我们的根据地。但人口不满两千，产谷不满万担，军粮全靠宁",
+     "checksum": "6818c1dcc47538bb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-253",
+     "articleId": "v1n04",
+     "seq": 253,
+     "text": "冈、永新、遂川三县输送。山上要隘，都筑了工事。医院、被服厂、",
+     "checksum": "04d616c4a30ede66",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-254",
+     "articleId": "v1n04",
+     "seq": 254,
+     "text": "军械处、各团留守处，均在这里。现在正从宁冈搬运粮食上山。若有",
+     "checksum": "9ba009f857aa3225",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-255",
+     "articleId": "v1n04",
+     "seq": 255,
+     "text": "充足的给养，敌人是打不进来的。第二个根据地是宁冈、永新、莲",
+     "checksum": "8b93c75c16e45b05",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-256",
+     "articleId": "v1n04",
+     "seq": 256,
+     "text": "花、茶陵四县交界的九陇山，重要性不及井冈山，为四县地方武装的",
+     "checksum": "3458105e83066bce",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-257",
+     "articleId": "v1n04",
+     "seq": 257,
+     "text": "最后根据地，也筑了工事。在四围白色政权中间的红色割据，利用山",
+     "checksum": "22bd71491f0cd8ce",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-258",
+     "articleId": "v1n04",
+     "seq": 258,
+     "text": "险是必要的。",
+     "checksum": "2e0bd654c3301d0e",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-259",
+     "articleId": "v1n04",
+     "seq": 259,
+     "text": "土地问题",
+     "checksum": "f99a9212697893f7",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-260",
+     "articleId": "v1n04",
+     "seq": 260,
+     "text": "边界土地状况：大体说来，土地的百分之六十以上在地主手里，",
+     "checksum": "ebf5ab4d01869c7b",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-261",
+     "articleId": "v1n04",
+     "seq": 261,
+     "text": "百分之四十以下在农民手里。江西方面，遂川的土地最集中，约百分",
+     "checksum": "2a3cd3314a847836",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-262",
+     "articleId": "v1n04",
+     "seq": 262,
+     "text": "之八十是地主的。永新次之，约百分之七十是地主的。万安、宁冈、",
+     "checksum": "6cf3b065dddf36e3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-263",
+     "articleId": "v1n04",
+     "seq": 263,
+     "text": "莲花自耕农较多，但地主的土地仍占比较的多数，约百分之六十，农",
+     "checksum": "0d35eb0e0d3dd974",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-264",
+     "articleId": "v1n04",
+     "seq": 264,
+     "text": "民只占百分之四十。湖南方面，茶陵、酃县两县均有约百分之七十的",
+     "checksum": "4cc103c271c85f36",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-265",
+     "articleId": "v1n04",
+     "seq": 265,
+     "text": "土地在地主手中。",
+     "checksum": "ca06f50902f16571",
+     "charCount": 8,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-266",
+     "articleId": "v1n04",
+     "seq": 266,
+     "text": "中间阶级问题：在上述土地状况之下，没收一切土地重新分配",
+     "checksum": "5441af66b9eafa12",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-267",
+     "articleId": "v1n04",
+     "seq": 267,
+     "text": "（21），是能得到大多数人拥护的。但农村中略分为三种阶级，即",
+     "checksum": "8b8a2a02eb560dd0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-268",
+     "articleId": "v1n04",
+     "seq": 268,
+     "text": "大、中地主阶级，小地主、富农的中间阶级，中农、贫农阶级。富农",
+     "checksum": "f342afa6daddf07b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-269",
+     "articleId": "v1n04",
+     "seq": 269,
+     "text": "往往与小地主利害联在一起。富农土地在土地总额中占少数，但与小",
+     "checksum": "346e748f386e1928",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-270",
+     "articleId": "v1n04",
+     "seq": 270,
+     "text": "地主土地合计，则数量颇大。这种情形，恐全国亦差不多。边界对于",
+     "checksum": "1fe53d007a2072d1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-271",
+     "articleId": "v1n04",
+     "seq": 271,
+     "text": "土地是采取全部没收、彻底分配的政策；故在红色区域，豪绅阶级和",
+     "checksum": "613a648ec08ef306",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-272",
+     "articleId": "v1n04",
+     "seq": 272,
+     "text": "中间阶级，同被打击。政策是如此，实际执行时却大受中间阶级的阻",
+     "checksum": "a477af4f4817b3e4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-273",
+     "articleId": "v1n04",
+     "seq": 273,
+     "text": "碍。当革命初期，中间阶级表面上投降贫农阶级，实际则利用他们从",
+     "checksum": "eeff72c9536f6684",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-274",
+     "articleId": "v1n04",
+     "seq": 274,
+     "text": "前的社会地位及家族主义，恐吓贫农，延宕分田的时间。到无可延宕",
+     "checksum": "d36606555cd35f26",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-275",
+     "articleId": "v1n04",
+     "seq": 275,
+     "text": "时，即隐瞒土地实数，或自据肥田，把瘠田让人。此时期内，贫农因",
+     "checksum": "aaea224adfe63795",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-276",
+     "articleId": "v1n04",
+     "seq": 276,
+     "text": "长期地被摧残及感觉革命胜利无保障，往往接受中间阶级的意见，不",
+     "checksum": "bf4718d18b18187c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-277",
+     "articleId": "v1n04",
+     "seq": 277,
+     "text": "敢积极行动。必待进至革命高涨，如得了全县甚至几县政权，反动军",
+     "checksum": "7bae851ccae8dcad",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-278",
+     "articleId": "v1n04",
+     "seq": 278,
+     "text": "队几次战败，红军的威力几次表现之后，农村中才有对于中间阶级的",
+     "checksum": "f5ea33da88b094ef",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-279",
+     "articleId": "v1n04",
+     "seq": 279,
+     "text": "积极行动。如永新南乡，是中间阶级最多的地方，延宕分田及隐瞒土",
+     "checksum": "75bbce83e6437a07",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-280",
+     "articleId": "v1n04",
+     "seq": 280,
+     "text": "地也最厉害。到六月二十三日龙源口红军大胜之后，区政府又处理了",
+     "checksum": "82ddee53da8bdf57",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-281",
+     "articleId": "v1n04",
+     "seq": 281,
+     "text": "几个延宕分田的人，才实际地分下去。但是无论哪一县，封建的家族",
+     "checksum": "5c1c2bf1429ee22e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-282",
+     "articleId": "v1n04",
+     "seq": 282,
+     "text": "组织十分普遍，多是一姓一个村子，或一姓几个村子，非有一个比较",
+     "checksum": "00f7d6b19bde6081",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-283",
+     "articleId": "v1n04",
+     "seq": 283,
+     "text": "长的时间，村子内阶级分化不能完成，家族主义不能战胜。",
+     "checksum": "98ecdfd5798f57dc",
+     "charCount": 26,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-284",
+     "articleId": "v1n04",
+     "seq": 284,
+     "text": "白色恐怖下中间阶级的反水：中间阶级在革命高涨时受到打击，",
+     "checksum": "3c95be40ac92dc92",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-285",
+     "articleId": "v1n04",
+     "seq": 285,
+     "text": "白色恐怖一来，马上反水。引导反动军队大烧永新、宁冈革命农民的",
+     "checksum": "a09b62bd637f87a4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-286",
+     "articleId": "v1n04",
+     "seq": 286,
+     "text": "房子的，就是两县的小地主和富农。他们依照反动派的指示，烧屋、",
+     "checksum": "24b690db3edaa517",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-287",
+     "articleId": "v1n04",
+     "seq": 287,
+     "text": "捉人，十分勇敢。红军再度到宁冈新城、古城、砻市一带时，有数千",
+     "checksum": "0b4d518832584194",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-288",
+     "articleId": "v1n04",
+     "seq": 288,
+     "text": "农民听信反动派的共产党将要杀死他们的宣传，跟了反动派跑到永",
+     "checksum": "5f7bb93240ba12d4",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-289",
+     "articleId": "v1n04",
+     "seq": 289,
+     "text": "新。经过我们“不杀反水农民”、“欢迎反水农民回来割禾”的宣传",
+     "checksum": "a1ef9ecb92c6d0c4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-290",
+     "articleId": "v1n04",
+     "seq": 290,
+     "text": "之后，才有一些农民慢慢地跑回来。",
+     "checksum": "5901b5097fefdaa6",
+     "charCount": 16,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-291",
+     "articleId": "v1n04",
+     "seq": 291,
+     "text": "全国革命低潮时，割据地区最困难的问题，就在拿不住中间阶",
+     "checksum": "5f7f51f9596e916a",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-292",
+     "articleId": "v1n04",
+     "seq": 292,
+     "text": "级。中间阶级之所以反叛，受到革命的过重打击是主因。然若全国在",
+     "checksum": "d08d0ac80a42a387",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-293",
+     "articleId": "v1n04",
+     "seq": 293,
+     "text": "革命高涨中，贫农阶级有所恃而增加勇气，中间阶级亦有所惧而不敢",
+     "checksum": "700694c3de8182ed",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-294",
+     "articleId": "v1n04",
+     "seq": 294,
+     "text": "乱为。当李宗仁唐生智战争向湖南发展时，茶陵的小地主向农民求",
+     "checksum": "b3be9e8f1e761e15",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-295",
+     "articleId": "v1n04",
+     "seq": 295,
+     "text": "和，有送猪肉给农民过年的（这时红军已退出茶陵向遂川去了）。李",
+     "checksum": "1d0040766a267481",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-296",
+     "articleId": "v1n04",
+     "seq": 296,
+     "text": "唐战争结束，就不见有这等事了。现在全国是反革命高涨时期，被打",
+     "checksum": "5103517369c01348",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-297",
+     "articleId": "v1n04",
+     "seq": 297,
+     "text": "击的中间阶级在白色区域内几乎完全附属于豪绅阶级去了，贫农阶级",
+     "checksum": "8da5bf23ddf48b82",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-298",
+     "articleId": "v1n04",
+     "seq": 298,
+     "text": "成了孤军。此问题实在严重得很（22）。",
+     "checksum": "07810e7eacca8cfe",
+     "charCount": 19,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-299",
+     "articleId": "v1n04",
+     "seq": 299,
+     "text": "日常生活压迫，影响中间阶级反水：红区白区对抗，成为两个敌",
+     "checksum": "293884acbffb868f",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-300",
+     "articleId": "v1n04",
+     "seq": 300,
+     "text": "国。因为敌人的严密封锁和我们对小资产阶级的处理失当这两个原",
+     "checksum": "32bba2256e0e931a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-301",
+     "articleId": "v1n04",
+     "seq": 301,
+     "text": "因，两区几乎完全断绝贸易，食盐、布匹、药材等项日常必需品的缺",
+     "checksum": "bab447a5a6ca2cd8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-302",
+     "articleId": "v1n04",
+     "seq": 302,
+     "text": "乏和昂贵，木材、茶油等农产品不能输出，农民断绝进款，影响及于",
+     "checksum": "899bfd7dbcf71ef6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-303",
+     "articleId": "v1n04",
+     "seq": 303,
+     "text": "一般人民。贫农阶级比较尚能忍受此苦痛，中等阶级到忍不住时，就",
+     "checksum": "8b189ba1451cc42f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-304",
+     "articleId": "v1n04",
+     "seq": 304,
+     "text": "投降豪绅阶级。中国豪绅军阀的分裂和战争若不是继续进行的，全国",
+     "checksum": "2661753067a2f5d2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-305",
+     "articleId": "v1n04",
+     "seq": 305,
+     "text": "革命形势若不是向前发展的，则小块地区的红色割据，在经济上将受",
+     "checksum": "e7b35b1878b849be",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-306",
+     "articleId": "v1n04",
+     "seq": 306,
+     "text": "到极大的压迫，割据的长期存在将成问题。因为这种经济压迫，不但",
+     "checksum": "a565eacea17cd6aa",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-307",
+     "articleId": "v1n04",
+     "seq": 307,
+     "text": "中等阶级忍不住，工人、贫农和红军亦恐将有耐不住之时。永新、宁",
+     "checksum": "05f3be1b3633b90e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-308",
+     "articleId": "v1n04",
+     "seq": 308,
+     "text": "冈两县没有盐吃，布匹、药材完全断绝，其他更不必说。现在盐已有",
+     "checksum": "5790bd99d3da45aa",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-309",
+     "articleId": "v1n04",
+     "seq": 309,
+     "text": "卖，但极贵。布匹、药材仍然没有。宁冈及永新西部、遂川北部（以",
+     "checksum": "022f3e639c285706",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-310",
+     "articleId": "v1n04",
+     "seq": 310,
+     "text": "上均目前割据地）出产最多的木材和茶油，仍然运不出去（23）。",
+     "checksum": "30981cfaa5688eb4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-311",
+     "articleId": "v1n04",
+     "seq": 311,
+     "text": "土地分配的标准：以乡为分配土地的单位。山多田少地方，如永",
+     "checksum": "1b9e2ebc74b63515",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-312",
+     "articleId": "v1n04",
+     "seq": 312,
+     "text": "新之小江区，以三四乡为一个单位去分配的也有，但极少。所有乡村",
+     "checksum": "84eb25fc7c2d58f7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-313",
+     "articleId": "v1n04",
+     "seq": 313,
+     "text": "中男女老幼，一律平分。现依中央办法，改以劳动力为标准，能劳动",
+     "checksum": "c26bfe8c45a17435",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-314",
+     "articleId": "v1n04",
+     "seq": 314,
+     "text": "的比不能劳动的多分一倍（24）。",
+     "checksum": "c9b1747896832c6e",
+     "charCount": 16,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-315",
+     "articleId": "v1n04",
+     "seq": 315,
+     "text": "向自耕农让步问题：尚未详细讨论。自耕农中之富农，自己提出",
+     "checksum": "e4f76ce1fe4afb7d",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-316",
+     "articleId": "v1n04",
+     "seq": 316,
+     "text": "要求，欲以生产力为标准，即人工和资本（农具等）多的多分田。富",
+     "checksum": "8ef5934b7e2a43a4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-317",
+     "articleId": "v1n04",
+     "seq": 317,
+     "text": "农觉得平均分和按劳动力分两种方法都于他们不利。他们的意思，在",
+     "checksum": "890bfdf8d0f63385",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-318",
+     "articleId": "v1n04",
+     "seq": 318,
+     "text": "人工方面，他们愿意多努力，加上资本的力量，他们可以多得收获。",
+     "checksum": "ae377130b69c304b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-319",
+     "articleId": "v1n04",
+     "seq": 319,
+     "text": "若照普通人一样分了，蔑视了（闲置了）他们的特别努力和多余的资",
+     "checksum": "77e9c19e98ba23cd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-320",
+     "articleId": "v1n04",
+     "seq": 320,
+     "text": "本，他们是不愿意的。此间仍照中央办法执行。但此问题，仍当讨",
+     "checksum": "bfb1a62f043db3fe",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-321",
+     "articleId": "v1n04",
+     "seq": 321,
+     "text": "论，候得结论再作报告。",
+     "checksum": "0d652b64543f2591",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-322",
+     "articleId": "v1n04",
+     "seq": 322,
+     "text": "土地税：宁冈收的是百分之二十，比中央办法多收半成，已在征",
+     "checksum": "7f692d0d7d9a768d",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-323",
+     "articleId": "v1n04",
+     "seq": 323,
+     "text": "收中，不好变更，明年再减。此外，遂川、酃县、永新各一部在割据",
+     "checksum": "ecc5492810b4cd02",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-324",
+     "articleId": "v1n04",
+     "seq": 324,
+     "text": "区域内，都是山地，农民太苦，不好收税。政府和赤卫队用费，靠向",
+     "checksum": "6f11102b8f7512d7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-325",
+     "articleId": "v1n04",
+     "seq": 325,
+     "text": "白色区域打土豪。至于红军给养，米暂可从宁冈土地税取得，钱亦完",
+     "checksum": "9cc9839be41f7b38",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-326",
+     "articleId": "v1n04",
+     "seq": 326,
+     "text": "全靠打土豪。十月在遂川游击，筹得万余元，可用一时，用完再讲。",
+     "checksum": "8b3dda4c59d7824f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-327",
+     "articleId": "v1n04",
+     "seq": 327,
+     "text": "政权问题",
+     "checksum": "de382d7fba783b11",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-328",
+     "articleId": "v1n04",
+     "seq": 328,
+     "text": "县、区、乡各级民众政权是普遍地组织了，但是名不副实。许多",
+     "checksum": "4e4dcda3355f52e4",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-329",
+     "articleId": "v1n04",
+     "seq": 329,
+     "text": "地方无所谓工农兵代表会。乡、区两级乃至县一级，政府的执行委员",
+     "checksum": "a011f9057b514188",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-330",
+     "articleId": "v1n04",
+     "seq": 330,
+     "text": "会，都是用一种群众会选举的。一哄而集的群众会，不能讨论问题，",
+     "checksum": "3da628c9999089c3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-331",
+     "articleId": "v1n04",
+     "seq": 331,
+     "text": "不能使群众得到政治训练，又最便于知识分子或投机分子的操纵。一",
+     "checksum": "3ebe205944d8de90",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-332",
+     "articleId": "v1n04",
+     "seq": 332,
+     "text": "些地方有了代表会，亦仅认为是对执行委员会的临时选举机关；选举",
+     "checksum": "0b431f46ceb48a0a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-333",
+     "articleId": "v1n04",
+     "seq": 333,
+     "text": "完毕，大权揽于委员会，代表会再不谈起。名副其实的工农兵代表会",
+     "checksum": "bc624419bee3bd39",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-334",
+     "articleId": "v1n04",
+     "seq": 334,
+     "text": "组织，不是没有，只是少极了。所以如此，就是因为缺乏对于代表会",
+     "checksum": "06c8567769bd4f38",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-335",
+     "articleId": "v1n04",
+     "seq": 335,
+     "text": "这个新的政治制度的宣传和教育。封建时代独裁专断的恶习惯深中于",
+     "checksum": "efcf67cf551e73c3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-336",
+     "articleId": "v1n04",
+     "seq": 336,
+     "text": "群众乃至一般党员的头脑中，一时扫除不净，遇事贪图便利，不喜欢",
+     "checksum": "e74d83f59a218cb7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-337",
+     "articleId": "v1n04",
+     "seq": 337,
+     "text": "麻烦的民主制度。民主集中主义的制度，一定要在革命斗争中显出了",
+     "checksum": "57e33d7e6d07fa97",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-338",
+     "articleId": "v1n04",
+     "seq": 338,
+     "text": "它的效力，使群众了解它是最能发动群众力量和最利于斗争的，方能",
+     "checksum": "faf2df5d0855f2f6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-339",
+     "articleId": "v1n04",
+     "seq": 339,
+     "text": "普遍地真实地应用于群众组织。我们正在制订详细的各级代表会组织",
+     "checksum": "95737878dee02d26",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-340",
+     "articleId": "v1n04",
+     "seq": 340,
+     "text": "法（依据中央的大纲），把以前的错误逐渐纠正。红军中的各级士兵",
+     "checksum": "e7828b690e86c392",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-341",
+     "articleId": "v1n04",
+     "seq": 341,
+     "text": "代表会议，现亦正在使之经常建立起来，纠正从前只有士兵委员会而",
+     "checksum": "4eb09e19d9b968a4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-342",
+     "articleId": "v1n04",
+     "seq": 342,
+     "text": "无士兵代表会的错误。",
+     "checksum": "f6f69327c548c6f1",
+     "charCount": 10,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-343",
+     "articleId": "v1n04",
+     "seq": 343,
+     "text": "现在民众普遍知道的“工农兵政府”，是指委员会，因为他们尚",
+     "checksum": "b0595f09343ac81c",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-344",
+     "articleId": "v1n04",
+     "seq": 344,
+     "text": "不认识代表会的权力，以为委员会才是真正的权力机关。没有代表大",
+     "checksum": "16c5567ac34264ee",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-345",
+     "articleId": "v1n04",
+     "seq": 345,
+     "text": "会作依靠的执行委员会，其处理事情，往往脱离群众的意见，对没收",
+     "checksum": "de549afad166cb85",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-346",
+     "articleId": "v1n04",
+     "seq": 346,
+     "text": "及分配土地的犹豫妥协，对经费的滥用和贪污，对白色势力的畏避或",
+     "checksum": "ceac8cc989cd8ed6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-347",
+     "articleId": "v1n04",
+     "seq": 347,
+     "text": "斗争不坚决，到处发现。委员会也很少开全体会，遇事由常委处决。",
+     "checksum": "d98770951a8ad68e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-348",
+     "articleId": "v1n04",
+     "seq": 348,
+     "text": "区乡两级政府则常委会也少开，遇事由主席、秘书、财务或赤卫队长",
+     "checksum": "4686d7b7f473dda8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-349",
+     "articleId": "v1n04",
+     "seq": 349,
+     "text": "（暴动队长）各自处理决定，这四个人是经常驻会的。所以，民主集",
+     "checksum": "9cf3bab20504cb72",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-350",
+     "articleId": "v1n04",
+     "seq": 350,
+     "text": "中主义，在政府工作中也用得不习惯。",
+     "checksum": "308018a425f1424c",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-351",
+     "articleId": "v1n04",
+     "seq": 351,
+     "text": "初期的政府委员会中，特别是乡政府一级，小地主富农争着要",
+     "checksum": "2a56e686ab595f37",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-352",
+     "articleId": "v1n04",
+     "seq": 352,
+     "text": "干。他们挂起红带子，装得很热心，用骗术钻入了政府委员会，把持",
+     "checksum": "6777ea59bea05c42",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-353",
+     "articleId": "v1n04",
+     "seq": 353,
+     "text": "一切，使贫农委员只作配角。只有在斗争中揭破了他们的假面，贫农",
+     "checksum": "ecce3eee0f53c3b8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-354",
+     "articleId": "v1n04",
+     "seq": 354,
+     "text": "阶级起来之后，方能去掉他们。这种现象虽不普遍，但在很多地方都",
+     "checksum": "c5c517f54e6fc605",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-355",
+     "articleId": "v1n04",
+     "seq": 355,
+     "text": "发现了。",
+     "checksum": "49af265af99c0cc7",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-356",
+     "articleId": "v1n04",
+     "seq": 356,
+     "text": "党在群众中有极大的威权，政府的威权却差得多。这是由于许多",
+     "checksum": "6e33017b281eb23e",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-357",
+     "articleId": "v1n04",
+     "seq": 357,
+     "text": "事情为图省便，党在那里直接做了，把政权机关搁置一边。这种情形",
+     "checksum": "ce49e40812ee3d80",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-358",
+     "articleId": "v1n04",
+     "seq": 358,
+     "text": "是很多的。政权机关里的党团组织有些地方没有，有些地方有了也用",
+     "checksum": "a11791406671a9fd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-359",
+     "articleId": "v1n04",
+     "seq": 359,
+     "text": "得不完满。以后党要执行领导政府的任务；党的主张办法，除宣传",
+     "checksum": "74d68e4ac99cbfab",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-360",
+     "articleId": "v1n04",
+     "seq": 360,
+     "text": "外，执行的时候必须通过政府的组织。国民党直接向政府下命令的错",
+     "checksum": "f90e2f35c0c246b2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-361",
+     "articleId": "v1n04",
+     "seq": 361,
+     "text": "误办法，是要避免的。",
+     "checksum": "4ecc7cd847dc5a40",
+     "charCount": 10,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-362",
+     "articleId": "v1n04",
+     "seq": 362,
+     "text": "党的组织问题",
+     "checksum": "478334b1fba67c77",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-363",
+     "articleId": "v1n04",
+     "seq": 363,
+     "text": "与机会主义斗争的经过：马日事变前后，边界各县的党，可以说",
+     "checksum": "d05accfb57cb3861",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-364",
+     "articleId": "v1n04",
+     "seq": 364,
+     "text": "是被机会主义操纵的。当反革命到来时，很少坚决的斗争。去年十",
+     "checksum": "7b64bb2160345113",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-365",
+     "articleId": "v1n04",
+     "seq": 365,
+     "text": "月，红军（工农革命军第一军第一师第一团）到达边界各县时，只剩",
+     "checksum": "46d3aa60868fc3d6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-366",
+     "articleId": "v1n04",
+     "seq": 366,
+     "text": "下若干避难藏匿的党员，党的组织全部被敌人破坏了。十一月到今年",
+     "checksum": "ce7e7ee8f225cc83",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-367",
+     "articleId": "v1n04",
+     "seq": 367,
+     "text": "四月，为重新建党时期，五月以后为大发展时期。一年以来，党内机",
+     "checksum": "74eaa5bf09d5fd79",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-368",
+     "articleId": "v1n04",
+     "seq": 368,
+     "text": "会主义现象仍然到处发现：一部分党员无斗争决心，敌来躲入深山，",
+     "checksum": "f06d328a26a3f2c1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-369",
+     "articleId": "v1n04",
+     "seq": 369,
+     "text": "叫做“打埋伏”；一部分党员富有积极性，却又流于盲目的暴动。这",
+     "checksum": "eb6c2895b3bc70f6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-370",
+     "articleId": "v1n04",
+     "seq": 370,
+     "text": "些都是小资产阶级思想的表现。这种情形，经过长期的斗争锻炼和党",
+     "checksum": "32d73be8b2d2b1ff",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-371",
+     "articleId": "v1n04",
+     "seq": 371,
+     "text": "内教育，逐渐减少了。同时，在红军中，这种小资产阶级的思想，也",
+     "checksum": "cd99677c9996614e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-372",
+     "articleId": "v1n04",
+     "seq": 372,
+     "text": "是存在的。敌人来了，主张拚一下，否则就要逃跑。这两种思想，往",
+     "checksum": "4af896b1756a259c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-373",
+     "articleId": "v1n04",
+     "seq": 373,
+     "text": "往在讨论作战时由一个人说出来。经过了长时间党内的斗争和客观事",
+     "checksum": "19ea7a4db6a4643a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-374",
+     "articleId": "v1n04",
+     "seq": 374,
+     "text": "实的教训，例如拚一下遭了损伤，逃跑遭了失败，才逐渐地改变过",
+     "checksum": "bc55a09204765cc3",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-375",
+     "articleId": "v1n04",
+     "seq": 375,
+     "text": "来。",
+     "checksum": "2a31862fc64d9266",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-376",
+     "articleId": "v1n04",
+     "seq": 376,
+     "text": "地方主义：边界的经济，是农业经济，有些地方还停留在杵臼时",
+     "checksum": "d2a6d759b434ca1f",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-377",
+     "articleId": "v1n04",
+     "seq": 377,
+     "text": "代（山地大都用杵臼舂米，平地方有许多石碓）。社会组织是普遍地",
+     "checksum": "104fbf966434a822",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-378",
+     "articleId": "v1n04",
+     "seq": 378,
+     "text": "以一姓为单位的家族组织。党在村落中的组织，因居住关系，许多是",
+     "checksum": "30cf0a2af5102c5f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-379",
+     "articleId": "v1n04",
+     "seq": 379,
+     "text": "一姓的党员为一个支部，支部会议简直同时就是家族会议。在这种情",
+     "checksum": "a50aba6c189deda1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-380",
+     "articleId": "v1n04",
+     "seq": 380,
+     "text": "形下，“斗争的布尔什维克党”的建设，真是难得很。说共产党不分",
+     "checksum": "63d01410acb21ce1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-381",
+     "articleId": "v1n04",
+     "seq": 381,
+     "text": "国界省界的话，他们不大懂，不分县界、区界、乡界的话，他们也是",
+     "checksum": "047d5a583f2b73c2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-382",
+     "articleId": "v1n04",
+     "seq": 382,
+     "text": "不大懂得的。各县之间地方主义很重，一县内的各区乃至各乡之间也",
+     "checksum": "13652372711e13cb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-383",
+     "articleId": "v1n04",
+     "seq": 383,
+     "text": "有很深的地方主义。这种地方主义的改变，说道理，至多发生几分效",
+     "checksum": "6731c380cdfdc59e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-384",
+     "articleId": "v1n04",
+     "seq": 384,
+     "text": "力，多半要靠白色势力的非地方主义的压迫。例如反革命的两省“会",
+     "checksum": "a114c78a147f71a2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-385",
+     "articleId": "v1n04",
+     "seq": 385,
+     "text": "剿”，使人民在斗争中有了共同的利害，才可以逐渐地打破他们的地",
+     "checksum": "133c1f5ab18a16cb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-386",
+     "articleId": "v1n04",
+     "seq": 386,
+     "text": "方主义。经过了许多这样的教训，地方主义是减少了。",
+     "checksum": "afec8a61182b5ffa",
+     "charCount": 24,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-387",
+     "articleId": "v1n04",
+     "seq": 387,
+     "text": "土客籍问题：边界各县还有一件特别的事，就是土客籍的界限。",
+     "checksum": "f812a939d9503f50",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-388",
+     "articleId": "v1n04",
+     "seq": 388,
+     "text": "土籍的本地人和数百年前从北方移来的客籍人之间存在着很大的界",
+     "checksum": "a966ba325cf544a4",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-389",
+     "articleId": "v1n04",
+     "seq": 389,
+     "text": "限，历史上的仇怨非常深，有时发生很激烈的斗争。这种客籍人从闽",
+     "checksum": "40f1034843c8f4b3",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-390",
+     "articleId": "v1n04",
+     "seq": 390,
+     "text": "粤边起，沿湘、赣两省边界，直至鄂南，大概有几百万人。客籍占领",
+     "checksum": "396fc81b1287f273",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-391",
+     "articleId": "v1n04",
+     "seq": 391,
+     "text": "山地，为占领平地的土籍所压迫，素无政治权利。前年和去年的国民",
+     "checksum": "0714db10c1ec4214",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-392",
+     "articleId": "v1n04",
+     "seq": 392,
+     "text": "革命，客籍表示欢迎，以为出头有日。不料革命失败，客籍被土籍压",
+     "checksum": "a7bef6532155fcc5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-393",
+     "articleId": "v1n04",
+     "seq": 393,
+     "text": "迫如故。我们的区域内，宁冈、遂川、酃县、茶陵，都有土客籍问",
+     "checksum": "ce2f5c89cfdd9437",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-394",
+     "articleId": "v1n04",
+     "seq": 394,
+     "text": "题，而以宁冈的问题为最严重。前年至去年，宁冈的土籍革命派和客",
+     "checksum": "3de2b67de1ad4b7b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-395",
+     "articleId": "v1n04",
+     "seq": 395,
+     "text": "籍结合，在共产党领导之下，推翻了土籍豪绅的政权，掌握了全县。",
+     "checksum": "53c57b7e11f2d51b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-396",
+     "articleId": "v1n04",
+     "seq": 396,
+     "text": "去年六月，江西朱培德政府反革命，九月，豪绅带领朱培德军队“进",
+     "checksum": "803e19b68e6bc563",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-397",
+     "articleId": "v1n04",
+     "seq": 397,
+     "text": "剿”宁冈，重新挑起土客籍人民之间斗争。这种土客籍的界限，在道",
+     "checksum": "6d52f4ed6e8fffb0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-398",
+     "articleId": "v1n04",
+     "seq": 398,
+     "text": "理上讲不应引到被剥削的工农阶级内部来，尤其不应引到共产党内部",
+     "checksum": "39d54b2c312fd5b5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-399",
+     "articleId": "v1n04",
+     "seq": 399,
+     "text": "来。然而在事实上，因为多年遗留下来的习惯，这种界限依然存在。",
+     "checksum": "c4e1cfd066592889",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-400",
+     "articleId": "v1n04",
+     "seq": 400,
+     "text": "例如边界八月失败，土籍豪绅带领反动军队回宁冈，宣传客籍将要杀",
+     "checksum": "47a31acc72f53d89",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-401",
+     "articleId": "v1n04",
+     "seq": 401,
+     "text": "土籍，土籍农民大部分反水，挂起白带子，带领白军烧屋搜山。十",
+     "checksum": "b40015108895a7b5",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-402",
+     "articleId": "v1n04",
+     "seq": 402,
+     "text": "月、十一月红军打败白军，土籍农民跟着反动派逃走，客籍农民又去",
+     "checksum": "163baa81680f75dc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-403",
+     "articleId": "v1n04",
+     "seq": 403,
+     "text": "没收土籍农民的财物。这种情况，反映到党内来，时常发生无谓的斗",
+     "checksum": "28898bd9e395ddbf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-404",
+     "articleId": "v1n04",
+     "seq": 404,
+     "text": "争。我们的办法是一面宣传“不杀反水农民”，“反水农民回来一样",
+     "checksum": "1ab33d7ffca5833a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-405",
+     "articleId": "v1n04",
+     "seq": 405,
+     "text": "得田地”，使他们脱离豪绅的影响，安心回家；一面由县政府责令客",
+     "checksum": "184fa6666d3f8ef6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-406",
+     "articleId": "v1n04",
+     "seq": 406,
+     "text": "籍农民将没收的财物退还原主，并出布告保护土籍农民。在党内，加",
+     "checksum": "6b400357de8f27c1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-407",
+     "articleId": "v1n04",
+     "seq": 407,
+     "text": "紧教育，务使两部分党员团结一致。",
+     "checksum": "60cad304cdcb2889",
+     "charCount": 16,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-408",
+     "articleId": "v1n04",
+     "seq": 408,
+     "text": "投机分子的反水：革命高涨时（六月），许多投机分子乘公开征",
+     "checksum": "3ba6078071402a68",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-409",
+     "articleId": "v1n04",
+     "seq": 409,
+     "text": "收党员的机会混入党内，边界党员数量一时增到一万以上。支部和区",
+     "checksum": "ead26f928e1a8518",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-410",
+     "articleId": "v1n04",
+     "seq": 410,
+     "text": "委的负责人多属新党员，不能有好的党内教育。白色恐怖一到，投机",
+     "checksum": "66de2961ad4934d2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-411",
+     "articleId": "v1n04",
+     "seq": 411,
+     "text": "分子反水，带领反动派捉拿同志，白区党的组织大半塌台。九月以",
+     "checksum": "c7d7aa8391563ccd",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-412",
+     "articleId": "v1n04",
+     "seq": 412,
+     "text": "后，厉行洗党，对于党员成分加以严格的限制。永新、宁冈两县的党",
+     "checksum": "755dedadb6cc838e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-413",
+     "articleId": "v1n04",
+     "seq": 413,
+     "text": "组织全部解散，重新登记。党员数量大为减少，战斗力反而增加。过",
+     "checksum": "83954e00eaab6101",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-414",
+     "articleId": "v1n04",
+     "seq": 414,
+     "text": "去党的组织全部公开，九月以后，建设秘密的组织，准备在反动派来",
+     "checksum": "587c153c5f731835",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-415",
+     "articleId": "v1n04",
+     "seq": 415,
+     "text": "了也能活动。同时多方伸入白区，在敌人营垒中去活动。但在附近各",
+     "checksum": "c34b58419abd902b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-416",
+     "articleId": "v1n04",
+     "seq": 416,
+     "text": "城市中还没有党的基础。其原因一因城市中敌人势力较大，二因我军",
+     "checksum": "bd3b27411b55bc2f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-417",
+     "articleId": "v1n04",
+     "seq": 417,
+     "text": "在占领这些城市时太损害了资产阶级的利益，致使党员在那里难于立",
+     "checksum": "9eadc2aecdfba655",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-418",
+     "articleId": "v1n04",
+     "seq": 418,
+     "text": "足。现在纠正错误，力求在城市中建设我们的组织，但成效尚不多",
+     "checksum": "aadb64e6680dd1ce",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-419",
+     "articleId": "v1n04",
+     "seq": 419,
+     "text": "见。",
+     "checksum": "7eb5e8ef872eaa63",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-420",
+     "articleId": "v1n04",
+     "seq": 420,
+     "text": "党的领导机关：支部干事会改称委员会。支部上为区委，区委上",
+     "checksum": "b7a2a8296ab17c85",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-421",
+     "articleId": "v1n04",
+     "seq": 421,
+     "text": "为县委。区委县委之间因特别情况有组织特别区委的，如永新的北乡",
+     "checksum": "471f65735f5515cb",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-422",
+     "articleId": "v1n04",
+     "seq": 422,
+     "text": "特区及东南特区。边区共有宁冈、永新、莲花、遂川、酃县五个县",
+     "checksum": "8498f8add7b451cf",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-423",
+     "articleId": "v1n04",
+     "seq": 423,
+     "text": "委。茶陵原有县委，因工作做不进去，去冬今春建设的许多组织大部",
+     "checksum": "408d1387af2d691c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-424",
+     "articleId": "v1n04",
+     "seq": 424,
+     "text": "被白色势力打塌了，半年以来只能在靠近宁冈永新一带的山地工作，",
+     "checksum": "750db2a91f957181",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-425",
+     "articleId": "v1n04",
+     "seq": 425,
+     "text": "因此将县委改为特别区委。攸县、安仁均须越过茶陵，派人去过，无",
+     "checksum": "18af2a5f8983fedc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-426",
+     "articleId": "v1n04",
+     "seq": 426,
+     "text": "功而返。万安县委一月间曾和我们在遂川开过一次联席会议，大半年",
+     "checksum": "dd7cc3a2ee80868f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-427",
+     "articleId": "v1n04",
+     "seq": 427,
+     "text": "被白色势力隔断，九月红军游击到万安，才又接一次头。有八十个革",
+     "checksum": "e1af22d91eae049b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-428",
+     "articleId": "v1n04",
+     "seq": 428,
+     "text": "命农民跟随到井冈山，组织万安赤卫队。安福没有党的组织。吉安邻",
+     "checksum": "ab2e1551cc5335e5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-429",
+     "articleId": "v1n04",
+     "seq": 429,
+     "text": "接永新，吉安县委仅和我们接过两次头，一点帮助不给，奇怪得很。",
+     "checksum": "46209aac21da6367",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-430",
+     "articleId": "v1n04",
+     "seq": 430,
+     "text": "桂东的沙田一带，三月八月两度分配土地，建设了党的组织，属于以",
+     "checksum": "f8f53e69af88e927",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-431",
+     "articleId": "v1n04",
+     "seq": 431,
+     "text": "龙溪十二洞为中心的湘南特委管辖。各县县委之上为湘赣边界特委。",
+     "checksum": "d586be8ee854f6f1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-432",
+     "articleId": "v1n04",
+     "seq": 432,
+     "text": "五月二十日，边界党的第一次代表大会在宁冈茅坪开会，选举第一届",
+     "checksum": "f3b5f70c10b93692",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-433",
+     "articleId": "v1n04",
+     "seq": 433,
+     "text": "特委会委员二十三人，毛泽东为书记。七月湖南省委派杨开明来，杨",
+     "checksum": "ca700e7f1092d6a5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-434",
+     "articleId": "v1n04",
+     "seq": 434,
+     "text": "代理书记。九月杨病，谭震林代理书记。八月红军大队往湘南，白色",
+     "checksum": "e4f9ac5b916b3f27",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-435",
+     "articleId": "v1n04",
+     "seq": 435,
+     "text": "势力高压边界，我们曾在永新开过一次紧急会议。十月红军返至宁",
+     "checksum": "851d3ab90fbfb8d7",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-436",
+     "articleId": "v1n04",
+     "seq": 436,
+     "text": "冈，乃在茅坪召集边界党的第二次代表大会。十月四日起开会三天，",
+     "checksum": "1bfa7e94530ec0c0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-437",
+     "articleId": "v1n04",
+     "seq": 437,
+     "text": "通过了《政治问题和边界党的任务》等决议，选举了谭震林、朱德、",
+     "checksum": "77d31eb12500b2ef",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-438",
+     "articleId": "v1n04",
+     "seq": 438,
+     "text": "陈毅、龙超清、朱昌偕、刘天干、盘圆珠、谭思聪、谭兵、李却非、",
+     "checksum": "aaf316cab32c4ca2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-439",
+     "articleId": "v1n04",
+     "seq": 439,
+     "text": "朱亦岳、袁文才、王佐农、陈正人、毛泽东、宛希先、王佐、杨开",
+     "checksum": "b5294e7ba6fc7554",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-440",
+     "articleId": "v1n04",
+     "seq": 440,
+     "text": "明、何挺颖等十九人为第二届特委会的委员。五人为常委，谭震林",
+     "checksum": "e29163671c2cbc58",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-441",
+     "articleId": "v1n04",
+     "seq": 441,
+     "text": "（工人）为书记，陈正人（知识分子）为副书记。十一月十四日红军",
+     "checksum": "0ef7afcf1ad5bb69",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-442",
+     "articleId": "v1n04",
+     "seq": 442,
+     "text": "第六次全军大会（25），选举二十三人组织军委，五人为常委，朱德",
+     "checksum": "da844907166d04c9",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-443",
+     "articleId": "v1n04",
+     "seq": 443,
+     "text": "为书记。特委及军委统辖于前委。前委是十一月六日重新组织的，依",
+     "checksum": "6c83fcd16c492d28",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-444",
+     "articleId": "v1n04",
+     "seq": 444,
+     "text": "中央的指定，以毛泽东、朱德、地方党部书记（谭震林）、一工人同",
+     "checksum": "4223ddb535bc1c35",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-445",
+     "articleId": "v1n04",
+     "seq": 445,
+     "text": "志（宋乔生）、一农民同志（毛科文）五人组成，毛泽东为书记。前",
+     "checksum": "0ff0711f8304aa51",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-446",
+     "articleId": "v1n04",
+     "seq": 446,
+     "text": "委暂设秘书处、宣传科、组织科和职工运动委员会、军事委员会。前",
+     "checksum": "57ad9ce3fe5de4f0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-447",
+     "articleId": "v1n04",
+     "seq": 447,
+     "text": "委管理地方党。特委仍有存在的必要，因为前委有时要随军行动。我",
+     "checksum": "1d816d1ac0095213",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-448",
+     "articleId": "v1n04",
+     "seq": 448,
+     "text": "们感觉无产阶级思想领导的问题，是一个非常重要的问题。边界各县",
+     "checksum": "32d3ac2216bedeaf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-449",
+     "articleId": "v1n04",
+     "seq": 449,
+     "text": "的党，几乎完全是农民成分的党，若不给以无产阶级的思想领导，其",
+     "checksum": "238ec9821574aa36",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-450",
+     "articleId": "v1n04",
+     "seq": 450,
+     "text": "趋向是会要错误的。除应积极注意各县城和大市镇的职工运动外，并",
+     "checksum": "f6e550ff80319f60",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-451",
+     "articleId": "v1n04",
+     "seq": 451,
+     "text": "应在政权机关中增加工人的代表。党的各级领导机关也应增加工人和",
+     "checksum": "98658e92c98e7404",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-452",
+     "articleId": "v1n04",
+     "seq": 452,
+     "text": "贫农的成分。",
+     "checksum": "e2598e8c12a41a5b",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-453",
+     "articleId": "v1n04",
+     "seq": 453,
+     "text": "革命性质问题",
+     "checksum": "db62b23ba7511f34",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-454",
+     "articleId": "v1n04",
+     "seq": 454,
+     "text": "我们完全同意共产国际关于中国问题的决议。中国现时确实还是",
+     "checksum": "50dd4f32b05ac38f",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-455",
+     "articleId": "v1n04",
+     "seq": 455,
+     "text": "处在资产阶级民权革命的阶段。中国彻底的民权主义革命的纲领，包",
+     "checksum": "16551b8236fd8413",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-456",
+     "articleId": "v1n04",
+     "seq": 456,
+     "text": "括对外推翻帝国主义，求得彻底的民族解放；对内肃清买办阶级的在",
+     "checksum": "891f6226982d6ba7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-457",
+     "articleId": "v1n04",
+     "seq": 457,
+     "text": "城市的势力，完成土地革命，消灭乡村的封建关系，推翻军阀政府。",
+     "checksum": "687ad6be5eddb6af",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-458",
+     "articleId": "v1n04",
+     "seq": 458,
+     "text": "必定要经过这样的民权主义革命，方能造成过渡到社会主义的真正基",
+     "checksum": "b722268497b3e822",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-459",
+     "articleId": "v1n04",
+     "seq": 459,
+     "text": "础。我们一年来转战各地，深感全国革命潮流的低落。一方面有少数",
+     "checksum": "082118842683016f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-460",
+     "articleId": "v1n04",
+     "seq": 460,
+     "text": "小块地方的红色政权，一方面全国人民还没有普通的民权，工人农民",
+     "checksum": "a763b43deb8258fd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-461",
+     "articleId": "v1n04",
+     "seq": 461,
+     "text": "以至民权派的资产阶级，一概没有言论集会的权利，加入共产党是最",
+     "checksum": "59e962d75b9caafc",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-462",
+     "articleId": "v1n04",
+     "seq": 462,
+     "text": "大的犯罪。红军每到一地，群众冷冷清清，经过宣传之后，才慢慢地",
+     "checksum": "5c9763796119730c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-463",
+     "articleId": "v1n04",
+     "seq": 463,
+     "text": "起来。和敌军打仗，不论哪一军都要硬打，没有什么敌军内部的倒戈",
+     "checksum": "32e446403132cc36",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-464",
+     "articleId": "v1n04",
+     "seq": 464,
+     "text": "或暴动。马日事变后招募“暴徒”最多的第六军，也是这样。我们深",
+     "checksum": "a8d24a286f77ec6b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-465",
+     "articleId": "v1n04",
+     "seq": 465,
+     "text": "深感觉寂寞，我们时刻盼望这种寂寞生活的终了。要转入到沸热的全",
+     "checksum": "2604393735206782",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-466",
+     "articleId": "v1n04",
+     "seq": 466,
+     "text": "国高涨的革命中去，则包括城市小资产阶级在内的政治的经济的民权",
+     "checksum": "a6936eb1e7f34b22",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-467",
+     "articleId": "v1n04",
+     "seq": 467,
+     "text": "主义斗争的发动，是必经的道路。",
+     "checksum": "eef3db2ee07bb633",
+     "charCount": 15,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-468",
+     "articleId": "v1n04",
+     "seq": 468,
+     "text": "对小资产阶级的政策，我们在今年二月以前，是比较地执行得好",
+     "checksum": "892f92508f178412",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-469",
+     "articleId": "v1n04",
+     "seq": 469,
+     "text": "的。三月湘南特委的代表到宁冈，批评我们太右，烧杀太少，没有执",
+     "checksum": "13d811f7a8a2a76c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-470",
+     "articleId": "v1n04",
+     "seq": 470,
+     "text": "行所谓“使小资产变成无产，然后强迫他们革命”的政策，于是改变",
+     "checksum": "fac1c61724124da8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-471",
+     "articleId": "v1n04",
+     "seq": 471,
+     "text": "原来前委的领导人，政策一变。四月全军到边界后，烧杀虽仍不多，",
+     "checksum": "553e0277fbadd956",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-472",
+     "articleId": "v1n04",
+     "seq": 472,
+     "text": "但对城市中等商人的没收和乡村小地主富农的派款，是做得十分厉害",
+     "checksum": "4f4576bc33e7f0e1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-473",
+     "articleId": "v1n04",
+     "seq": 473,
+     "text": "的。湘南特委提出的“一切工厂归工人”的口号，也宣传得很普遍。",
+     "checksum": "09664af6f3d81093",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-474",
+     "articleId": "v1n04",
+     "seq": 474,
+     "text": "这种打击小资产阶级的过左的政策，把小资产阶级大部驱到豪绅一",
+     "checksum": "4a786864a067331d",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-475",
+     "articleId": "v1n04",
+     "seq": 475,
+     "text": "边，使他们挂起白带子反对我们。近来逐渐改变这种政策，情形渐渐",
+     "checksum": "2ffd78d154b4916f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-476",
+     "articleId": "v1n04",
+     "seq": 476,
+     "text": "好些。在遂川特别收到了好的效果，县城和市镇上的商人不畏避我们",
+     "checksum": "75951110cb3709a2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-477",
+     "articleId": "v1n04",
+     "seq": 477,
+     "text": "了，颇有说红军的好话的。草林圩上逢圩（日中为市，三天一次），",
+     "checksum": "c5ea8f9b0869643c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-478",
+     "articleId": "v1n04",
+     "seq": 478,
+     "text": "到圩两万人，为从来所未有。这件事，证明我们的政策是正确的了。",
+     "checksum": "9f2c76537ce0fff8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-479",
+     "articleId": "v1n04",
+     "seq": 479,
+     "text": "豪绅对人民的税捐很重，遂川靖卫团（26）在黄坳到草林七十里路上",
+     "checksum": "dc31cf44cb84a3ff",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-480",
+     "articleId": "v1n04",
+     "seq": 480,
+     "text": "要抽五道税，无论什么农产都不能免。我们打掉靖卫团，取消这些",
+     "checksum": "19201e21e7d23682",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-481",
+     "articleId": "v1n04",
+     "seq": 481,
+     "text": "税，获得了农民和中小商人全体的拥护。",
+     "checksum": "1cfe95ecfe1f94b8",
+     "charCount": 18,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-482",
+     "articleId": "v1n04",
+     "seq": 482,
+     "text": "中央要我们发布一个包括小资产阶级利益的政纲，我们则提议请",
+     "checksum": "5ccc75864e851872",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-483",
+     "articleId": "v1n04",
+     "seq": 483,
+     "text": "中央制订一个整个民权革命的政纲，包括工人利益、土地革命和民族",
+     "checksum": "95f05527a5c9b010",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-484",
+     "articleId": "v1n04",
+     "seq": 484,
+     "text": "解放，使各地有所遵循。",
+     "checksum": "18273c8b74c03094",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-485",
+     "articleId": "v1n04",
+     "seq": 485,
+     "text": "以农业为主要经济的中国的革命，以军事发展暴动，是一种特",
+     "checksum": "7712531752a9874a",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-486",
+     "articleId": "v1n04",
+     "seq": 486,
+     "text": "征。我们建议中央，用大力做军事运动。",
+     "checksum": "632a2ff2e1e076d0",
+     "charCount": 18,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-487",
+     "articleId": "v1n04",
+     "seq": 487,
+     "text": "割据地区问题",
+     "checksum": "83250534975a8796",
+     "charCount": 6,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-488",
+     "articleId": "v1n04",
+     "seq": 488,
+     "text": "广东北部沿湖南江西两省边界至湖北南部，都属罗霄山脉区域。",
+     "checksum": "8df6b4ffd28384ab",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-489",
+     "articleId": "v1n04",
+     "seq": 489,
+     "text": "整个的罗霄山脉我们都走遍了；各部分比较起来，以宁冈为中心的罗",
+     "checksum": "274f3b80dee6579c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-490",
+     "articleId": "v1n04",
+     "seq": 490,
+     "text": "霄山脉的中段，最利于我们的军事割据。北段地势不如中段可进可",
+     "checksum": "7b949a2e8cef9ffb",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-491",
+     "articleId": "v1n04",
+     "seq": 491,
+     "text": "守，又太迫近了大的政治都会，如果没有迅速夺取长沙或武汉的计",
+     "checksum": "12d6de7f4c12aa2d",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-492",
+     "articleId": "v1n04",
+     "seq": 492,
+     "text": "划，则以大部兵力放在浏阳、醴陵、萍乡、铜鼓一带是很危险的。南",
+     "checksum": "697674465d6ad3b2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-493",
+     "articleId": "v1n04",
+     "seq": 493,
+     "text": "段地势较北段好，但群众基础不如中段，政治上及于湘赣两省的影响",
+     "checksum": "05e6b3fef551391c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-494",
+     "articleId": "v1n04",
+     "seq": 494,
+     "text": "也小些，不如中段一举一动可以影响两省的下游。中段的长处：（1）",
+     "checksum": "cf914a3d5084c5d7",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-495",
+     "articleId": "v1n04",
+     "seq": 495,
+     "text": "有经营了一年多的群众基础。（2）党的组织有相当的基础。（3）经",
+     "checksum": "6a6be900c1c57132",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-496",
+     "articleId": "v1n04",
+     "seq": 496,
+     "text": "过一年多的时间，创造了富有斗争经验的地方武装，这是十分难得",
+     "checksum": "d07fbeb2cbb7550b",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-497",
+     "articleId": "v1n04",
+     "seq": 497,
+     "text": "的；这个地方武装的力量，加上红军第四军的力量，是任凭什么敌人",
+     "checksum": "8a8ec94dd136129a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-498",
+     "articleId": "v1n04",
+     "seq": 498,
+     "text": "也不能消灭的。（4）有很好的军事根据地——井冈山，地方武装的根",
+     "checksum": "9e7cd04c3013dbc3",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-499",
+     "articleId": "v1n04",
+     "seq": 499,
+     "text": "据地则各县都有。（5）影响两省，且能影响两省的下游，比较湘南赣",
+     "checksum": "b50e82f8432e07b0",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-500",
+     "articleId": "v1n04",
+     "seq": 500,
+     "text": "南等处只影响一省，且在一省的上游和僻地者，政治意义大不相同。",
+     "checksum": "c025f3adc353a387",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-501",
+     "articleId": "v1n04",
+     "seq": 501,
+     "text": "中段的缺点，是因割据已久，“围剿”军多，经济问题，特别是现金",
+     "checksum": "5efda5a281df285c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-502",
+     "articleId": "v1n04",
+     "seq": 502,
+     "text": "问题，十分困难。",
+     "checksum": "6b3c90088b486969",
+     "charCount": 8,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-503",
+     "articleId": "v1n04",
+     "seq": 503,
+     "text": "湖南省委对于此间的行动计划，六七月间数星期内，曾三变其主",
+     "checksum": "073005dc783f0592",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-504",
+     "articleId": "v1n04",
+     "seq": 504,
+     "text": "张。第一次袁德生来，赞成罗霄山脉中段政权计划。第二次杜修经、",
+     "checksum": "bf88ff113a3c8915",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-505",
+     "articleId": "v1n04",
+     "seq": 505,
+     "text": "杨开明来，主张红军毫不犹豫地向湘南发展，只留二百枝枪会同赤卫",
+     "checksum": "a5cc33b29df4a6ed",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-506",
+     "articleId": "v1n04",
+     "seq": 506,
+     "text": "队保卫边界，并说这是“绝对正确”的方针。第三次袁德生又来，相",
+     "checksum": "3eacd2d38de093d2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-507",
+     "articleId": "v1n04",
+     "seq": 507,
+     "text": "隔不过十天，这次信上除骂了我们一大篇外，却主张红军向湘东去，",
+     "checksum": "5ca9b023abcf424a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-508",
+     "articleId": "v1n04",
+     "seq": 508,
+     "text": "又说是“绝对正确”的方针，而且又要我们“毫不犹豫”。我们接受",
+     "checksum": "70ffeae5892d8b75",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-509",
+     "articleId": "v1n04",
+     "seq": 509,
+     "text": "了这样硬性的指示，不从则迹近违抗，从则明知失败，真是不好处。",
+     "checksum": "adac51ce350acf67",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-510",
+     "articleId": "v1n04",
+     "seq": 510,
+     "text": "当第二次信到时，军委、特委、永新县委举行联席会议，认为往湘南",
+     "checksum": "5000414b78fdfb51",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-511",
+     "articleId": "v1n04",
+     "seq": 511,
+     "text": "危险，决定不执行省委的意见。数天之后，却由杜修经杨开明坚持省",
+     "checksum": "45ff7aeed6d813bf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-512",
+     "articleId": "v1n04",
+     "seq": 512,
+     "text": "委意见，利用第二十九团的乡土观念，把红军拉去攻郴州，致边界和",
+     "checksum": "32c98d165f5c439e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-513",
+     "articleId": "v1n04",
+     "seq": 513,
+     "text": "红军一齐失败。红军数量上约损失一半；边界则被焚之屋、被杀之人",
+     "checksum": "cb529961cedf6607",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-514",
+     "articleId": "v1n04",
+     "seq": 514,
+     "text": "不可胜数，各县相继失陷，至今未能完全恢复。至于往湘东，在湘鄂",
+     "checksum": "fd43ae305433adef",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-515",
+     "articleId": "v1n04",
+     "seq": 515,
+     "text": "赣三省豪绅政权尚未分裂之前，亦决不宜用红军的主力去。设七月无",
+     "checksum": "7e8dd5e9446730f7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-516",
+     "articleId": "v1n04",
+     "seq": 516,
+     "text": "去湘南一举，则不但可免边界的八月失败，且可乘国民党第六军和王",
+     "checksum": "431ff54e460d0981",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-517",
+     "articleId": "v1n04",
+     "seq": 517,
+     "text": "均战于江西樟树之际，击破永新敌军，席卷吉安、安福，前锋可达萍",
+     "checksum": "0d19fc2d8a19c74e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-518",
+     "articleId": "v1n04",
+     "seq": 518,
+     "text": "乡，而与北段之红第五军取得联络。即在这种时候，也应以宁冈为大",
+     "checksum": "4014b1d79ba2378b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-519",
+     "articleId": "v1n04",
+     "seq": 519,
+     "text": "本营，去湘东的只能是游击部队。因豪绅间战争未起，湘边酃县、茶",
+     "checksum": "e7010a23c1c28856",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-520",
+     "articleId": "v1n04",
+     "seq": 520,
+     "text": "陵、攸县尚有大敌，主力北向，必为所乘。中央要我们考虑往湘东或",
+     "checksum": "23a19455615b480d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-521",
+     "articleId": "v1n04",
+     "seq": 521,
+     "text": "往湘南，实行起来都很危险，湘东之议虽未实现，湘南则已有证验。",
+     "checksum": "45cc40c6314b4929",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-522",
+     "articleId": "v1n04",
+     "seq": 522,
+     "text": "这种痛苦的经验，是值得我们时时记着的。",
+     "checksum": "82f7a786560792cb",
+     "charCount": 19,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-523",
+     "articleId": "v1n04",
+     "seq": 523,
+     "text": "现在是豪绅阶级统治还没有破裂的时期，环边界而“进剿”的敌",
+     "checksum": "174e9a6322ae1008",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-524",
+     "articleId": "v1n04",
+     "seq": 524,
+     "text": "军，尚有十余团之多。但若我们于现金问题能继续找得出路（粮食衣",
+     "checksum": "d7a6615cb2d913c7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-525",
+     "articleId": "v1n04",
+     "seq": 525,
+     "text": "服已不成大问题），则凭借边界的基础，对付此数敌人，甚至更多的",
+     "checksum": "879da2e2e55cc04e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-526",
+     "articleId": "v1n04",
+     "seq": 526,
+     "text": "敌人，均有办法。为边界计，红军若走，则像八月那样的蹂躏，立可",
+     "checksum": "bbedd4de33f90312",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-527",
+     "articleId": "v1n04",
+     "seq": 527,
+     "text": "重来。赤卫队虽不至完全消灭，党和群众的基础将受到极大的摧残，",
+     "checksum": "ad040af446bfc226",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-528",
+     "articleId": "v1n04",
+     "seq": 528,
+     "text": "除山头割据可以保存一些外，平地均将转入秘密状态，如八九月间一",
+     "checksum": "e8d48239651c6e88",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-529",
+     "articleId": "v1n04",
+     "seq": 529,
+     "text": "样。红军不走，以现在的基础可以逐渐向四周发展，前途的希望是很",
+     "checksum": "bdfa533858aee93b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-530",
+     "articleId": "v1n04",
+     "seq": 530,
+     "text": "大的。为红军计，欲求扩大，只有在有群众基础的井冈山四周即宁",
+     "checksum": "9aeb03d1b1bb9c79",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-531",
+     "articleId": "v1n04",
+     "seq": 531,
+     "text": "冈、永新、酃县、遂川四县，利用湘赣两敌利害不一致，四面防守，",
+     "checksum": "1ee9e2eec3a4a248",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-532",
+     "articleId": "v1n04",
+     "seq": 532,
+     "text": "无法集中的情况，和敌人作长期的斗争。利用正确的战术，不战则",
+     "checksum": "084c7fdd07a95eca",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-533",
+     "articleId": "v1n04",
+     "seq": 533,
+     "text": "已，战则必胜，必有俘获，如此可以逐渐扩大红军。以四月至七月那",
+     "checksum": "e6dc6a59a97d4791",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-534",
+     "articleId": "v1n04",
+     "seq": 534,
+     "text": "时边界群众的准备，红军大队若无湘南之行，则八月间红军的扩大是",
+     "checksum": "10d013cfe58349ac",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-535",
+     "articleId": "v1n04",
+     "seq": 535,
+     "text": "没有疑义的。虽然犯了一次错误，红军已卷土重来此地利人和之边",
+     "checksum": "4e5c497fce0c4d9a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-536",
+     "articleId": "v1n04",
+     "seq": 536,
+     "text": "界，前途希望还是不恶。红军必须在边界这等地方，下斗争的决心，",
+     "checksum": "078edec7e6cb394f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-537",
+     "articleId": "v1n04",
+     "seq": 537,
+     "text": "有耐战的勇气，才能增加武器，练出好兵。边界的红旗子，业已打了",
+     "checksum": "eb01e9c3f0261065",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-538",
+     "articleId": "v1n04",
+     "seq": 538,
+     "text": "一年，虽然一方面引起了湘鄂赣三省乃至全国豪绅阶级的痛恨，另一",
+     "checksum": "8143f20dfb21cde9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-539",
+     "articleId": "v1n04",
+     "seq": 539,
+     "text": "方面却渐渐引起了附近省份工农士兵群众的希望。以士兵论，因军阀",
+     "checksum": "17103ce528010448",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-540",
+     "articleId": "v1n04",
+     "seq": 540,
+     "text": "们把向边界“剿匪”当做一件大事，“剿匪经年，耗费百万”（鲁涤",
+     "checksum": "d14280901fb6d492",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-541",
+     "articleId": "v1n04",
+     "seq": 541,
+     "text": "平），“人称二万，枪号五千”（王均），如此等类的话，逐渐引起",
+     "checksum": "18cc3aa5166fb95a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-542",
+     "articleId": "v1n04",
+     "seq": 542,
+     "text": "敌军士兵和无出路的下级官长对我们注意，自拔来归的将日益增多，",
+     "checksum": "24d6163c4dc5df5d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-543",
+     "articleId": "v1n04",
+     "seq": 543,
+     "text": "红军扩充，又是一条来路。并且边界红旗子始终不倒，不但表示了共",
+     "checksum": "4c93eb3d215188a9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-544",
+     "articleId": "v1n04",
+     "seq": 544,
+     "text": "产党的力量，而且表示了统治阶级的破产，在全国政治上有重大的意",
+     "checksum": "5bb7f06c3dc69839",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-545",
+     "articleId": "v1n04",
+     "seq": 545,
+     "text": "义。所以我们始终认为罗霄山脉中段政权的创造和扩大，是十分必要",
+     "checksum": "108b8935b87a53df",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-546",
+     "articleId": "v1n04",
+     "seq": 546,
+     "text": "和十分正确的。",
+     "checksum": "a2622836bb00c170",
+     "charCount": 7,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-547",
+     "articleId": "v1n04",
+     "seq": 547,
+     "text": "-----------------",
+     "checksum": "1309755be1f7a30d",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-548",
+     "articleId": "v1n04",
+     "seq": 548,
+     "text": "注　　释",
+     "checksum": "9116dbd44516ce8c",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-549",
+     "articleId": "v1n04",
+     "seq": 549,
+     "text": "〔1〕 这个战争发生于一九二七年十月，到第二年三月结束。",
+     "checksum": "1ce39f45a4aa4308",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-550",
+     "articleId": "v1n04",
+     "seq": 550,
+     "text": "〔2〕这个战争发生于一九二七年十一月，到第二年二月结束。",
+     "checksum": "705b59d68e481d13",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-551",
+     "articleId": "v1n04",
+     "seq": 551,
+     "text": "〔3〕 见本卷《中国的红色政权为什么能够存在？》注〔9〕。",
+     "checksum": "d5a45c5d69e81679",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-552",
+     "articleId": "v1n04",
+     "seq": 552,
+     "text": "〔4〕参见本卷《湖南农民运动考察报告》注〔16〕。",
+     "checksum": "bba997ef60b80ae3",
+     "charCount": 25,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-553",
+     "articleId": "v1n04",
+     "seq": 553,
+     "text": "〔5〕红军中的士兵代表会议和士兵委员会是为了发扬军队内部民",
+     "checksum": "4769fccc2eb30c92",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-554",
+     "articleId": "v1n04",
+     "seq": 554,
+     "text": "主而建立的一种制度。这种制度，后来被废除了。一九四七年新式整",
+     "checksum": "6622b5cc6714b0c0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-555",
+     "articleId": "v1n04",
+     "seq": 555,
+     "text": "军运动开始以后，在人民解放军中，根据红军时期和新式整军运动中",
+     "checksum": "cc90739c99efbb50",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-556",
+     "articleId": "v1n04",
+     "seq": 556,
+     "text": "的经验，又在连队中建立过干部领导的士兵会和士兵委员会的制度。",
+     "checksum": "99aa0256692da45a",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-557",
+     "articleId": "v1n04",
+     "seq": 557,
+     "text": "〔6〕 见本卷《中国的红色政权为什么能够存在？》注〔12〕。",
+     "checksum": "4449692e7509f3f1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-558",
+     "articleId": "v1n04",
+     "seq": 558,
+     "text": "〔7〕 “反水”意为叛变。",
+     "checksum": "4990e366636d9393",
+     "charCount": 13,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-559",
+     "articleId": "v1n04",
+     "seq": 559,
+     "text": "〔8〕即一九二七年八月一日在南昌起义的叶挺、贺龙的旧部（叶",
+     "checksum": "feca2ad185055e9c",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-560",
+     "articleId": "v1n04",
+     "seq": 560,
+     "text": "部见本文注〔18〕）。这些部队在潮州、汕头一带失败后，一部分到",
+     "checksum": "f8db5d60e88da217",
+     "charCount": 31,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-561",
+     "articleId": "v1n04",
+     "seq": 561,
+     "text": "达海陆丰地区，继续在广东坚持斗争，另一部分由朱德、陈毅等率领",
+     "checksum": "9c913cb35dac888c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-562",
+     "articleId": "v1n04",
+     "seq": 562,
+     "text": "退出广东，经福建、江西，转入湖南南部，会合当地农军举行湘南起",
+     "checksum": "118b16c45495c471",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-563",
+     "articleId": "v1n04",
+     "seq": 563,
+     "text": "义，开展苏维埃运动。起义失败后，于一九二八年四月到达井冈山同",
+     "checksum": "9bbba7aa729830f6",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-564",
+     "articleId": "v1n04",
+     "seq": 564,
+     "text": "毛泽东领导的工农革命军会师。",
+     "checksum": "eff3e6ae9525a284",
+     "charCount": 14,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-565",
+     "articleId": "v1n04",
+     "seq": 565,
+     "text": "〔9〕指一九二七年革命时期的国民革命军第四集团军第二方面军",
+     "checksum": "4d68d8c9fbacbff4",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-566",
+     "articleId": "v1n04",
+     "seq": 566,
+     "text": "总指挥部警卫团。它的干部有很多是共产党员。汪精卫等叛变革命以",
+     "checksum": "57de99f275e06396",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-567",
+     "articleId": "v1n04",
+     "seq": 567,
+     "text": "后，这个警卫团在八月初离开武昌，准备到南昌参加起义军。行至中",
+     "checksum": "dcdc67802bef8218",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-568",
+     "articleId": "v1n04",
+     "seq": 568,
+     "text": "途，闻南昌起义军已经南下，就转到修水，同平江、浏阳的农军会",
+     "checksum": "11c7b60a01cec884",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-569",
+     "articleId": "v1n04",
+     "seq": 569,
+     "text": "合。",
+     "checksum": "1637ebf5f85f394a",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-570",
+     "articleId": "v1n04",
+     "seq": 570,
+     "text": "〔10〕湖南平江、浏阳一带在一九二七年春已经形成相当有力的",
+     "checksum": "f6ad71d1e4112292",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-571",
+     "articleId": "v1n04",
+     "seq": 571,
+     "text": "农民武装。五月二十一日许克祥在长沙发动反革命事变（即“马日事",
+     "checksum": "da80878058cd9389",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-572",
+     "articleId": "v1n04",
+     "seq": 572,
+     "text": "变”），屠杀革命群众。为了向反革命还击，浏阳的农军，同长沙附",
+     "checksum": "a26c265301676e35",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-573",
+     "articleId": "v1n04",
+     "seq": 573,
+     "text": "近其他各县的工农武装一起，曾经向长沙前进。在进军途中，由于中",
+     "checksum": "8e9e6666a70cd798",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-574",
+     "articleId": "v1n04",
+     "seq": 574,
+     "text": "共湖南省委传达了中共中央撤退农军的命令，其他各县工农武装都向",
+     "checksum": "5e363c22e009e137",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-575",
+     "articleId": "v1n04",
+     "seq": 575,
+     "text": "后撤退，只有浏阳农军未接到命令，一直攻到长沙城下，遭到失败后",
+     "checksum": "fcda945f67db0506",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-576",
+     "articleId": "v1n04",
+     "seq": 576,
+     "text": "撤退。七月中旬，这支农军同平江的农民武装会合。九月又与国民革",
+     "checksum": "ac28708898e98983",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-577",
+     "articleId": "v1n04",
+     "seq": 577,
+     "text": "命军第四集团军第二方面军总指挥部警卫团、安源工人武装等合编为",
+     "checksum": "440eb34bcfc4bc1c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-578",
+     "articleId": "v1n04",
+     "seq": 578,
+     "text": "工农革命军第一军第一师，在毛泽东领导下，于修水、铜鼓、平江、",
+     "checksum": "80a56849e7b30ac9",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-579",
+     "articleId": "v1n04",
+     "seq": 579,
+     "text": "浏阳一带举行秋收起义。十月，起义部队到达井冈山。",
+     "checksum": "e37ee35d81618ffd",
+     "charCount": 24,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-580",
+     "articleId": "v1n04",
+     "seq": 580,
+     "text": "〔11〕一九二八年初，朱德、陈毅率部在湘南开展革命游击战",
+     "checksum": "5ffdc1062acced4a",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-581",
+     "articleId": "v1n04",
+     "seq": 581,
+     "text": "争，原来农民运动有基础的宜章、郴县、耒阳、永兴、资兴五县，这",
+     "checksum": "09cb9f91798a5950",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-582",
+     "articleId": "v1n04",
+     "seq": 582,
+     "text": "时都组织了农军。后来这部分农军由朱德、陈毅率领到达井冈山，同",
+     "checksum": "b183e3b97a256921",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-583",
+     "articleId": "v1n04",
+     "seq": 583,
+     "text": "毛泽东领导的部队会师。",
+     "checksum": "7908daa29355a51e",
+     "charCount": 11,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-584",
+     "articleId": "v1n04",
+     "seq": 584,
+     "text": "〔12〕湖南省常宁县水口山是重要的铅锌矿产地。一九二二年，",
+     "checksum": "018b07f08995da20",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-585",
+     "articleId": "v1n04",
+     "seq": 585,
+     "text": "水口山的工人在共产党领导下，组织了工会，历年与反革命斗争。一",
+     "checksum": "735bdda79bec3aab",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-586",
+     "articleId": "v1n04",
+     "seq": 586,
+     "text": "九二七年冬，以水口山的工人为主，组成了湘南游击总队，进行游击",
+     "checksum": "fb66e40cf8ddb609",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-587",
+     "articleId": "v1n04",
+     "seq": 587,
+     "text": "战争。一九二八年初，湘南游击总队编入朱德率领的中国工农革命",
+     "checksum": "45024f33f02dc6a2",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-588",
+     "articleId": "v1n04",
+     "seq": 588,
+     "text": "军，参加了湘南起义。后随起义军一起，到达井冈山。",
+     "checksum": "ca277ac06670361a",
+     "charCount": 24,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-589",
+     "articleId": "v1n04",
+     "seq": 589,
+     "text": "〔13〕指安源煤矿和株萍铁路的工人。一九二一年秋，中国共产",
+     "checksum": "2852ccafe6f9ccf6",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-590",
+     "articleId": "v1n04",
+     "seq": 590,
+     "text": "党派人到安源工作，第二年，建立了共产党和工会的组织，在毛泽",
+     "checksum": "3c705e7d69618442",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-591",
+     "articleId": "v1n04",
+     "seq": 591,
+     "text": "东、李立三、刘少奇等的领导下，发动了著名的安源路矿大罢工。当",
+     "checksum": "d6c338f4d04acd92",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-592",
+     "articleId": "v1n04",
+     "seq": 592,
+     "text": "时，安源一带有一万二千多工人参加了工会。一九二七年九月，安源",
+     "checksum": "65892e0c97a7405d",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-593",
+     "articleId": "v1n04",
+     "seq": 593,
+     "text": "工人武装参加了毛泽东领导的秋收起义。",
+     "checksum": "3d566bef1ef21300",
+     "charCount": 18,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-594",
+     "articleId": "v1n04",
+     "seq": 594,
+     "text": "〔14〕 红军中的党代表一九二九年起改称政治委员，连的政治委",
+     "checksum": "efb44110cbd0ffe0",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-595",
+     "articleId": "v1n04",
+     "seq": 595,
+     "text": "员一九三○年起改称政治指导员。",
+     "checksum": "2ebdf0c815cd0642",
+     "charCount": 15,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-596",
+     "articleId": "v1n04",
+     "seq": 596,
+     "text": "〔15〕用“打土豪”罚款的方法筹措军费，只能是临时的和部分",
+     "checksum": "8aed116cdd6409ef",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-597",
+     "articleId": "v1n04",
+     "seq": 597,
+     "text": "的。军队大了，地域宽了，就必须而且可能用收税等方法筹措军费。",
+     "checksum": "8f3724774831867c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-598",
+     "articleId": "v1n04",
+     "seq": 598,
+     "text": "〔16〕此种办法在红军中施行了一个很长时期，在当时曾是必要",
+     "checksum": "623a141f2f473e12",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-599",
+     "articleId": "v1n04",
+     "seq": 599,
+     "text": "的，后来改变为按等级略有一些区别。",
+     "checksum": "7d658596c7ff23a6",
+     "charCount": 17,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-600",
+     "articleId": "v1n04",
+     "seq": 600,
+     "text": "〔17〕在军队内部实行一定的民主，是毛泽东一贯的思想。在这",
+     "checksum": "59585582d7283e78",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-601",
+     "articleId": "v1n04",
+     "seq": 601,
+     "text": "里毛泽东特别着重地指出革命军队内部民主生活的必要，是因为当时",
+     "checksum": "6f0d126a41d25c35",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-602",
+     "articleId": "v1n04",
+     "seq": 602,
+     "text": "红军初建，非强调民主，不足以鼓舞新入伍的农民和俘虏过来的国民",
+     "checksum": "c01e3605ec5d9a5f",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-603",
+     "articleId": "v1n04",
+     "seq": 603,
+     "text": "党军士兵的革命积极性，不足以肃清干部中由反动军队传来的军阀主",
+     "checksum": "58eed245a8bbdf96",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-604",
+     "articleId": "v1n04",
+     "seq": 604,
+     "text": "义的习气。当然，部队中的民主生活必须是在军事纪律所许可的范围",
+     "checksum": "c74319e053f200f8",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-605",
+     "articleId": "v1n04",
+     "seq": 605,
+     "text": "内，必须是为着加强纪律而不是为着减弱纪律，所以在部队中提倡必",
+     "checksum": "be02b29b5b9387c5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-606",
+     "articleId": "v1n04",
+     "seq": 606,
+     "text": "要的民主的时候，必须同时反对要求极端民主的无纪律现象。而这种",
+     "checksum": "2676eb8ba76ec49b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-607",
+     "articleId": "v1n04",
+     "seq": 607,
+     "text": "现象在初期的红军中，曾经一度严重地存在过。关于毛泽东反对军队",
+     "checksum": "43d2f3e7e8b90fe4",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-608",
+     "articleId": "v1n04",
+     "seq": 608,
+     "text": "中极端民主化的斗争，参见本卷《关于纠正党内的错误思想》。",
+     "checksum": "4806692dd1017d5e",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-609",
+     "articleId": "v1n04",
+     "seq": 609,
+     "text": "〔18〕一九二六年北伐时，叶挺领导的部队为一个独立团。这个",
+     "checksum": "74fe76c8e22fc930",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-610",
+     "articleId": "v1n04",
+     "seq": 610,
+     "text": "团以共产党员为骨干，是北伐中有名的战斗部队。革命军占领武昌以",
+     "checksum": "a6e3c83e5c15bb95",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-611",
+     "articleId": "v1n04",
+     "seq": 611,
+     "text": "后，独立团本身改编为第二十五师七十三团。同时，抽调该团部分骨",
+     "checksum": "0fd7fb0bb09402bd",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-612",
+     "articleId": "v1n04",
+     "seq": 612,
+     "text": "干组建第二十五师七十五团的三个营和第四集团军第二方面军总指挥",
+     "checksum": "1c2a28058b1a677e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-613",
+     "articleId": "v1n04",
+     "seq": 613,
+     "text": "部警卫团；抽调该团的大批骨干组建第二十四师，叶挺任师长。参加",
+     "checksum": "510f560c6d6a7853",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-614",
+     "articleId": "v1n04",
+     "seq": 614,
+     "text": "南昌起义后，二十四师、二十五师等部合编为第十一军，叶挺兼任军",
+     "checksum": "aad8940a9c348516",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-615",
+     "articleId": "v1n04",
+     "seq": 615,
+     "text": "长。",
+     "checksum": "b8fa1ae52c0b2e15",
+     "charCount": 2,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-616",
+     "articleId": "v1n04",
+     "seq": 616,
+     "text": "〔19〕 事实上红军中的党员人数占全军三分之一左右即好，后来",
+     "checksum": "7db077c794944fd1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-617",
+     "articleId": "v1n04",
+     "seq": 617,
+     "text": "在红军和人民解放军中大体上都是如此。",
+     "checksum": "77e8945864f9c90d",
+     "charCount": 18,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-618",
+     "articleId": "v1n04",
+     "seq": 618,
+     "text": "〔20〕一九二七年蒋介石在上海发动四一二反革命政变后，湖",
+     "checksum": "db1d574bdf7dbf65",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-619",
+     "articleId": "v1n04",
+     "seq": 619,
+     "text": "南、湖北的反动军官相继叛变革命。五月二十一日，国民党军第三十",
+     "checksum": "482e711a3e96af0c",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-620",
+     "articleId": "v1n04",
+     "seq": 620,
+     "text": "五军独立第三十三团团长许克祥在军长何键的策动下，在长沙发动反",
+     "checksum": "b008cddb6402054e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-621",
+     "articleId": "v1n04",
+     "seq": 621,
+     "text": "革命叛乱，围攻湖南省总工会、省农民协会等革命群众组织，捕杀共",
+     "checksum": "f061a043923595d7",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-622",
+     "articleId": "v1n04",
+     "seq": 622,
+     "text": "产党人和革命的工农群众。旧时的文电，习惯以通行的诗韵韵目代替",
+     "checksum": "bc53d69f13800359",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-623",
+     "articleId": "v1n04",
+     "seq": 623,
+     "text": "日期，以诗韵第二十一韵的韵目“马”字代替二十一日，所以这一天",
+     "checksum": "633fce51a44c8dbf",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-624",
+     "articleId": "v1n04",
+     "seq": 624,
+     "text": "发生的事变被称为“马日事变”。这个事变是以汪精卫为首的武汉国",
+     "checksum": "d7e655952c8bd03e",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-625",
+     "articleId": "v1n04",
+     "seq": 625,
+     "text": "民党反革命派和以蒋介石为首的南京反革命派公开合流的信号。",
+     "checksum": "98be2d85fbddad6f",
+     "charCount": 28,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-626",
+     "articleId": "v1n04",
+     "seq": 626,
+     "text": "〔21〕一九二八年湘赣边界土地法中曾经有这样的规定。毛泽东",
+     "checksum": "22125d42e4c7dbb4",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-627",
+     "articleId": "v1n04",
+     "seq": 627,
+     "text": "后来指出，没收一切土地而不是只没收地主的土地，是一种错误，这",
+     "checksum": "ee708ad689069956",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-628",
+     "articleId": "v1n04",
+     "seq": 628,
+     "text": "种错误是由于当时缺乏土地斗争的经验而来的。一九二九年四月兴国",
+     "checksum": "5d31a31322f5827b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-629",
+     "articleId": "v1n04",
+     "seq": 629,
+     "text": "县土地法把“没收一切土地”改为“没收一切公共土地及地主阶级的",
+     "checksum": "11bcc30f34a71e6b",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-630",
+     "articleId": "v1n04",
+     "seq": 630,
+     "text": "土地”。",
+     "checksum": "098154040200bda0",
+     "charCount": 4,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-631",
+     "articleId": "v1n04",
+     "seq": 631,
+     "text": "〔22〕鉴于争取农村中间阶级的重要，毛泽东随即纠正了打击中",
+     "checksum": "17b9647da15e6bd6",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-632",
+     "articleId": "v1n04",
+     "seq": 632,
+     "text": "间阶级过重的错误政策。毛泽东对中间阶级的政策主张，除见于本文",
+     "checksum": "8d0cbc8b3c6b56b5",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-633",
+     "articleId": "v1n04",
+     "seq": 633,
+     "text": "外，又见于一九二八年十一月红军第四军第六次党的代表大会提案",
+     "checksum": "1fbf3e7a4563fe16",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-634",
+     "articleId": "v1n04",
+     "seq": 634,
+     "text": "（内有“禁止盲目焚杀”，“保护中小商人利益”等项）、一九二九",
+     "checksum": "fa809f90042164d1",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-635",
+     "articleId": "v1n04",
+     "seq": 635,
+     "text": "年一月红军第四军布告（内有“城市商人，积铢累寸，只要服从，馀",
+     "checksum": "0d6f0038bba041d2",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-636",
+     "articleId": "v1n04",
+     "seq": 636,
+     "text": "皆不论”等语）和一九二九年四月兴国县土地法（参见本文注",
+     "checksum": "fa934fa360b94d51",
+     "charCount": 27,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-637",
+     "articleId": "v1n04",
+     "seq": 637,
+     "text": "〔21〕）等。",
+     "checksum": "486e49cb0310e546",
+     "charCount": 7,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-638",
+     "articleId": "v1n04",
+     "seq": 638,
+     "text": "〔23〕此种情况，依靠革命战争的发展、根据地的扩大和革命政",
+     "checksum": "360ed3fd0180c0ad",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-639",
+     "articleId": "v1n04",
+     "seq": 639,
+     "text": "府保护工商业的政策，是可以改变的，后来也已经改变了。这里的关",
+     "checksum": "83147e7385c1ab54",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-640",
+     "articleId": "v1n04",
+     "seq": 640,
+     "text": "键是坚决地保护民族工商业，反对过左的政策。",
+     "checksum": "7f5cf16b8c1cfc2e",
+     "charCount": 21,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-641",
+     "articleId": "v1n04",
+     "seq": 641,
+     "text": "〔24〕 以劳动力为标准分配土地的方法，是不妥当的。事实上，",
+     "checksum": "83042c98be160278",
+     "charCount": 30,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-642",
+     "articleId": "v1n04",
+     "seq": 642,
+     "text": "在革命根据地，长时期都是实行按人口平分土地的原则。",
+     "checksum": "928f76cf5d06220a",
+     "charCount": 25,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-643",
+     "articleId": "v1n04",
+     "seq": 643,
+     "text": "〔25〕这里指中共红四军第六次代表大会。这次会议在一九二八",
+     "checksum": "a881edb3d3228b8a",
+     "charCount": 29,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-644",
+     "articleId": "v1n04",
+     "seq": 644,
+     "text": "年十一月十三日开预备会，十四日正式开会，十五日闭幕。",
+     "checksum": "3d723e46ff336a20",
+     "charCount": 26,
+     "isHeadNote": false
+    },
+    {
+     "id": "pv1n04-645",
+     "articleId": "v1n04",
+     "seq": 645,
+     "text": "〔26〕 靖卫团是一种反革命的地方武装。",
+     "checksum": "3b8b82e16a56eadf",
+     "charCount": 20,
+     "isHeadNote": false
+    }
+   ],
+   "sections": [
+    {
+     "paragraphId": "pv1n04-004",
+     "label": "湘赣边界的割据和八月失败"
+    },
+    {
+     "paragraphId": "pv1n04-103",
+     "label": "割据地区的现势"
+    },
+    {
+     "paragraphId": "pv1n04-129",
+     "label": "军事问题"
+    },
+    {
+     "paragraphId": "pv1n04-259",
+     "label": "土地问题"
+    },
+    {
+     "paragraphId": "pv1n04-327",
+     "label": "政权问题"
+    },
+    {
+     "paragraphId": "pv1n04-362",
+     "label": "党的组织问题"
+    },
+    {
+     "paragraphId": "pv1n04-453",
+     "label": "革命性质问题"
+    },
+    {
+     "paragraphId": "pv1n04-487",
+     "label": "割据地区问题"
+    }
+   ]
+  }
+ },
+ "places": [
+  {
+   "placeId": "pl_jinggangshan",
+   "name": "井冈山",
+   "historicName": "井冈山",
+   "modernName": "江西省井冈山市",
+   "lat": 26.575,
+   "lng": 114.163,
+   "precision": "city",
+   "timeRange": "1927-1930",
+   "epistemicStatus": "verified",
+   "sourceNote": "v1n03/v1n04 题注地点；通用地理常识"
+  },
+  {
+   "placeId": "pl_luoxiao",
+   "name": "罗霄山脉中段",
+   "historicName": "罗霄山脉",
+   "modernName": "湘赣边界罗霄山脉",
+   "lat": null,
+   "lng": null,
+   "precision": "region",
+   "timeRange": "1928",
+   "epistemicStatus": "supported",
+   "sourceNote": "v1n04 正文论述'罗霄山脉中段'地形；坐标为山脉范围不取精确值"
+  }
+ ],
+ "events": [
+  {
+   "eventId": "evt_jgs_douzheng",
+   "title": "井冈山斗争",
+   "date": {
+    "start": "1927-10",
+    "end": "1929-01",
+    "precision": "month"
+   },
+   "placeId": "pl_jinggangshan",
+   "epistemicStatus": "supported",
+   "sourceArticleIds": [
+    "v1n03",
+    "v1n04"
+   ],
+   "reviewStatus": "pending",
+   "note": "两文均为该时期一手文献；边界起讫月待史料细核"
+  },
+  {
+   "eventId": "evt_bj_de2ci_dbh",
+   "title": "中共湘赣边界第二次代表大会",
+   "date": {
+    "start": "1928-10",
+    "end": "1928-10",
+    "precision": "month"
+   },
+   "placeId": "pl_jinggangshan",
+   "epistemicStatus": "verified",
+   "sourceArticleIds": [
+    "v1n03"
+   ],
+   "reviewStatus": "pending",
+   "note": "v1n03 题注: '毛泽东为中共湘赣边界第二次代表大会写的决议的一部分'"
+  }
+ ],
+ "sources": [
+  {
+   "sourceId": "src_v1",
+   "type": "book",
+   "title": "《毛泽东选集》第一卷",
+   "publisher": "人民出版社",
+   "editionNote": "本站语料底本",
+   "rightsStatus": "unknown",
+   "note": "A05 处置决定前，样本数据包不改变公开口径"
+  }
+ ],
+ "topic": {
+  "topicId": "topic_jinggangshan",
+  "title": "井冈山：根据地为什么能存在",
+  "timeRange": {
+   "start": "1927-10",
+   "end": "1929-01"
+  },
+  "center": {
+   "lat": 26.575,
+   "lng": 114.163,
+   "zoom": 10.5
+  },
+  "articles": [
+   "v1n03",
+   "v1n04"
+  ],
+  "events": [
+   "evt_jgs_douzheng",
+   "evt_bj_de2ci_dbh"
+  ],
+  "places": [
+   "pl_jinggangshan",
+   "pl_luoxiao"
+  ],
+  "scenes": [
+   {
+    "sceneId": "sc_jgs_01",
+    "seq": 1,
+    "title": "进入罗霄山脉",
+    "camera": {
+     "center": [
+      114.163,
+      26.575
+     ],
+     "zoom": 10.5,
+     "pitch": 62,
+     "bearing": -20,
+     "flyTo": true
+    },
+    "caption": "井冈山位于罗霄山脉中段，湘赣两省边界。",
+    "placeIds": [
+     "pl_jinggangshan",
+     "pl_luoxiao"
+    ],
+    "articleId": null,
+    "paragraphId": null,
+    "evidenceIds": [],
+    "reviewStatus": "draft",
+    "note": "镜头参数属视觉表达，非史实证明（V2 §4）"
+   },
+   {
+    "sceneId": "sc_jgs_02",
+    "seq": 2,
+    "title": "红色政权为什么能够存在",
+    "camera": {
+     "center": [
+      114.163,
+      26.575
+     ],
+     "zoom": 11.2,
+     "pitch": 55,
+     "bearing": 10
+    },
+    "caption": "一九二八年十月五日，中共湘赣边界第二次代表大会决议的一部分。",
+    "placeIds": [
+     "pl_jinggangshan"
+    ],
+    "eventId": "evt_bj_de2ci_dbh",
+    "articleId": "v1n03",
+    "paragraphId": null,
+    "evidenceIds": [],
+    "reviewStatus": "draft"
+   },
+   {
+    "sceneId": "sc_jgs_03",
+    "seq": 3,
+    "title": "军事根据地的稳固",
+    "camera": {
+     "center": [
+      114.163,
+      26.575
+     ],
+     "zoom": 11.8,
+     "pitch": 65,
+     "bearing": 40
+    },
+    "caption": "一九二八年十一月二十五日，毛泽东写给中共中央的报告。",
+    "placeIds": [
+     "pl_jinggangshan"
+    ],
+    "eventId": "evt_jgs_douzheng",
+    "articleId": "v1n04",
+    "paragraphId": null,
+    "evidenceIds": [],
+    "reviewStatus": "draft"
+   }
+  ],
+  "meta": {
+   "schemaVersion": "0.1",
+   "generatedBy": "pipeline/wp03_sample_pack.py",
+   "generatedAt": "2026-10-14",
+   "enrichedFieldsPolicy": "why/event/links 类字段沿用 data.js 的 AI 考证，默认 inferred/pending（DATA_MANIFEST）"
+  }
+ }
+}
