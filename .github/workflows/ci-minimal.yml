@@ -1,0 +1,57 @@
+name: ci-minimal
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 1. 语法检查：所有站点 JS 必须可解析
+      - name: JS syntax check
+        run: |
+          set -e
+          for f in site/app.js site/assets/map3d.js site/sw.js site/assets/china.json.js; do
+            node --check "$f" && echo "OK $f"
+          done
+
+      # 2. 数据映射检查：data.js 结构与 217 篇完整性
+      - name: Data mapping check
+        run: |
+          set -e
+          node -e '
+          const fs = require("fs");
+          const txt = fs.readFileSync("site/data/data.js","utf8");
+          const DATA = JSON.parse(txt.slice(txt.indexOf("["), txt.lastIndexOf("]")+1));
+          if (DATA.length !== 217) throw new Error("expected 217 articles, got "+DATA.length);
+          const ids = new Set(DATA.map(a=>a.id));
+          if (ids.size !== 217) throw new Error("duplicate article ids: "+(217-ids.size));
+          for (const a of DATA) {
+            if (!a.title) throw new Error("missing title: "+a.id);
+            if (typeof a.vol !== "number" || a.vol<1 || a.vol>5) throw new Error("bad vol: "+a.id);
+          }
+          console.log("data.js OK: 217 articles, unique ids, vol 1-5");
+          '
+
+      # 3. 旧 URL 兼容检查：hash 路由核心模式必须存在
+      - name: Legacy URL compatibility check
+        run: |
+          set -e
+          grep -q '#/art/'     site/app.js || { echo "FAIL: #/art/ route missing"; exit 1; }
+          grep -q '#/view/map' site/app.js || { echo "FAIL: #/view/map route missing"; exit 1; }
+          grep -q '#/view/tl'  site/app.js || { echo "FAIL: #/view/tl route missing"; exit 1; }
+          grep -q '#/view/graph' site/app.js || { echo "FAIL: #/view/graph route missing"; exit 1; }
+          grep -q '#/search/'  site/app.js || { echo "FAIL: #/search/ route missing"; exit 1; }
+          grep -q 'view/cats'  site/app.js || { echo "FAIL: view/cats route missing"; exit 1; }
+          echo "legacy URL routes OK"
+
+      # 4. 安全检查：密钥不得出现在前端
+      - name: No secrets in frontend
+        run: |
+          ! grep -rniE "(api[_-]?key|secret|password|bearer)\s*[:=]\s*['\"][A-Za-z0-9]{16,}" site/ --include="*.js" --include="*.html"
