@@ -251,10 +251,15 @@ var byId = {}; ARTS.forEach(function(a){ byId[a.id]=a; });
 var titleIndex = {}; ARTS.forEach(function(a){ titleIndex[a.title]=a; });
 
 var places = {};
+var PLACE_CANON = {                    /* N04: canonical grouping - variant names of the same place */
+  "延安市":"延安",
+  "山西兴县蔡家崖（晋绥解放区首府）":"山西兴县蔡家崖（晋绥解放区）",
+  "河北西柏坡（平山县西柏坡村）":"河北西柏坡"
+};
 ARTS.forEach(function(a){
   if(a.lat && a.lng && a.lat>17 && a.lat<55 && a.lng>72 && a.lng<136){
-    var k = a.place;
-    if(!places[k]) places[k] = {name:a.place, lat:a.lat, lng:a.lng, arts:[]};
+    var k = PLACE_CANON[a.place] || a.place;
+    if(!places[k]) places[k] = {name:k, lat:a.lat, lng:a.lng, arts:[]};
     places[k].arts.push(a);
   }
 });
@@ -387,6 +392,7 @@ function renderLabels(){
   });
 }
 function updateMarkers(){
+  if(!mapObj) return;                          /* N06: guard degraded mode */
   markers.forEach(function(m){ mapObj.removeLayer(m); });
   markers = [];
   var vis = visibleArts();
@@ -409,6 +415,7 @@ function updateMarkers(){
   if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.refresh();
 }
 function drawRoute(){
+  if(!mapObj || !routeLayer) return;           /* N06: guard degraded mode */
   routeLayer.clearLayers();
   var upto = state.histYear==null ? 9999 : state.histYear;
   var pts = [], stops = [];
@@ -863,6 +870,7 @@ function fmtText(raw){
   for(var i=0;i<paras.length;i++){
     var t = paras[i].trim();
     if(!t) continue;
+    t = esc(t);                                /* N03: escape article body (defense in depth for future corpus edits) */
     if(head>0 && (t.indexOf("一九")===0 || /^[（(].*[）)]$/.test(t))){ out.push("<p class='note' style='text-align:center;text-indent:0'>"+t+"</p>"); head--; continue; }
     if((/^\*/.test(t) || /^〔\d+〕/.test(t) || /^注[:：]/.test(t)) && out.length>10){ out.push("<p class='note'>"+t+"</p>"); continue; }
     out.push("<p>"+t+"</p>");
@@ -1014,7 +1022,7 @@ function openArticle(id, fromRoute){
     var tocEl = document.getElementById("readToc");
     var tl = document.getElementById("tocList");
     if(toc.length){
-      tl.innerHTML = toc.map(function(t){ return "<li data-t='"+t.id+"'>"+t.text+"</li>"; }).join("");
+      tl.innerHTML = toc.map(function(t){ return "<li data-t='"+t.id+"'>"+esc(t.text)+"</li>"; }).join("");
     }else{
       tl.innerHTML = "<li style='color:var(--ink2);cursor:default'>本篇为短文，无小节目录</li>";
     }
@@ -1283,7 +1291,13 @@ document.addEventListener("keydown", function(e){
 /* ---------- boot ---------- */
 document.getElementById("volLegend").innerHTML =
   VOLCOLOR.map(function(c,i){ return "<span><i style='background:"+c+"'></i>"+VOLNAME[i]+"</span>"; }).join("");
-initMap();
+try{
+  initMap();
+}catch(e){                                          /* N06: map init failure must not kill reading/search/timeline */
+  var mc = document.getElementById("mapWrap3d") || document.getElementById("mapChart");
+  if(mc) mc.innerHTML = "<div class='hint' style='padding:40px 16px'>地图组件初始化失败（"+esc(String(e&&e.message||e))+"），阅读、检索与年谱不受影响。<br><a href='#/view/cats'>前往目录</a></div>";
+  mapObj = null;
+}
 renderTimeline();
 renderStats();
 document.querySelectorAll("#mapModeBtns button").forEach(function(b){
