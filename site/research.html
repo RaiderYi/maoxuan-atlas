@@ -37,6 +37,10 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .sugg button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:14px;padding:5px 14px;cursor:pointer}
 .sugg button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
 .footer{font-size:10.5px;color:var(--ink2);margin-top:16px;letter-spacing:.5px}
+.scopeBar{display:flex;align-items:center;gap:12px;background:rgba(168,132,44,.08);border:1px solid var(--gold);border-radius:10px;padding:8px 14px;margin-bottom:14px;font-size:12.5px;color:var(--ink2)}
+.scopeBar b{color:var(--cinnabar)}
+.scopeBar button,.scopeBar a{font-family:inherit;font-size:11.5px;color:var(--cinnabar);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:12px;padding:3px 12px;cursor:pointer;text-decoration:none}
+.scopeBar button:hover,.scopeBar a:hover{border-color:var(--cinnabar)}
 .cardBtns{margin-top:14px;display:none}
 .cardBtns button,.cardsHead button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:12px;padding:5px 14px;cursor:pointer}
 .cardBtns button:hover,.cardsHead button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
@@ -64,9 +68,14 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
   <a class="back" href="index.html">← 返回图集</a>
 </header>
 <div class="wrap">
-  <div class="note">
+  <div class="note" id="note">
     答案仅由《中国的红色政权为什么能够存在？》《井冈山的斗争》两篇原文支撑。每条引用<b>必须来自本次检索命中的段落</b>（虚构段落号会被系统拦截）；
     语料不足的问题将直接回答<b>资料不足</b>，不会编造。此为开发预览（WP07）。
+  </div>
+  <div class="scopeBar" id="scopeBar" style="display:none">
+    <span id="scopeLabel"></span>
+    <button id="scopeAll">改回全语料</button>
+    <a id="scopeBack" style="display:none">← 返回剧场</a>
   </div>
   <div class="qbox">
     <input id="q" maxlength="300" placeholder="例如：红色政权为什么能够存在？">
@@ -98,6 +107,35 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 (function(){
 "use strict";
 function el(id){ return document.getElementById(id); }
+/* ---------- WP08 联动: 研究范围 (URL: research.html?art=v1n03,v1n04&from=scene:sc_jgs_02) ---------- */
+var ART_TITLES = { v1n03: "\u4e2d\u56fd\u7682\u7ea2\u8272\u653f\u6743\u4e3a\u4ec0\u4e48\u80fd\u591f\u5b58\u5728\uff1f", v1n04: "\u4e95\u5188\u5c71\u7684\u6597\u4e89" };
+var scopeArt = [];
+var scopeFrom = null;
+(function parseScope(){
+  try{
+    var u = new URLSearchParams(location.search);
+    var a = u.get("art") || "";
+    scopeArt = a.split(",").map(function(s){ return s.trim(); }).filter(function(s){ return ART_TITLES[s]; });
+    scopeFrom = u.get("from") || null;   // e.g. scene:sc_jgs_02
+  }catch(e){}
+  if(scopeArt.length){
+    el("scopeBar").style.display = "flex";
+    el("scopeLabel").innerHTML = "";
+    var b = document.createElement("b");
+    b.textContent = scopeArt.map(function(x){ return "\u300a" + ART_TITLES[x] + "\u300b"; }).join("\u3001");
+    el("scopeLabel").appendChild(document.createTextNode("\u7814\u7a76\u8303\u56f4\uff1a"));
+    el("scopeLabel").appendChild(b);
+    el("scopeLabel").appendChild(document.createTextNode("\uff08\u68c0\u7d22\u4ec5\u5728\u6b64\u8303\u56f4\u5185\u8fdb\u884c\uff09"));
+  }
+  if(scopeFrom && scopeFrom.indexOf("scene:") === 0){
+    el("scopeBack").style.display = "";
+    el("scopeBack").href = "theatre.html?scene=" + encodeURIComponent(scopeFrom.slice(6));
+  }
+})();
+el("scopeAll").onclick = function(){
+  scopeArt = []; scopeFrom = null;
+  el("scopeBar").style.display = "none";
+};
 var SUGG = [
   "\u7ea2\u8272\u653f\u6743\u4e3a\u4ec0\u4e48\u80fd\u591f\u5b58\u5728\uff1f",
   "\u516b\u6708\u5931\u8d25\u7684\u539f\u56e0\u548c\u6559\u8bad\u662f\u4ec0\u4e48\uff1f",
@@ -135,7 +173,7 @@ function ask(){
   fetch("api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: q }),
+    body: JSON.stringify(scopeArt.length ? { question: q, scope: { articleIds: scopeArt } } : { question: q }),
     signal: ac.signal
   }).then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j }; }); })
   .then(function(o){
@@ -160,14 +198,16 @@ function ask(){
     el("citHead").style.display = "";
     el("answer").textContent = (st === "partial" ? "【部分回答】" : "") + j.answer;
     lastAnswer = { question: q, answer: el("answer").textContent, status: st,
-      model: j.model, citations: j.citations || [] };
+      model: j.model, citations: j.citations || [],
+      corpusVer: j.corpusVersion || CORPUS_VER_FALLBACK };
     el("saveCard").parentNode.style.display = "";
     var box = el("cits");
     box.innerHTML = "";
     (j.citations || []).forEach(function(c){
       var d = document.createElement("div");
       d.className = "cit";
-      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u539f\u6587 \u2192</a>";
+      /* WP08 联动: 引用直达段落级深链 #/art/<articleId>/<paraId> + 返回研究室 */
+      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "/" + c.id + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u5bf9\u5e94\u6bb5\u843d \u2192</a>";
       d.querySelector(".id").textContent = c.id;
       d.querySelector(".q").textContent = c.quote ? ("\u201c" + c.quote + "\u201d") : "";
       box.appendChild(d);
@@ -191,7 +231,7 @@ el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter" && !busy
 
 /* ---------- WP08: 本地研究卡 (localStorage, 无账号; 存储失败明确提示不假成功) ---------- */
 var CARDS_KEY = "mx_research_cards";
-var CORPUS_VER = "sample-topic v1 (v1n03+v1n04, 832段, 2026-10)";
+var CORPUS_VER_FALLBACK = "sample-topic v1 (v1n03+v1n04, 832段, 2026-10) [前端回退值]";  // 服务端 corpusVersion 缺失时才用
 var lastAnswer = null;   // 最近一次成功回答 (供保存)
 function loadCards(){
   try{ return JSON.parse(localStorage.getItem(CARDS_KEY) || "[]"); }catch(e){ return []; }
@@ -278,7 +318,7 @@ el("saveCard").onclick = function(){
     citations: lastAnswer.citations || [],
     model: lastAnswer.model,
     status: lastAnswer.status,
-    corpusVer: CORPUS_VER,
+    corpusVer: lastAnswer.corpusVer || CORPUS_VER_FALLBACK,
     edited: false,
   });
   if(saveCards(list)){
@@ -296,7 +336,7 @@ el("clearCards").onclick = function(){
 el("exportMd").onclick = function(){
   var list = loadCards();
   if(!list.length){ alert("还没有研究卡可导出。"); return; }
-  var lines = ["# 我的研究卡（井冈山样本专题）", "", "语料：" + CORPUS_VER, ""];
+  var lines = ["# 我的研究卡（井冈山样本专题）", "", "语料：" + (loadCards().length && loadCards()[0].corpusVer ? loadCards()[0].corpusVer : CORPUS_VER_FALLBACK), ""];
   list.forEach(function(c, i){
     lines.push("## " + (i + 1) + ". " + c.question);
     lines.push("");

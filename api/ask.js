@@ -17,18 +17,23 @@ const CANDIDATES = [
   '/var/task/data/sample-topic.json',
 ];
 
-let CORPUS = null, ARTICLE_META = null;
+let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null;
 function corpus() {
   if (CORPUS) return CORPUS;
   for (const p of CANDIDATES) {
     try {
       const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
       CORPUS = loadCorpus(raw);
+      // 语料版本由服务端从数据包实际生成 (P0: 前端写死字符串 → 随答案下发)
+      CORPUS_VERSION = 'sample-topic:' + (raw.topic?.topicId ?? 'unknown')
+        + ':articles=' + Object.keys(raw.articles ?? {}).length
+        + ':paras=' + CORPUS.length
+        + ':checksum=' + String(raw.articles ? Object.values(raw.articles)[0]?.textChecksum : '').slice(0, 12);
       ARTICLE_META = {};
       for (const [aid, a] of Object.entries(raw.articles)) {
         ARTICLE_META[aid] = { title: a.title, date: a.date?.raw ?? '' };
       }
-      console.log(JSON.stringify({ t: 'corpus_loaded', path: p, paras: CORPUS.length }));
+      console.log(JSON.stringify({ t: 'corpus_loaded', path: p, paras: CORPUS.length, version: CORPUS_VERSION }));
       return CORPUS;
     } catch { /* try next */ }
   }
@@ -42,6 +47,7 @@ function rateLimited(key) {
   let b = rlBuckets.get(key);
   if (!b || now - b.windowStart >= W) b = { windowStart: now, count: 0 };
   b.count += 1;
+  rlBuckets.set(key, b);   // P0 修复: 此前创建/更新桶后未 set 回 Map → 计数永远丢失, 限流失效
   if (rlBuckets.size > 10_000) for (const [k, v] of rlBuckets) if (now - v.windowStart >= W) rlBuckets.delete(k);
   return b.count > RL_MAX;
 }
@@ -60,6 +66,10 @@ export default async function handler(req, res) {
   const q = (body?.question ?? '').toString().trim();
   if (!q) return jsonError(res, 400, 'empty_question', 'question is required');
   if (q.length > 300) return jsonError(res, 400, 'question_too_long', 'question max 300 chars');
+  // 研究范围 (WP08 联动): articleIds 数组, 限制检索语料范围; 段落/场景级范围由前端转成 articleIds+可选 scopeNote
+  const scope = Array.isArray(body?.scope?.articleIds)
+    ? body.scope.articleIds.filter(x => /^[v]\d+n\d+$/.test(x)).slice(0, 5)
+    : [];
 
   const ip = getClientIp(req);
   const { sid } = sessionOf(req, res);
@@ -78,18 +88,22 @@ export default async function handler(req, res) {
 
   try {
     const out = await askPipeline(q, {
-      provider, corpus: c, timeoutMs: provider.timeoutMs, maxRetries: 1,
+      provider, corpus: (scope.length ? c.filter(p => scope.includes(p.articleId)) : c),
+      timeoutMs: provider.timeoutMs, maxRetries: 1,
     }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, ...e })));
 
-    const cost = out.usage?.cost?.amount ?? null;
+    // 预算: 用管线累计费用 (含反馈重试的废弃调用); 未知费用 → 保守预留并尝试结算
+    const cost = out.totalCost ?? null;
     budget.spend(cost);
+    if (cost === null && out.usage?.cost?.amount != null) budget.settle(out.usage.cost.amount);
     logCall({ ts: Date.now(), sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
-      cost, status: out.status, nCitations: out.citations.length,
-      fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length });
+      cost, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
+      fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length + (out.badQuotesIntercepted ?? []).length,
+      scope: scope.join(',') || null });
 
     return res.status(200).json({
       schemaVersion: '0.2', ok: true, model: out.model, promptVersion: out.promptVersion,
-      status: out.status,  // answered | partial | insufficient
+      corpusVersion: CORPUS_VERSION, status: out.status,
       answer: out.answer,
       citations: out.citations.map(c2 => ({
         id: c2.id, quote: c2.quote,
@@ -97,6 +111,7 @@ export default async function handler(req, res) {
         articleTitle: ARTICLE_META?.[c2.id.replace(/^p(v\d+n\d+)-.*$/, '$1')]?.title ?? null,
       })),
       evidenceIds: out.evidenceIds, hitIds: out.hitIds ?? [], ms: out.ms,
+      attempts: out.attempts ?? 1,
       usage: { cost, budgetLeft: budget.left() },
     });
   } catch (e) {

@@ -112,18 +112,35 @@ export function parseAnswer(content) {
   try { return JSON.parse(slice.replace(/,\s*([}\]])/g, '$1')); } catch { return null; }
 }
 
-// ---------- 引用校验: 引用 ID 必须 100% 在本次检索证据中 ----------
+// ---------- 引用校验: 引用 ID 必须 100% 在本次检索证据中; 引文必须真实存在于所引段落 ----------
+// normRef: 剥离空白与注号⑴-⑿ (编辑标记非原文)
+function normRef(s) {
+  return String(s ?? '').replace(/[\s\u3000⑴-⑿]/g, '');
+}
 export function validateCitations(parsed, evidence) {
   if (!parsed || typeof parsed !== 'object') return { ok: false, reason: 'unparsable' };
   const evIds = new Set(evidence.map(e => e.id));
+  const byId = new Map(evidence.map(e => [e.id, e]));
   const cits = Array.isArray(parsed.citations) ? parsed.citations : [];
-  const fabricated = [];
+  const fabricated = [];   // 不存在的段落 ID
+  const badQuotes = [];    // ID 合法但引文不在该段(或紧邻拼接)中
   const valid = [];
   const seen = new Set();
   for (const c of cits) {
     const id = String((c && c.id) ?? '');
     if (!id || !evIds.has(id)) { if (id) fabricated.push(id); continue; }
     if (seen.has(id)) continue;
+    // P0 修复: 合法 ID + 伪造引文 → 拦截 (引文必须逐字存在于所引段落, 或与紧邻段拼接后 — 切段边界连续文字合法)
+    const q = normRef(c.quote);
+    if (q) {
+      const p = byId.get(id);
+      const seq = p.seq ?? 0, aid = p.articleId;
+      const cands = [normRef(p.text)];
+      for (const o of evidence) {
+        if (o.articleId === aid && Math.abs((o.seq ?? 0) - seq) === 1) cands.push(normRef(p.text + o.text), normRef(o.text + p.text));
+      }
+      if (!cands.some(t => t.includes(q))) { badQuotes.push(id); continue; }
+    }
     seen.add(id);
     valid.push({ id, quote: String(c.quote ?? '').slice(0, 30) });
   }
@@ -140,7 +157,16 @@ export function validateCitations(parsed, evidence) {
     // partial 缺按语 → 降级反馈重试 (不静默改判)
     return { ok: false, reason: 'partial_missing_note', fabricated };
   }
-  if (cits.length === 0) return { ok: false, reason: 'no_citations', fabricated };
+  // P0 修复: 校验"过滤后有效引用"而非原始 cits.length —
+  // 全部虚构 / 真假混合剥离后为零 / 引文全部伪造 → 必须失败重试, 不得放行空引用答案
+  if (valid.length === 0) {
+    const reason = fabricated.length ? 'all_fabricated' : (badQuotes.length ? 'bad_quotes' : 'no_citations');
+    return { ok: false, reason, fabricated, badQuotes };
+  }
+  if (badQuotes.length) {
+    // 部分引文伪造: 剔除伪造项继续, 但记录 (答案可用的引用全部真实)
+    return { ok: true, status, answer: parsed.answer, citations: valid, fabricated, badQuotes };
+  }
   return { ok: true, status, answer: parsed.answer, citations: valid, fabricated };
 }
 
@@ -166,17 +192,21 @@ export async function askPipeline(question, opts, log) {
     return ret;
   }
 
-  // 3) 真实模型调用 (不合规输出带反馈重试: 虚构id / 不可解析 / 空答案 / partial缺按语)
+  // 3) 真实模型调用 (不合规输出带反馈重试: 虚构id / 伪造引文 / 不可解析 / 空答案 / partial缺按语)
+  // P0 修复: 每次调用独立记录 attempt (耗时/费用/错误), 不再只留最后一次 usage
   const provider = opts.provider;
   let attempt = 0, last = null, lastParsed = null;
+  ret.attemptsLog = [];
   const maxAttempts = (opts.maxRetries ?? 1) + 1;
   while (attempt < maxAttempts) {
     attempt++;
     let messages = buildMessages(question, evidence);
     if (last) {
       let fb;
-      if (last.reason === 'fabricated') {
+      if (last.reason === 'fabricated' || last.reason === 'all_fabricated') {
         fb = `你的上一条回复引用了不存在的段落 id：${last.fabricated.join('、')}。只能使用以下 id：${evidence.map(e => e.id).join('、')}。`;
+      } else if (last.reason === 'bad_quotes') {
+        fb = `你的上一条回复中段落 ${last.badQuotes.join('、')} 的引文 quote 与该段落原文不符。quote 必须是所引段落原文中不超过 20 字的连续片段，请逐字复制后重新输出。`;
       } else if (last.reason === 'partial_missing_note') {
         fb = '你的上一条回复 status 为 partial 但 answer 末尾缺少「按语：」开头的缺失信息说明。请补上按语后重新输出严格 JSON。';
       } else if (last.reason === 'no_citations') {
@@ -188,22 +218,35 @@ export async function askPipeline(question, opts, log) {
       }
       messages.push({ role: 'user', content: fb + '请重新输出严格 JSON。' });
     }
-    const r = await callChat(provider, messages,
-      { timeoutMs: opts.timeoutMs ?? provider.timeoutMs, maxRetries: 0 });
-    ret.model = r.model; ret.usage = r.usage;
+    const tCall = Date.now();
+    let r;
+    try {
+      r = await callChat(provider, messages,
+        { timeoutMs: opts.timeoutMs ?? provider.timeoutMs, maxRetries: 0 });
+    } catch (e) {
+      ret.attemptsLog.push({ attempt, ms: Date.now() - tCall, error: String(e.message ?? e), code: e.code ?? null });
+      throw e;  // 上游错误(超时/429/402/过滤)直接抛出, attempt 记录已留
+    }
+    ret.model = r.model;
+    ret.attemptsLog.push({ attempt, ms: Date.now() - tCall, cost: r.usage?.cost?.amount ?? r.usage?.total_cost ?? null,
+      tokens: r.usage?.total_tokens ?? null });
     const parsed = parseAnswer(r.content);
     lastParsed = parsed;
     const v = validateCitations(parsed, evidence);
     if (v.ok) {
       ret.status = v.status; ret.answer = v.answer ?? '';
-      ret.citations = v.citations; ret.fabricatedIntercepted = last && last.fabricated ? last.fabricated : [];
+      ret.citations = v.citations;
+      ret.fabricatedIntercepted = last && last.fabricated ? last.fabricated : [];
+      ret.badQuotesIntercepted = v.badQuotes ?? [];
+      // 累计费用: 所有 attempt 的费用求和 (含被反馈重试废弃的调用)
+      ret.totalCost = ret.attemptsLog.reduce((s, a) => s + (typeof a.cost === 'number' ? a.cost : 0), 0);
       ret.attempts = attempt;
       ret.ms = Date.now() - t0;
       return ret;
     }
     // 记录失败原因, 带反馈重试
     last = { reason: v.reason ?? (v.fabricated?.length ? 'fabricated' : 'unparsable'),
-             fabricated: v.fabricated ?? [] };
+             fabricated: v.fabricated ?? [], badQuotes: v.badQuotes ?? [] };
   }
   // 重试仍不合规: 虚构引用一律拦截丢弃。
   if (lastParsed && typeof lastParsed === 'object' && (lastParsed.answer || lastParsed.insufficient)) {

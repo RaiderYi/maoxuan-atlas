@@ -27,7 +27,17 @@ const server = http.createServer(async (req, res) => {
     // API 路由
     if (url.pathname.startsWith('/api/')) {
       const name = url.pathname.replace(/^\/api\//, '').replace(/\.js$/, '');
-      const mod = await import(`../api/${name}.js?cb=${Date.now()}`);
+      // 按 mtime 缓存模块: 代码没变就复用实例 (限流桶/预算累计跨请求保留 — 与生产一致);
+      // 代码变了自动失效重载 (开发热更新)
+      const modPath = path.join(ROOT, 'api', `${name}.js`);
+      const mtime = fs.statSync(modPath).mtimeMs;
+      if (!globalThis.__apiMods) globalThis.__apiMods = new Map();
+      let entry = globalThis.__apiMods.get(name);
+      if (!entry || entry.mtime !== mtime) {
+        entry = { mtime, mod: await import(`../api/${name}.js?cb=${mtime}`) };
+        globalThis.__apiMods.set(name, entry);
+      }
+      const mod = entry.mod;
       // 收集 body
       const chunks = [];
       for await (const c of req) chunks.push(c);

@@ -960,13 +960,15 @@ function scrollToPara(view, paraId){
     var p = (paras||[]).filter(function(x){ return x.id === paraId; })[0];
     if(!p || !p.text){ toast("样本数据中未找到该段落"); return; }
     var key = p.text.replace(/\s+/g,"").slice(0, 20);
-    var elP = null;
+    /* 多处匹配消歧: 收集全部候选, 取包含文字最长者 (重复套话段落向内容更具体处定位); 仍并列取首个 */
+    var cands = [];
     view.querySelectorAll(".artText p").forEach(function(el2){
-      if(elP) return;
       var t = el2.textContent.replace(/\s+/g,"");
-      if(t.length >= 20 ? t.indexOf(key) >= 0 : t === p.text.replace(/\s+/g,"")) elP = el2;
+      if(t.length >= 20 ? t.indexOf(key) >= 0 : t === p.text.replace(/\s+/g,"")) cands.push({ el: el2, len: t.length });
     });
-    if(!elP){ toast("正文中未定位到该段落"); return; }
+    if(!cands.length){ toast("正文中未定位到该段落"); return; }
+    cands.sort(function(a,b){ return b.len - a.len; });
+    var elP = cands[0].el;
     elP.id = "anchor-" + paraId;
     elP.style.transition = "background .8s";
     elP.style.background = "rgba(176,58,46,.12)";

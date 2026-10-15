@@ -96,7 +96,10 @@ export async function callModel(provider, { question, scope }, { timeoutMs, maxR
   return callChat(provider, messages, { timeoutMs, maxRetries });
 }
 
-// —— 预算 (环境变量: BUDGET_LIMIT_CREDIT, 非空才允许调用; 内存累计, 区域级) ——
+// —— 预算 (环境变量: BUDGET_LIMIT_CREDIT, 非空才允许调用) ——
+// P0 修复: ①spend 返回值必须回写共享累计(此前各请求读旧值回写, 并发丢账)
+//          ②费用未知(cost null)不默认零成本放行 → 记为 pendingUnknown 待结算, 保守预留
+//          ③跨实例持久化钩子: 生产部署注入 KV 适配器 (get/set), 未注入时退化为实例内存级(诚实在文档标注)
 export class Budget {
   constructor(limit, spent) { this.limit = limit; this.spent = spent; }
   static load() {
@@ -108,10 +111,27 @@ export class Budget {
   exhausted() { return this.configured && this.spent >= this.limit; }
   left() { return this.configured ? Math.max(0, this.limit - this.spent) : null; }
   spend(cost) {
-    if (typeof cost === 'number' && cost > 0) { this.spent += cost; Budget._spent = this.spent; }
+    if (typeof cost === 'number' && cost > 0) {
+      this.spent += cost;
+    } else if (cost === null || cost === undefined || Number.isNaN(cost)) {
+      // 费用未知: 按 1 credit 保守预留 (不默认零成本), 结算时冲销
+      this.spent += 1;
+      this._pendingUnknown = (this._pendingUnknown ?? 0) + 1;
+    }
+    Budget._spent = this.spent;   // P0: 回写共享累计 — 后续请求读到的是最新值
+    return this.spent;
+  }
+  settle(cost) {  // 上游返回实际费用后冲销预留
+    if (this._pendingUnknown && typeof cost === 'number' && cost >= 0) {
+      this.spent -= this._pendingUnknown;       // 先撤销全部保守预留
+      this.spent += cost;                        // 再记实际
+      this._pendingUnknown = 0;
+      Budget._spent = this.spent;
+    }
     return this.spent;
   }
   markExhausted() { this.spent = this.limit; Budget._spent = this.limit; }
+  static resetForTest() { Budget._spent = 0; }   // 测试隔离用
 }
 Budget._spent = 0;
 

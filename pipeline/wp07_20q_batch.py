@@ -17,10 +17,11 @@ const no = parseInt(process.argv[2]), q = process.argv[3], expect = process.argv
 try {
   const r = await askPipeline(q, { provider: loadProviderConfig(), corpus, timeoutMs: 90000, maxRetries: 2 }, null);
   process.stdout.write(JSON.stringify({ no, question: q, expect, promptVersion: PROMPT_VERSION,
-    model: r.model, ms: r.ms, attempts: r.attempts ?? 1,
+    model: r.model, ms: r.ms, attempts: r.attempts ?? 1, attemptsLog: r.attemptsLog ?? [],
+    totalCost: r.totalCost ?? null,
     status: r.status, answer: r.answer, citations: r.citations,
     evidenceIds: r.evidenceIds, hitIds: r.hitIds ?? [], bestScore: r.bestScore,
-    fabricatedIntercepted: r.fabricatedIntercepted ?? [] }));
+    fabricatedIntercepted: r.fabricatedIntercepted ?? [], badQuotesIntercepted: r.badQuotesIntercepted ?? [] }));
 } catch (e) {
   process.stdout.write(JSON.stringify({ no, question: q, expect, promptVersion: PROMPT_VERSION,
     error: String(e.message??e), code: e.code??null, detail: JSON.parse(JSON.stringify(e.detail??{})) }));
@@ -51,19 +52,21 @@ QUESTIONS = [
  ('1929年红军长征的路线是怎样的？','IRRELEVANT'),
 ]
 OUT='pipeline/wp07-20q-records-r2.json'
+# attempt 级完整留痕: 不覆盖同题旧记录, 每次运行 append 到 history 数组; "当前结果"指向最新一条
+HIST='pipeline/wp07-20q-history.jsonl'
+def append_hist(no, q, expect, rec):
+    with io.open(HIST,'a',encoding='utf-8') as f:
+        f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%S'), 'no': no, 'question': q,
+            'expect': expect, **rec}, ensure_ascii=False)+'\n')
 recs = {}
 try:
     for r in json.load(io.open(OUT,encoding='utf-8')):
-        recs[r['no']]=r   # 保留一切记录(含 error), 只跳过未跑过的
+        recs[r['no']]=r   # 当前结果 = 最新一次
 except Exception: pass
 print('resume:',len(recs),'records', flush=True)
-# contentFilter 400 之类瞬时错误可重试一次; 记录重试次数
-retried = {k:v.get('_retried',0) for k,v in recs.items()}
 for no,(q,tag) in enumerate(QUESTIONS,1):
     if no in recs and not recs[no].get('error'):
-        continue
-    if no in recs and recs[no].get('error') and retried.get(no,0)>=1:
-        continue  # 已重试过一次仍失败 → 保留失败记录, 不掩盖
+        continue   # 已成功 → 不重跑 (历史失败已在 history.jsonl 留痕)
     print(f'[{no}/20] {q[:24]}', flush=True)
     try:
         r = subprocess.run(['node','pipeline/_one_q.mjs',str(no),q,tag or 'ANSWERABLE'],
@@ -75,7 +78,7 @@ for no,(q,tag) in enumerate(QUESTIONS,1):
             rec = {'no':no,'question':q,'expect':tag or 'ANSWERABLE','error':'bad output: '+out[:200]}
     except subprocess.TimeoutExpired:
         rec = {'no':no,'question':q,'expect':tag or 'ANSWERABLE','error':'timeout 400s'}
-    rec['_retried'] = retried.get(no,0) + (1 if no in recs else 0)
+    append_hist(no, q, tag or 'ANSWERABLE', rec)   # 每次尝试都留痕 (含失败)
     s = rec.get('status')
     if rec.get('error'):    print('   -> ERROR', rec['error'][:80], flush=True)
     elif s=='insufficient': print('   -> INSUFFICIENT', flush=True)
@@ -83,4 +86,4 @@ for no,(q,tag) in enumerate(QUESTIONS,1):
     recs[no]=rec
     with io.open(OUT,'w',encoding='utf-8') as f:
         json.dump([recs[k] for k in sorted(recs)], f, ensure_ascii=False, indent=1)
-print('ALL DONE ->', OUT, flush=True)
+print('ALL DONE ->', OUT, '| history ->', HIST, flush=True)

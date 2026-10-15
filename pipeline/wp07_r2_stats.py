@@ -5,6 +5,7 @@ os_sep_note = "run in repo_stage"
 import os
 os.chdir(r'D:/工作/maoxuan_viz/repo_stage')
 recs = json.load(io.open('pipeline/wp07-20q-records-r2.json', encoding='utf-8'))
+HIST = 'pipeline/wp07-20q-history.jsonl'
 d = json.load(io.open('site/data/sample-topic.json', encoding='utf-8'))
 txt = {}
 for a in d['articles'].values():
@@ -69,10 +70,22 @@ for r in par:
     has = '按语：' in (r.get('answer') or '')
     print(f"partial Q{r['no']}: has-analyze-note={has}")
 
-# 期望符合性
+# 期望符合性 — 分母 = 可答题总数 16 (含调用失败题; 不因失败被排除而虚增成功率)
 irr = [r for r in oks if r.get('expect')=='IRRELEVANT']
 okirr = [r for r in irr if r.get('status')=='insufficient']
 print(f'irrelevant correctly refused: {len(okirr)}/{len(irr)}')
-ansb = [r for r in oks if r.get('expect')=='ANSWERABLE']
-okans = [r for r in ansb if r.get('status') in ('answered','partial')]
-print(f'answerable answered-or-partial: {len(okans)}/{len(ansb)}')
+ALL_ANS = [r for r in recs if r.get('expect')=='ANSWERABLE']   # 16, 含 error
+okans = [r for r in ALL_ANS if r.get('status') in ('answered','partial')]
+err_ans = [r for r in ALL_ANS if r.get('error')]
+print(f'answerable (denominator=16 incl. failures): returned answered-or-partial {len(okans)}/{len(ALL_ANS)}, call-failed {len(err_ans)}/{len(ALL_ANS)}')
+print('NOTE: returned != factually correct; correctness requires human/content review of each answer')
+# history 还原性: history.jsonl 中每题的完整尝试序列
+try:
+    hist = [json.loads(l) for l in io.open(HIST, encoding='utf-8') if l.strip()]
+    from collections import Counter
+    cnt = Counter(h['no'] for h in hist)
+    multi_hist = {k: v for k, v in cnt.items() if v > 1}
+    print(f'history.jsonl: {len(hist)} attempts logged, questions with >1 attempt: {multi_hist}')
+except FileNotFoundError:
+    print('history.jsonl: not found (rerun from scratch to build)')
+
