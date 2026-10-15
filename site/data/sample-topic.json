@@ -8147,8 +8147,10 @@
     ],
     "eventId": "evt_bj_de2ci_dbh",
     "articleId": "v1n03",
-    "paragraphId": null,
-    "evidenceIds": [],
+    "paragraphId": "pv1n03-033",
+    "evidenceIds": [
+     "pv1n03-033"
+    ],
     "reviewStatus": "draft"
    },
    {
@@ -8170,8 +8172,10 @@
     ],
     "eventId": "evt_jgs_douzheng",
     "articleId": "v1n04",
-    "paragraphId": null,
-    "evidenceIds": [],
+    "paragraphId": "pv1n04-244",
+    "evidenceIds": [
+     "pv1n04-244"
+    ],
     "reviewStatus": "draft"
    }
   ],

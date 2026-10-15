@@ -108,7 +108,17 @@ fetch("data/sample-topic.json").then(function(r){
   T = d;
   Object.keys(d.articles).forEach(function(aid){ ART_TITLES[aid] = d.articles[aid].title; });
   buildDots();
-  renderScene(0, false);
+  /* WP06: ?scene=<sceneId> 或 sessionStorage.jgs_scene → 恢复上次的幕次 (不自动播放) */
+  var startIdx = 0;
+  try{
+    var qs = new URLSearchParams(location.search).get("scene");
+    var sid = qs || sessionStorage.getItem("jgs_scene");
+    if(sid){
+      var k = scenes().findIndex(function(s){ return s.sceneId === sid; });
+      if(k >= 0) startIdx = k;
+    }
+  }catch(e){}
+  renderScene(startIdx, false);
   if(!window.maplibregl){ fallback("三维组件未就绪，已切换文字版"); return; }
   initMap();
 }).catch(function(e){
@@ -214,6 +224,8 @@ function renderScene(i, fly){
   var sc = scenes()[i];
   if(!sc) return;
   player.idx = i;
+  /* WP06: 记录当前幕, 供"返回剧场"刷新兜底恢复 */
+  try{ sessionStorage.setItem("jgs_scene", sc.sceneId); }catch(e){}
   el("scNo").textContent = "\u7b2c " + (i+1) + " \u5e55 / \u5171 " + scenes().length + " \u5e55";
   el("scTitle").textContent = sc.title;
   el("scCap").textContent = sc.caption;
@@ -231,8 +243,9 @@ function renderScene(i, fly){
   var art = el("scArt");
   if(sc.articleId){
     art.style.display = "inline-block";
-    art.href = "index.html#/art/" + sc.articleId;
-    art.textContent = "\u6253\u5f00\u300a" + ART_TITLES[sc.articleId] + "\u300b \u2192";
+    /* WP06: 段落级深链 — 场景绑定了 paragraphId 时直达该段并高亮 */
+    art.href = "index.html#/art/" + sc.articleId + (sc.paragraphId ? "/" + sc.paragraphId : "");
+    art.textContent = "\u6253\u5f00\u300a" + ART_TITLES[sc.articleId] + "\u300b" + (sc.paragraphId ? "\u5bf9\u5e94\u6bb5\u843d \u2192" : " \u2192");
   } else { art.style.display = "none"; }
   el("sceneLab").textContent = (i+1) + "/" + scenes().length + " " + sc.title;
   var dots = el("dots").children;
@@ -273,6 +286,10 @@ function pausePlayer(){
   if(player.mode === "playing") player.mode = "paused";
   playBtnUI();
 }
+// 离页/切后台 → 暂停播放计时器 (WP06 验收点)
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden && player.timer) pausePlayer();
+});
 function togglePlayer(){
   if(player.mode === "playing") pausePlayer();
   else { playPlayer(); }
@@ -322,7 +339,7 @@ function fallback(msg){
     c.className = "fbCard";
     var src = sc.articleId ? "\u4f9d\u636e\uff1a" + ART_TITLES[sc.articleId] : "";
     c.innerHTML = "<div class='scNo'>\u7b2c " + (i+1) + " \u5e55</div><h3></h3><p></p>" +
-      (sc.articleId ? "<a href='index.html#/art/" + sc.articleId + "'>\u6253\u5f00\u539f\u6587 \u2192</a>" : "");
+      (sc.articleId ? "<a href='index.html#/art/" + sc.articleId + (sc.paragraphId ? "/" + sc.paragraphId : "") + "'>\u6253\u5f00\u539f\u6587 \u2192</a>" : "");
     c.querySelector("h3").textContent = sc.title;
     c.querySelector("p").textContent = sc.caption + (src ? "\uff08" + src + "\uff09" : "");
     list.appendChild(c);

@@ -113,7 +113,7 @@ function routeFromHash(){
   var h = location.hash.replace(/^#\/?/, "");
   if(!h) return {v:"home"};
   var p = h.split("/");
-  if(p[0]==="art" && p[1]) return {v:"art", id:p[1]};
+  if(p[0]==="art" && p[1]) return {v:"art", id:p[1], para: p[2]||null};
   if(p[0]==="year" && p[1]) return {v:"year", y:parseInt(p[1])};
   if(p[0]==="search" && p[1]) return {v:"search", q:safeDecode(p[1])};
   if(p[0]==="place" && p[1]) return {v:"place", p:safeDecode(p[1])};
@@ -125,7 +125,7 @@ function applyRoute(){
   if(h === lastRoute) return;
   lastRoute = h;
   var r = routeFromHash();
-  if(r.v==="art"){ openArticle(r.id, true); return; }
+  if(r.v==="art"){ openArticle(r.id, true, r.para); return; }
   if(r.v==="year"){ show("tl"); selectYear(r.y); return; }
   if(r.v==="search"){ document.getElementById("q").value = r.q; doSearch(r.q); return; }
   if(r.v==="place"){ show("map"); selectPlace(r.p); return; }
@@ -949,7 +949,41 @@ function lastReadArticle(){
 
 var articleSeq = 0;
 var lastOpenedId = null;          /* D01: last SUCCESSFULLY rendered article */
-function openArticle(id, fromRoute){
+/* WP06: 段落锚点定位 — sample-topic.json 的段落 id (pv1n03-033 等) → 按 20 字前缀文本在渲染后的
+   .artText 段落中定位 (对主站 txt 分段与数据包分段的差异鲁棒); 找到则滚过去高亮 2.5s */
+var __sampleTopicCache = null;
+function scrollToPara(view, paraId){
+  var m = /^p(v\d+n\d+)-(\d+)$/.exec(paraId);
+  if(!m){ toast("段落链接格式无法识别"); return; }
+  var artId = m[1];
+  var locate = function(paras){
+    var p = (paras||[]).filter(function(x){ return x.id === paraId; })[0];
+    if(!p || !p.text){ toast("样本数据中未找到该段落"); return; }
+    var key = p.text.replace(/\s+/g,"").slice(0, 20);
+    var elP = null;
+    view.querySelectorAll(".artText p").forEach(function(el2){
+      if(elP) return;
+      var t = el2.textContent.replace(/\s+/g,"");
+      if(t.length >= 20 ? t.indexOf(key) >= 0 : t === p.text.replace(/\s+/g,"")) elP = el2;
+    });
+    if(!elP){ toast("正文中未定位到该段落"); return; }
+    elP.id = "anchor-" + paraId;
+    elP.style.transition = "background .8s";
+    elP.style.background = "rgba(176,58,46,.12)";
+    setTimeout(function(){ elP.style.background = ""; }, 2500);
+    view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
+  };
+  if(__sampleTopicCache){
+    var art = __sampleTopicCache.articles && __sampleTopicCache.articles[artId];
+    locate(art && art.paragraphs); return;
+  }
+  fetch("data/sample-topic.json").then(function(r){ return r.json(); }).then(function(j){
+    __sampleTopicCache = j;
+    var art = j.articles && j.articles[artId];
+    locate(art && art.paragraphs);
+  }).catch(function(){ toast("段落定位失败：样本数据不可用"); });
+}
+function openArticle(id, fromRoute, anchorPara){
   var a = byId[id];
   if(!a){ toast("未找到该篇文章"); setHash("#/view/cats"); return; }
   /* save previous article scroll before switching (A04) */
@@ -983,7 +1017,9 @@ function openArticle(id, fromRoute){
     var h = "<div id='readProg'></div><div class='readTools'><span class='rtTitle'>"+esc(a.title)+"</span>"+
       "<span class='fsGrp'><button data-fs='0' class='"+(fs===0?"on":"")+"'>小</button><button data-fs='1' class='"+(fs===1?"on":"")+"'>中</button><button data-fs='2' class='"+(fs===2?"on":"")+"'>大</button></span>"+
       "<button id='rtMark' class='"+(isMarked?"on":"")+"'>"+(isMarked?"★ 已收藏":"☆ 收藏")+"</button>"+
-      "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button></div>"+
+      "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button>"+
+      (anchorPara ? "<button id='rtBackScene' style='color:#b03a2e;border-color:#b03a2e'>← 返回剧场</button>" : "")+
+      "</div>"+
       "<div class='readWrap'><div class='readHead'><div class='vol'>《毛泽东选集》第"+["一","二","三","四","五"][a.vol-1]+"卷</div>"+
       "<h2>"+esc(a.title)+"</h2><div class='date'>"+esc(a.dateRaw.replace(/[（）()]/g,""))+"</div></div>"+
       "<div class='ctxCard'><h4>写作背景 · 本站整理</h4><p>"+esc(a.why||"（待考）")+"</p>"+
@@ -1052,10 +1088,26 @@ function openArticle(id, fromRoute){
         toast(url);
       }
     });
+    /* WP06: 返回剧场 — history.back() 保留 theatre 的幕次/相机/播放器状态;
+       刷新兜底: theatre 每次切幕写 sessionStorage.jgs_scene, 返回剧场页据此恢复幕次 */
+    var rtBack = document.getElementById("rtBackScene");
+    if(rtBack) rtBack.addEventListener("click", function(){
+      if(history.length > 1 && document.referrer.indexOf("theatre.html") >= 0){
+        history.back();
+      }else{
+        var sc = null;
+        try{ sc = sessionStorage.getItem("jgs_scene"); }catch(e){}
+        location.href = "theatre.html" + (sc ? "?scene=" + encodeURIComponent(sc) : "");
+      }
+    });
     /* restore reading position */
     var saved = restoreScroll(id);
     v.scrollTop = saved;
     if(saved > 40) toast("已回到上次阅读位置");
+    /* WP06: paragraph anchor (#/art/<id>/<paraId>) — fetch sample-topic.json once, locate by text */
+    if(anchorPara){
+      scrollToPara(v, anchorPara);
+    }
     /* A04: also persist on page hide so the last meaningful position survives reload */
     window.addEventListener("pagehide", onPageHide);
     track("article_open", {articleId:a.id});

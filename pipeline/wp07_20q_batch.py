@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""WP07: 分批跑 20 题 — 每题独立 node 进程 (规避长驻进程崩溃), 断点续跑"""
-import subprocess, json, io, os, sys
+"""WP07 r2: 固定版本(wp07-r2)全量重跑 20 题 — 每题独立 node 进程, 失败/重试全保留, 不拼接旧版本结果"""
+import subprocess, json, io, os, time
 os.chdir(r'D:/工作/maoxuan_viz/repo_stage')
 
 RUNNER = r'''
 import { loadProviderConfig } from '../api/_lib.js';
-import { loadCorpus, askPipeline } from '../api/_ask.js';
+import { loadCorpus, askPipeline, PROMPT_VERSION } from '../api/_ask.js';
 import fs from 'node:fs';
 const KEY = fs.readFileSync('D:/工作/maoxuan_viz/data/.key','utf8').trim();
 process.env.PROVIDER_URL='https://open.bigmodel.cn/api/coding/paas/v4';
@@ -16,11 +16,14 @@ const corpus = loadCorpus(data);
 const no = parseInt(process.argv[2]), q = process.argv[3], expect = process.argv[4]||'ANSWERABLE';
 try {
   const r = await askPipeline(q, { provider: loadProviderConfig(), corpus, timeoutMs: 90000, maxRetries: 2 }, null);
-  process.stdout.write(JSON.stringify({ no, question: q, expect, model: r.model, ms: r.ms,
-    insufficient: !!r.insufficient, answer: r.answer, citations: r.citations,
-    evidenceIds: r.evidenceIds, bestScore: r.bestScore, fabricatedIntercepted: r.fabricatedIntercepted ?? [] }));
+  process.stdout.write(JSON.stringify({ no, question: q, expect, promptVersion: PROMPT_VERSION,
+    model: r.model, ms: r.ms, attempts: r.attempts ?? 1,
+    status: r.status, answer: r.answer, citations: r.citations,
+    evidenceIds: r.evidenceIds, hitIds: r.hitIds ?? [], bestScore: r.bestScore,
+    fabricatedIntercepted: r.fabricatedIntercepted ?? [] }));
 } catch (e) {
-  process.stdout.write(JSON.stringify({ no, question: q, expect, error: String(e.message??e), code: e.code??null, detail: JSON.parse(JSON.stringify(e.detail??{})) }));
+  process.stdout.write(JSON.stringify({ no, question: q, expect, promptVersion: PROMPT_VERSION,
+    error: String(e.message??e), code: e.code??null, detail: JSON.parse(JSON.stringify(e.detail??{})) }));
 }
 '''
 io.open('pipeline/_one_q.mjs','w',encoding='utf-8',newline='\n').write(RUNNER)
@@ -47,16 +50,20 @@ QUESTIONS = [
  ('薛定谔方程在井冈山斗争中的应用是什么？','IRRELEVANT'),
  ('1929年红军长征的路线是怎样的？','IRRELEVANT'),
 ]
-OUT='pipeline/wp07-20q-records.json'
+OUT='pipeline/wp07-20q-records-r2.json'
 recs = {}
 try:
     for r in json.load(io.open(OUT,encoding='utf-8')):
-        if not r.get('error'): recs[r['no']]=r
+        recs[r['no']]=r   # 保留一切记录(含 error), 只跳过未跑过的
 except Exception: pass
-print('resume:',len(recs),'done', flush=True)
+print('resume:',len(recs),'records', flush=True)
+# contentFilter 400 之类瞬时错误可重试一次; 记录重试次数
+retried = {k:v.get('_retried',0) for k,v in recs.items()}
 for no,(q,tag) in enumerate(QUESTIONS,1):
     if no in recs and not recs[no].get('error'):
         continue
+    if no in recs and recs[no].get('error') and retried.get(no,0)>=1:
+        continue  # 已重试过一次仍失败 → 保留失败记录, 不掩盖
     print(f'[{no}/20] {q[:24]}', flush=True)
     try:
         r = subprocess.run(['node','pipeline/_one_q.mjs',str(no),q,tag or 'ANSWERABLE'],
@@ -65,12 +72,14 @@ for no,(q,tag) in enumerate(QUESTIONS,1):
         try:
             rec = json.loads(out)
         except Exception:
-            rec = {'no':no,'question':q,'expect':tag or 'ANSWERABLE','error':'bad output: '+out[:100]}
+            rec = {'no':no,'question':q,'expect':tag or 'ANSWERABLE','error':'bad output: '+out[:200]}
     except subprocess.TimeoutExpired:
         rec = {'no':no,'question':q,'expect':tag or 'ANSWERABLE','error':'timeout 400s'}
-    if rec.get('insufficient'): print('   -> INSUFFICIENT', flush=True)
-    elif rec.get('error'):      print('   -> ERROR', rec['error'][:60], flush=True)
-    else:                       print('   -> answered', len(rec.get('citations',[])), 'cits', rec.get('ms'),'ms', flush=True)
+    rec['_retried'] = retried.get(no,0) + (1 if no in recs else 0)
+    s = rec.get('status')
+    if rec.get('error'):    print('   -> ERROR', rec['error'][:80], flush=True)
+    elif s=='insufficient': print('   -> INSUFFICIENT', flush=True)
+    else:                   print(f'   -> {s}', len(rec.get('citations',[])), 'cits', rec.get('attempts'),'att', rec.get('ms'),'ms', flush=True)
     recs[no]=rec
     with io.open(OUT,'w',encoding='utf-8') as f:
         json.dump([recs[k] for k in sorted(recs)], f, ensure_ascii=False, indent=1)

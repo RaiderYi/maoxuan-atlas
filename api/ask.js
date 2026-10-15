@@ -84,18 +84,19 @@ export default async function handler(req, res) {
     const cost = out.usage?.cost?.amount ?? null;
     budget.spend(cost);
     logCall({ ts: Date.now(), sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
-      cost, insufficient: out.insufficient, nCitations: out.citations.length,
+      cost, status: out.status, nCitations: out.citations.length,
       fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length });
 
     return res.status(200).json({
-      schemaVersion: '0.1', ok: true, model: out.model,
-      answer: out.answer, insufficient: out.insufficient,
+      schemaVersion: '0.2', ok: true, model: out.model, promptVersion: out.promptVersion,
+      status: out.status,  // answered | partial | insufficient
+      answer: out.answer,
       citations: out.citations.map(c2 => ({
         id: c2.id, quote: c2.quote,
         articleId: c2.id.replace(/^p(v\d+n\d+)-.*$/, '$1'),
         articleTitle: ARTICLE_META?.[c2.id.replace(/^p(v\d+n\d+)-.*$/, '$1')]?.title ?? null,
       })),
-      evidenceIds: out.evidenceIds, ms: out.ms,
+      evidenceIds: out.evidenceIds, hitIds: out.hitIds ?? [], ms: out.ms,
       usage: { cost, budgetLeft: budget.left() },
     });
   } catch (e) {

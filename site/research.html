@@ -37,6 +37,25 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .sugg button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:14px;padding:5px 14px;cursor:pointer}
 .sugg button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
 .footer{font-size:10.5px;color:var(--ink2);margin-top:16px;letter-spacing:.5px}
+.cardBtns{margin-top:14px;display:none}
+.cardBtns button,.cardsHead button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:12px;padding:5px 14px;cursor:pointer}
+.cardBtns button:hover,.cardsHead button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.cards{margin-top:26px}
+.cardsHead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cardsHead h4{font-size:13px;color:var(--cinnabar);letter-spacing:2px}
+.cardsHead span{font-size:11px;color:var(--ink2)}
+.cardsHead button{margin-left:auto}
+.cardsHead button + button{margin-left:0}
+.rcard{background:rgba(255,252,243,.95);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;font-size:13px}
+.rcard .cq{color:var(--ink);font-weight:bold;margin-bottom:6px}
+.rcard .cmeta{font-size:10.5px;color:var(--gold);margin-bottom:6px}
+.rcard .ca{line-height:1.9;white-space:pre-wrap;color:var(--ink)}
+.rcard .ccits{margin-top:8px;font-size:11px;color:var(--cinnabar);line-height:1.8}
+.rcard .cbtns{margin-top:10px;display:flex;gap:8px}
+.rcard .cbtns button{font-family:inherit;font-size:11px;color:var(--ink2);background:rgba(245,239,224,.8);border:1px solid var(--border);border-radius:10px;padding:3px 10px;cursor:pointer}
+.rcard .cbtns button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.rcard .aiTag{display:inline-block;font-size:10px;color:#fff;background:var(--gold);border-radius:8px;padding:1px 8px;margin-left:6px;letter-spacing:1px}
+.rcard textarea{width:100%;font-family:inherit;font-size:13px;line-height:1.9;border:1px solid var(--gold);border-radius:8px;padding:8px;background:#fffdf5;color:var(--ink);box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -52,6 +71,7 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
   <div class="qbox">
     <input id="q" maxlength="300" placeholder="例如：红色政权为什么能够存在？">
     <button id="ask">提 问</button>
+    <button id="cancel" style="display:none;background:#8e6a4f;border-color:#8e6a4f">取消等待</button>
   </div>
   <div class="sugg" id="sugg"></div>
   <div class="err" id="err"></div>
@@ -60,6 +80,17 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
     <div class="answer" id="answer"></div>
     <h4 id="citHead">引用段落（点击可查看原文）</h4>
     <div id="cits"></div>
+    <div class="cardBtns">
+      <button id="saveCard">保存为研究卡</button>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="cardsHead">
+      <h4>我的研究卡 <span id="cardCnt"></span></h4>
+      <button id="exportMd">导出 Markdown</button>
+      <button id="clearCards">全部删除</button>
+    </div>
+    <div id="cardList"></div>
   </div>
   <div class="footer">模型在服务端调用 · 密钥不进入浏览器 · 预算/限流/超时由服务端控制</div>
 </div>
@@ -81,38 +112,56 @@ SUGG.forEach(function(s){
   el("sugg").appendChild(b);
 });
 var busy = false;
+var curReq = 0;           // 请求代次: 迟到的旧回答不得覆盖新请求的结果
+var curAbort = null;      // 当前 fetch 的 AbortController (取消界面等待; 模型调用是否真正停止由服务端决定)
+function setBusy(b){
+  busy = b;
+  el("ask").disabled = b;
+  el("cancel").style.display = b ? "" : "none";
+  if(b){ el("ask").textContent = "提问中…"; } else { el("ask").textContent = "提 问"; }
+}
 function ask(){
   if(busy) return;
   var q = el("q").value.trim();
   if(!q) return;
-  busy = true;
-  el("ask").disabled = true;
+  var myReq = ++curReq;
+  var ac = new AbortController();
+  curAbort = ac;
+  setBusy(true);
   el("err").style.display = "none";
   el("result").style.display = "none";
-  el("answer").textContent = "\u601d\u8003\u4e2d\uff08\u6a21\u578b\u9700\u8981\u7ea6 20 \u79d2\uff09\u2026\u2026";
+  el("answer").textContent = "思考中（模型通常需要 15~40 秒）……";
   el("result").style.display = "block";
   fetch("api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: q })
+    body: JSON.stringify({ question: q }),
+    signal: ac.signal
   }).then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j }; }); })
   .then(function(o){
+    if(myReq !== curReq) return;  // 旧请求迟到 → 丢弃
     var j = o.j;
     if(!j || !j.ok){
       el("result").style.display = "none";
-      el("err").textContent = "\u8bf7\u6c42\u672a\u6210\u529f\uff1a" + ((j && j.error && j.error.message) || ("HTTP " + o.status));
+      el("err").textContent = "请求未成功：" + ((j && j.error && j.error.message) || ("HTTP " + o.status));
       el("err").style.display = "block";
       return;
     }
-    el("model").textContent = (j.model || "") + " \u00b7 " + (j.ms/1000).toFixed(1) + "s \u00b7 AI\u5f52\u7eb3\uff0c\u4ec5\u4f9b\u53c2\u8003";
-    if(j.insufficient){
-      el("answer").innerHTML = "<span class='insuff'>\u6837\u672c\u8bed\u6599\u4e2d\u6ca1\u6709\u8db3\u591f\u8bc1\u636e\u56de\u7b54\u8fd9\u4e2a\u95ee\u9898\uff08\u4e0d\u731c\u6d4b\u3001\u4e0d\u7f16\u9875\u7801\uff09\u3002</span>";
+    el("model").textContent = (j.model || "") + " · " + (j.ms/1000).toFixed(1) + "s · AI归纳，仅供参考";
+    var st = j.status || (j.insufficient ? "insufficient" : "answered");
+    if(st === "insufficient"){
+      el("answer").innerHTML = "<span class='insuff'>样本语料中没有足够证据回答这个问题（不猜测、不编页码）。</span>";
       el("citHead").style.display = "none";
       el("cits").innerHTML = "";
+      lastAnswer = null;
+      el("saveCard").parentNode.style.display = "none";
       return;
     }
     el("citHead").style.display = "";
-    el("answer").textContent = j.answer;
+    el("answer").textContent = (st === "partial" ? "【部分回答】" : "") + j.answer;
+    lastAnswer = { question: q, answer: el("answer").textContent, status: st,
+      model: j.model, citations: j.citations || [] };
+    el("saveCard").parentNode.style.display = "";
     var box = el("cits");
     box.innerHTML = "";
     (j.citations || []).forEach(function(c){
@@ -125,14 +174,153 @@ function ask(){
     });
   })
   .catch(function(e){
+    if(myReq !== curReq) return;
     el("result").style.display = "none";
-    el("err").textContent = "\u7f51\u7edc\u9519\u8bef\uff1a" + e;
+    el("err").textContent = (e && e.name === "AbortError")
+      ? "已取消本次等待（后台模型调用可能仍在进行，结果不会展示）。"
+      : "网络错误：" + e;
     el("err").style.display = "block";
   })
-  .finally(function(){ busy = false; el("ask").disabled = false; });
+  .finally(function(){ if(myReq === curReq) setBusy(false); });
 }
 el("ask").onclick = ask;
-el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter") ask(); });
+el("cancel").onclick = function(){
+  if(curAbort) curAbort.abort();
+};
+el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter" && !busy) ask(); });
+
+/* ---------- WP08: 本地研究卡 (localStorage, 无账号; 存储失败明确提示不假成功) ---------- */
+var CARDS_KEY = "mx_research_cards";
+var CORPUS_VER = "sample-topic v1 (v1n03+v1n04, 832段, 2026-10)";
+var lastAnswer = null;   // 最近一次成功回答 (供保存)
+function loadCards(){
+  try{ return JSON.parse(localStorage.getItem(CARDS_KEY) || "[]"); }catch(e){ return []; }
+}
+function saveCards(list){
+  try{
+    localStorage.setItem(CARDS_KEY, JSON.stringify(list));
+    return true;
+  }catch(e){
+    alert("研究卡保存失败：本地存储不可用（" + e + "）");
+    return false;
+  }
+}
+function renderCards(){
+  var list = loadCards();
+  el("cardCnt").textContent = list.length ? "(" + list.length + ")" : "";
+  var box = el("cardList");
+  box.innerHTML = "";
+  if(!list.length){
+    var p = document.createElement("p");
+    p.style.cssText = "font-size:12px;color:var(--ink2)";
+    p.textContent = "还没有研究卡。提问后将答案保存到这里，可编辑、删除、导出 Markdown。";
+    box.appendChild(p);
+    return;
+  }
+  list.forEach(function(c){
+    var d = document.createElement("div");
+    d.className = "rcard";
+    /* 全部用 textContent 构建 — 用户/AI 内容不进 innerHTML (导出再展示不执行脚本) */
+    var q = document.createElement("div"); q.className = "cq";
+    q.textContent = "问：" + c.question;
+    d.appendChild(q);
+    var meta = document.createElement("div"); meta.className = "cmeta";
+    var tag = document.createElement("span"); tag.className = "aiTag"; tag.textContent = "AI归纳";
+    meta.textContent = new Date(c.ts).toLocaleString() + " · " + (c.model || "?") + " · 语料 " + (c.corpusVer || "?") + (c.edited ? " · 已人工改写" : "");
+    meta.appendChild(tag);
+    d.appendChild(meta);
+    var a = document.createElement("div"); a.className = "ca";
+    a.textContent = c.answer;
+    d.appendChild(a);
+    if(c.citations && c.citations.length){
+      var ci = document.createElement("div"); ci.className = "ccits";
+      ci.textContent = "引用：" + c.citations.map(function(x){ return x.id + "（" + (x.quote || "") + "）"; }).join("；");
+      d.appendChild(ci);
+    }
+    var btns = document.createElement("div"); btns.className = "cbtns";
+    var bEdit = document.createElement("button"); bEdit.textContent = "改写";
+    var bDel = document.createElement("button"); bDel.textContent = "删除";
+    btns.appendChild(bEdit); btns.appendChild(bDel);
+    d.appendChild(btns);
+    bEdit.onclick = function(){
+      var ta = document.createElement("textarea");
+      ta.rows = 6; ta.value = c.answer;
+      a.replaceWith(ta);
+      var bSave = document.createElement("button"); bSave.textContent = "保存改写";
+      var bCancel = document.createElement("button"); bCancel.textContent = "取消";
+      bSave.onclick = function(){
+        var list2 = loadCards();
+        for(var i = 0; i < list2.length; i++){
+          if(list2[i].id === c.id){ list2[i].answer = ta.value; list2[i].edited = true; break; }
+        }
+        if(saveCards(list2)){ renderCards(); }
+      };
+      bCancel.onclick = function(){ renderCards(); };
+      btns.innerHTML = "";
+      btns.appendChild(bSave); btns.appendChild(bCancel);
+    };
+    bDel.onclick = function(){
+      if(!confirm("删除这张研究卡？")) return;
+      saveCards(loadCards().filter(function(x){ return x.id !== c.id; }));
+      renderCards();
+    };
+    box.appendChild(d);
+  });
+}
+el("saveCard").onclick = function(){
+  if(!lastAnswer){ return; }
+  var list = loadCards();
+  list.unshift({
+    id: "rc" + Date.now(),
+    ts: Date.now(),
+    question: lastAnswer.question,
+    answer: lastAnswer.answer,
+    citations: lastAnswer.citations || [],
+    model: lastAnswer.model,
+    status: lastAnswer.status,
+    corpusVer: CORPUS_VER,
+    edited: false,
+  });
+  if(saveCards(list)){
+    renderCards();
+    el("saveCard").textContent = "已保存 ✓";
+    setTimeout(function(){ el("saveCard").textContent = "保存为研究卡"; }, 1500);
+  }
+};
+el("clearCards").onclick = function(){
+  if(!loadCards().length){ return; }
+  if(!confirm("确定删除全部研究卡？此操作不可恢复。")) return;
+  saveCards([]);
+  renderCards();
+};
+el("exportMd").onclick = function(){
+  var list = loadCards();
+  if(!list.length){ alert("还没有研究卡可导出。"); return; }
+  var lines = ["# 我的研究卡（井冈山样本专题）", "", "语料：" + CORPUS_VER, ""];
+  list.forEach(function(c, i){
+    lines.push("## " + (i + 1) + ". " + c.question);
+    lines.push("");
+    lines.push("> " + new Date(c.ts).toLocaleString() + " · " + (c.model || "?") + (c.edited ? " · 已人工改写" : "") + " · AI归纳，仅供参考");
+    lines.push("");
+    lines.push(c.answer);
+    if(c.citations && c.citations.length){
+      lines.push("");
+      c.citations.forEach(function(x){
+        lines.push("- 引用 `" + x.id + "`：" + (x.quote || ""));
+      });
+    }
+    lines.push("");
+  });
+  var md = lines.join(String.fromCharCode(10));
+  var blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+  var a2 = document.createElement("a");
+  a2.href = URL.createObjectURL(blob);
+  a2.download = "研究卡_" + new Date().toISOString().slice(0, 10) + ".md";
+  document.body.appendChild(a2);
+  a2.click();
+  setTimeout(function(){ URL.revokeObjectURL(a2.href); a2.remove(); }, 500);
+};
+renderCards();
 })();
 </script>
 </body>
