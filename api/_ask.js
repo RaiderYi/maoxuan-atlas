@@ -1,0 +1,178 @@
+// WP07 核心: 段落关键词检索 → 真实模型 → 结构化回答 → 引用校验
+// 语料: data/sample-topic.json (WP03, v1n03+v1n04, 879 段)
+import { loadProviderConfig, callChat } from './_lib.js';
+
+// ---------- 关键词检索 (字符 bigram 重叠, 无分词依赖) ----------
+export function bigrams(s) {
+  const t = String(s ?? '').toLowerCase().replace(/[\s，。？！、；：""''（）\[\]{}.,!?;:'"()]/g, '');
+  const set = new Set();
+  for (let i = 0; i < t.length - 1; i++) set.add(t.slice(i, i + 2));
+  if (t.length === 1) set.add(t);
+  return set;
+}
+
+export function loadCorpus(data) {
+  const paras = [];
+  for (const art of Object.values(data.articles)) {
+    // 节标题段落 id → label 映射, 按序传播: 每段携带其所属节标题的 bigram (检索上下文增强)
+    const secOf = [];
+    let curSec = '';
+    const byId = new Map(art.paragraphs.map(p => [p.id, p]));
+    for (const s of art.sections ?? []) {
+      const lbl = byId.get(s.paragraphId)?.text ?? '';
+      secOf.push([s.paragraphId, lbl]);
+    }
+    for (const p of art.paragraphs) {
+      if (p.isHeadNote) continue;               // 题注不作为证据
+      if (/^〔\d+[〕⑴]/.test(p.text) || /^注[\s　]*释/.test(p.text)) continue; // 尾注/注释段为编辑性文字
+      for (const [pid, lbl] of secOf) if (pid === p.id) curSec = lbl;
+      paras.push({ id: p.id, articleId: p.articleId, text: p.text,
+        _g: bigrams(p.text + ' ' + curSec), _sec: curSec });
+    }
+  }
+  return paras;
+}
+
+// 返回按分排序的 top 证据段; minScore 以下丢弃
+export function retrieve(question, corpus, { top = 8, minScore = 2 } = {}) {
+  const qg = bigrams(question);
+  let best = 0;
+  const scored = [];
+  for (const p of corpus) {
+    let score = 0;
+    for (const g of qg) if (p._g.has(g)) score++;
+    if (score > best) best = score;
+    if (score >= minScore) scored.push({ ...p, score });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  return { evidence: scored.slice(0, top), bestScore: best };
+}
+
+// ---------- 提示词 ----------
+// 注意: 证据段是原文按固定字宽切分的, 相邻编号文字连续; 段首/段尾可能是半句。
+// glm-5.3 实测会把"碎段落"误判为资料不足 → 提示词必须明确连读规则和 insufficient 判据。
+export function buildMessages(question, evidence) {
+  const evText = evidence.map(e => `[${e.id}]${e._sec ? `（节：${e._sec}）` : ''} ${e.text}`).join('\n\n');
+  const sys = '你是党史文献研究助手。只依据编号证据段落回答问题。'
+    + '关于证据段落的重要说明：这些段落是从原文按固定字宽切分出来的，编号相邻的段落（如 033 与 034）文字是连续的，'
+    + '段首或段尾出现半句话属于正常现象，应把相邻段落连起来读，不要因此认为资料残缺或不可用。'
+    + '规则：'
+    + '1) 每个实质性论断都要给出支撑它的证据段落编号；'
+    + '2) citations 里的 id 必须原样复制证据段落的 id，禁止编造任何 id；'
+    + '3) insufficient 只在以下情况为 true：所有证据段落与问题所问的事项完全无关，或证据中确实没有任何内容涉及所问事项。'
+    + '证据不够详尽、需要综合多条段落归纳、答案分散在多个段落中，都不是 insufficient——此时应综合归纳作答并逐条引用；'
+    + '若证据不足，answer 写空字符串且 citations 为空数组，不要猜测、不要编页码；'
+    + '4) quote 是证据原文中不超过 20 字的连续片段。'
+    + '输出严格 JSON（不要 markdown 代码块，不要多余文字）：'
+    + '{"answer":"...","insufficient":false,"citations":[{"id":"pv1n03-001","quote":"..."}]}';
+  const user = `证据段落：\n${evText}\n\n问题：${question}`;
+  return [
+    { role: 'system', content: sys },
+    { role: 'user', content: user },
+  ];
+}
+
+// ---------- 解析模型输出 ----------
+export function parseAnswer(content) {
+  let t = String(content ?? '').trim()
+    .replace(/^```(?:json)?/i, '').replace(/```$/,'').trim();
+  const i = t.indexOf('{'), j = t.lastIndexOf('}');
+  if (i < 0 || j <= i) return null;
+  const slice = t.slice(i, j + 1);
+  try { return JSON.parse(slice); } catch { /* try cleanup */ }
+  try { return JSON.parse(slice.replace(/,\s*([}\]])/g, '$1')); } catch { return null; }
+}
+
+// ---------- 引用校验: 引用 ID 必须 100% 在本次检索证据中 ----------
+export function validateCitations(parsed, evidence) {
+  if (!parsed || typeof parsed !== 'object') return { ok: false, reason: 'unparsable' };
+  const evIds = new Set(evidence.map(e => e.id));
+  const cits = Array.isArray(parsed.citations) ? parsed.citations : [];
+  const fabricated = [];
+  const valid = [];
+  const seen = new Set();
+  for (const c of cits) {
+    const id = String((c && c.id) ?? '');
+    if (!id || !evIds.has(id)) { if (id) fabricated.push(id); continue; }
+    if (seen.has(id)) continue;
+    seen.add(id);
+    valid.push({ id, quote: String(c.quote ?? '').slice(0, 30) });
+  }
+  // 无答案状态: 不得带引用, 不得编页码
+  if (parsed.insufficient === true || !parsed.answer) {
+    return { ok: true, insufficient: true, citations: [], answer: parsed.answer || '', fabricated };
+  }
+  if (!parsed.answer) return { ok: false, reason: 'empty_answer' };
+  return { ok: true, insufficient: false, answer: parsed.answer, citations: valid, fabricated };
+}
+
+// ---------- 完整问答管线 (供 /api/ask 与 20 题脚本共用) ----------
+// opts: { provider, corpus, articleMeta, top, timeoutMs, maxRetries }
+export async function askPipeline(question, opts, log) {
+  const { corpus } = opts;
+  const ret = { question };
+  const t0 = Date.now();
+
+  // 1) 检索
+  const { evidence, bestScore } = retrieve(question, corpus, { top: opts.top ?? 8 });
+  ret.evidenceIds = evidence.map(e => e.id);
+  ret.bestScore = bestScore;
+  log && log({ t: 'retrieve', q: question.slice(0, 24), n: evidence.length, bestScore,
+    ids: ret.evidenceIds });
+
+  // 2) 无证据 → 资料不足状态, 不调模型 (杜绝无依据编造)
+  if (evidence.length === 0) {
+    ret.insufficient = true; ret.answer = ''; ret.citations = [];
+    ret.model = null; ret.ms = Date.now() - t0;
+    return ret;
+  }
+
+  // 3) 真实模型调用 (不合规输出带反馈重试: 虚构id / 不可解析 / 空答案)
+  const provider = opts.provider;
+  let attempt = 0, last = null, lastParsed = null;
+  const maxAttempts = (opts.maxRetries ?? 1) + 1;
+  while (attempt < maxAttempts) {
+    attempt++;
+    let messages = buildMessages(question, evidence);
+    if (last) {
+      let fb;
+      if (last.reason === 'fabricated') {
+        fb = `你的上一条回复引用了不存在的段落 id：${last.fabricated.join('、')}。只能使用以下 id：${evidence.map(e => e.id).join('、')}。`;
+      } else if (last.reason === 'unparsable') {
+        fb = '你的上一条回复不是严格 JSON（含多余文字或格式错误）。只输出一个 JSON 对象，不要任何解释和代码围栏。';
+      } else {
+        fb = '你的上一条回复缺少 answer 字段或答案为空。若证据不足请输出 insufficient=true。';
+      }
+      messages.push({ role: 'user', content: fb + '请重新输出严格 JSON。' });
+    }
+    const r = await callChat(provider, messages,
+      { timeoutMs: opts.timeoutMs ?? provider.timeoutMs, maxRetries: 0 });
+    ret.model = r.model; ret.usage = r.usage;
+    const parsed = parseAnswer(r.content);
+    lastParsed = parsed;
+    const v = validateCitations(parsed, evidence);
+    if (v.ok) {
+      ret.insufficient = v.insufficient; ret.answer = v.answer ?? '';
+      ret.citations = v.citations; ret.fabricatedIntercepted = last && last.fabricated ? last.fabricated : [];
+      ret.ms = Date.now() - t0;
+      return ret;
+    }
+    // 记录失败原因, 带反馈重试
+    last = { reason: v.reason ?? (v.fabricated?.length ? 'fabricated' : 'unparsable'),
+             fabricated: v.fabricated ?? [] };
+  }
+  // 重试仍不合规: 虚构引用一律拦截丢弃。若至少有一次可解析输出 → 只保留通过校验的部分并标记 degraded
+  if (lastParsed && typeof lastParsed === 'object' && (lastParsed.answer || lastParsed.insufficient)) {
+    const v = validateCitations(lastParsed, evidence); // fabricated 已剔除
+    if (v.ok && v.citations.length === 0 && !v.insufficient && v.answer) {
+      const err = new Error('all citations rejected after retries');
+      err.code = 'citation_invalid';
+      err.detail = { attempted: attempt, reason: last.reason, fabricated: last.fabricated };
+      throw err; // 有答案但引用全被拒 = 不可信, 拦截
+    }
+  }
+  const err = new Error('citation_validation_failed');
+  err.code = 'citation_invalid';
+  err.detail = last ?? {};
+  throw err;
+}

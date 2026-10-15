@@ -42,13 +42,8 @@ export function loadProviderConfig() {
 }
 
 // —— 真实调用 (fetch + AbortController 超时 + 有界重试) ——
-export async function callModel(provider, { question, scope }, { timeoutMs, maxRetries }) {
-  const messages = [
-    { role: 'system', content: '你是党史文献研究助手。只依据给定研究范围中的原文回答; 资料不足时明确说明, 不得虚构。回答用简体中文。' },
-    { role: 'user', content: scope.length
-      ? `研究范围: ${scope.join('、')}\n\n问题: ${question}`
-      : `问题: ${question}` },
-  ];
+// callChat: 任意 messages 的通用调用 (WP07 ask 管线等)
+export async function callChat(provider, messages, { timeoutMs, maxRetries = 0, maxTokens = 4096, temperature = 0.3 }) {
   let lastErr;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     if (attempt > 0) await new Promise(r => setTimeout(r, 800 * attempt));
@@ -58,20 +53,18 @@ export async function callModel(provider, { question, scope }, { timeoutMs, maxR
       const resp = await fetch(provider.url, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${provider.key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: provider.model, messages, max_tokens: 4096, temperature: 0.3 }),
+        body: JSON.stringify({ model: provider.model, messages, max_tokens: maxTokens, temperature }),
         signal: ac.signal,
       });
       if (resp.status === 429) {
         lastErr = Object.assign(new Error('upstream 429'), { status: 429, retryAfter: resp.headers.get('retry-after') });
-        continue; // 重试一次
+        continue;
       }
       if (!resp.ok) {
         const t = await resp.text().catch(() => '');
-        // 余额/配额类错误不重试
         if (resp.status === 402 || /insufficient|quota|balance/i.test(t)) {
           throw Object.assign(new Error('insufficient quota'), { status: 402, code: 'insufficient_quota' });
         }
-        // invalid_token 类瞬时错误可重试 (acedata skill 实证)
         if (resp.status >= 500 || /invalid_token/i.test(t)) {
           lastErr = Object.assign(new Error(`upstream ${resp.status}`), { status: resp.status });
           continue;
@@ -80,18 +73,27 @@ export async function callModel(provider, { question, scope }, { timeoutMs, maxR
       }
       const data = await resp.json();
       const msg = data?.choices?.[0]?.message ?? {};
-      // 推理型模型 (如 GLM): 思考消耗 max_tokens 时 content 可能为空 → 回退 reasoning_content
-      const content = msg.content || msg.reasoning_content;
+      const content = msg.content || msg.reasoning_content; // 推理模型 content 可能被 reasoning 吃掉
       if (!content) throw Object.assign(new Error('empty completion'), { status: 502 });
       return { model: data.model ?? provider.model, content, usage: data.usage };
     } catch (e) {
       if (e.name === 'AbortError') { const te = new Error('upstream timeout'); te.code = 'TIMEOUT'; lastErr = te; continue; }
-      if (e.status) throw e; // 已分类错误直接抛出
+      if (e.status) throw e;
       lastErr = e;
       continue;
     } finally { clearTimeout(timer); }
   }
   throw lastErr ?? new Error('model call failed');
+}
+
+export async function callModel(provider, { question, scope }, { timeoutMs, maxRetries }) {
+  const messages = [
+    { role: 'system', content: '你是党史文献研究助手。只依据给定研究范围中的原文回答; 资料不足时明确说明, 不得虚构。回答用简体中文。' },
+    { role: 'user', content: scope.length
+      ? `研究范围: ${scope.join('、')}\n\n问题: ${question}`
+      : `问题: ${question}` },
+  ];
+  return callChat(provider, messages, { timeoutMs, maxRetries });
 }
 
 // —— 预算 (环境变量: BUDGET_LIMIT_CREDIT, 非空才允许调用; 内存累计, 区域级) ——

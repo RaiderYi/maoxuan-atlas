@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 研究 · 段落引用问答（WP07 Alpha）</title>
+<style>
+:root{
+  --paper:#f5efe0; --paper2:#efe6d0; --ink:#2b2420; --ink2:#5a4f45;
+  --cinnabar:#b03a2e; --gold:#a8842c; --border:#d8cbaa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Noto Serif SC","Source Han Serif SC","SimSun",serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+header{width:100%;padding:10px 16px;border-bottom:2px solid var(--cinnabar);display:flex;align-items:center;gap:14px;background:rgba(245,239,224,.97);position:sticky;top:0;z-index:10}
+header h1{font-size:16px;letter-spacing:3px}
+header .tag{font-size:11px;color:#fff;background:var(--gold);border-radius:9px;padding:2px 9px;letter-spacing:1px}
+header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decoration:none;border:1px solid var(--border);border-radius:13px;padding:4px 12px;background:rgba(255,252,243,.8)}
+.wrap{width:min(860px,94vw);padding:26px 0 60px}
+.note{font-size:12px;color:var(--ink2);line-height:1.9;background:rgba(255,252,243,.9);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:18px}
+.note b{color:var(--cinnabar)}
+.qbox{display:flex;gap:10px;margin-bottom:18px}
+.qbox input{flex:1;font-family:inherit;font-size:14px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:rgba(255,252,243,.95);color:var(--ink);outline:none}
+.qbox input:focus{border-color:var(--gold)}
+.qbox button{font-family:inherit;font-size:14px;padding:10px 26px;border-radius:10px;border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff;cursor:pointer;letter-spacing:2px}
+.qbox button:disabled{opacity:.5;cursor:wait}
+.result{background:rgba(255,252,243,.95);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:none}
+.result .model{font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px}
+.result .answer{font-size:14.5px;line-height:2;letter-spacing:.5px;white-space:pre-wrap}
+.result .insuff{font-size:14px;line-height:2;color:var(--gold)}
+.result h4{font-size:13px;color:var(--cinnabar);letter-spacing:2px;margin:16px 0 8px}
+.cit{border-left:3px solid var(--cinnabar);background:rgba(176,58,46,.04);border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.9}
+.cit .id{color:var(--gold);font-size:11px}
+.cit .q{color:var(--cinnabar)}
+.cit a{color:var(--cinnabar);text-decoration:none;border-bottom:1px dashed var(--cinnabar)}
+.err{background:rgba(176,58,46,.06);border:1px solid var(--cinnabar);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.9;color:#8e2f26;display:none}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.sugg button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);border:1px solid var(--border);border-radius:14px;padding:5px 14px;cursor:pointer}
+.sugg button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.footer{font-size:10.5px;color:var(--ink2);margin-top:16px;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>AI 研究 · 问答 Alpha</h1><span class="tag">样本语料：两篇 · 832 段</span>
+  <a class="back" href="index.html">← 返回图集</a>
+</header>
+<div class="wrap">
+  <div class="note">
+    答案仅由《中国的红色政权为什么能够存在？》《井冈山的斗争》两篇原文支撑。每条引用<b>必须来自本次检索命中的段落</b>（虚构段落号会被系统拦截）；
+    语料不足的问题将直接回答<b>资料不足</b>，不会编造。此为开发预览（WP07）。
+  </div>
+  <div class="qbox">
+    <input id="q" maxlength="300" placeholder="例如：红色政权为什么能够存在？">
+    <button id="ask">提 问</button>
+  </div>
+  <div class="sugg" id="sugg"></div>
+  <div class="err" id="err"></div>
+  <div class="result" id="result">
+    <div class="model" id="model"></div>
+    <div class="answer" id="answer"></div>
+    <h4 id="citHead">引用段落（点击可查看原文）</h4>
+    <div id="cits"></div>
+  </div>
+  <div class="footer">模型在服务端调用 · 密钥不进入浏览器 · 预算/限流/超时由服务端控制</div>
+</div>
+<script>
+(function(){
+"use strict";
+function el(id){ return document.getElementById(id); }
+var SUGG = [
+  "\u7ea2\u8272\u653f\u6743\u4e3a\u4ec0\u4e48\u80fd\u591f\u5b58\u5728\uff1f",
+  "\u516b\u6708\u5931\u8d25\u7684\u539f\u56e0\u548c\u6559\u8bad\u662f\u4ec0\u4e48\uff1f",
+  "\u4e95\u5188\u5c71\u6839\u636e\u5730\u7684\u5730\u5f62\u4f18\u52bf\u6709\u54ea\u4e9b\uff1f",
+  "\u571f\u5730\u95ee\u9898\u4e0a\u7684\u5206\u914d\u6807\u51c6\u662f\u4ec0\u4e48\uff1f",
+  "\u4e95\u5188\u5c71\u65f6\u671f\u7ea2\u519b\u7684\u706b\u70ae\u578b\u53f7\u662f\u4ec0\u4e48\uff1f"
+];
+SUGG.forEach(function(s){
+  var b = document.createElement("button");
+  b.textContent = s;
+  b.onclick = function(){ el("q").value = s; ask(); };
+  el("sugg").appendChild(b);
+});
+var busy = false;
+function ask(){
+  if(busy) return;
+  var q = el("q").value.trim();
+  if(!q) return;
+  busy = true;
+  el("ask").disabled = true;
+  el("err").style.display = "none";
+  el("result").style.display = "none";
+  el("answer").textContent = "\u601d\u8003\u4e2d\uff08\u6a21\u578b\u9700\u8981\u7ea6 20 \u79d2\uff09\u2026\u2026";
+  el("result").style.display = "block";
+  fetch("api/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question: q })
+  }).then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j }; }); })
+  .then(function(o){
+    var j = o.j;
+    if(!j || !j.ok){
+      el("result").style.display = "none";
+      el("err").textContent = "\u8bf7\u6c42\u672a\u6210\u529f\uff1a" + ((j && j.error && j.error.message) || ("HTTP " + o.status));
+      el("err").style.display = "block";
+      return;
+    }
+    el("model").textContent = (j.model || "") + " \u00b7 " + (j.ms/1000).toFixed(1) + "s \u00b7 AI\u5f52\u7eb3\uff0c\u4ec5\u4f9b\u53c2\u8003";
+    if(j.insufficient){
+      el("answer").innerHTML = "<span class='insuff'>\u6837\u672c\u8bed\u6599\u4e2d\u6ca1\u6709\u8db3\u591f\u8bc1\u636e\u56de\u7b54\u8fd9\u4e2a\u95ee\u9898\uff08\u4e0d\u731c\u6d4b\u3001\u4e0d\u7f16\u9875\u7801\uff09\u3002</span>";
+      el("citHead").style.display = "none";
+      el("cits").innerHTML = "";
+      return;
+    }
+    el("citHead").style.display = "";
+    el("answer").textContent = j.answer;
+    var box = el("cits");
+    box.innerHTML = "";
+    (j.citations || []).forEach(function(c){
+      var d = document.createElement("div");
+      d.className = "cit";
+      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u539f\u6587 \u2192</a>";
+      d.querySelector(".id").textContent = c.id;
+      d.querySelector(".q").textContent = c.quote ? ("\u201c" + c.quote + "\u201d") : "";
+      box.appendChild(d);
+    });
+  })
+  .catch(function(e){
+    el("result").style.display = "none";
+    el("err").textContent = "\u7f51\u7edc\u9519\u8bef\uff1a" + e;
+    el("err").style.display = "block";
+  })
+  .finally(function(){ busy = false; el("ask").disabled = false; });
+}
+el("ask").onclick = ask;
+el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter") ask(); });
+})();
+</script>
+</body>
+</html>
