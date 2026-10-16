@@ -3,6 +3,7 @@
 // 语料: data/sample-topic.json (随函数打包为静态资源, 由 fetch 相对路径读取 — Vercel 上从站点根)
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.js';
 import { loadCorpus, askPipeline } from './_ask.js';
@@ -24,11 +25,9 @@ function corpus() {
     try {
       const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
       CORPUS = loadCorpus(raw);
-      // 语料版本由服务端从数据包实际生成 (P0: 前端写死字符串 → 随答案下发)
-      CORPUS_VERSION = 'sample-topic:' + (raw.topic?.topicId ?? 'unknown')
-        + ':articles=' + Object.keys(raw.articles ?? {}).length
-        + ':paras=' + CORPUS.length
-        + ':checksum=' + String(raw.articles ? Object.values(raw.articles)[0]?.textChecksum : '').slice(0, 12);
+      // 语料版本: 对参与检索的全部文章 (title+段落 id+段落内容, 按稳定顺序) 做确定性 hash
+      // — 修改任一篇内容/段落/ID 都会改变 hash; 相同内容重复构建不变 (验收标准)
+      CORPUS_VERSION = buildCorpusVersion(raw);
       ARTICLE_META = {};
       for (const [aid, a] of Object.entries(raw.articles)) {
         ARTICLE_META[aid] = { title: a.title, date: a.date?.raw ?? '' };
@@ -38,6 +37,23 @@ function corpus() {
     } catch { /* try next */ }
   }
   throw new Error('sample-topic.json not found');
+}
+function buildCorpusVersion(raw) {
+  const hash = crypto.createHash('sha256');
+  const aids = Object.keys(raw.articles ?? {}).sort();
+  for (const aid of aids) {
+    const a = raw.articles[aid];
+    hash.update(aid).update('\u0000');
+    hash.update(String(a.title ?? '')).update('\u0000');
+    // 段落按 seq 稳定顺序 (id 含 seq, 直接 sort 亦稳定)
+    const paras = [...(a.paragraphs ?? [])].sort((x, y) => (x.seq ?? 0) - (y.seq ?? 0));
+    for (const para of paras) {
+      hash.update(String(para.id ?? '')).update('\u0000');
+      hash.update(String(para.text ?? '')).update('\u0000');
+    }
+    hash.update('\u0001'); // 文章分隔符
+  }
+  return 'corpus-' + hash.digest('hex').slice(0, 20) + ':articles=' + aids.length + ':paras=' + CORPUS.length;
 }
 
 const RL_MAX = parseInt(process.env.ASK_RL_MAX_PER_MIN ?? '5', 10);
@@ -92,17 +108,16 @@ export default async function handler(req, res) {
       timeoutMs: provider.timeoutMs, maxRetries: 1,
     }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, ...e })));
 
-    // 预算: 用管线累计费用 (含反馈重试的废弃调用); 未知费用 → 保守预留并尝试结算
-    const cost = out.totalCost ?? null;
-    budget.spend(cost);
-    if (cost === null && out.usage?.cost?.amount != null) budget.settle(out.usage.cost.amount);
+    // 预算: 按"上游调用次数"记账 (含重试; 1 credit = 1 次上游调用)。计量单位见 _lib.js Budget 注释。
+    const calls = (out.attemptsLog ?? []).length || (out.attempts ?? 1);
+    budget.spend(calls);
     logCall({ ts: Date.now(), sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
-      cost, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
+      calls, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
       fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length + (out.badQuotesIntercepted ?? []).length,
       scope: scope.join(',') || null });
 
     return res.status(200).json({
-      schemaVersion: '0.2', ok: true, model: out.model, promptVersion: out.promptVersion,
+      schemaVersion: '0.3', ok: true, model: out.model, promptVersion: out.promptVersion,
       corpusVersion: CORPUS_VERSION, status: out.status,
       answer: out.answer,
       citations: out.citations.map(c2 => ({
@@ -112,9 +127,12 @@ export default async function handler(req, res) {
       })),
       evidenceIds: out.evidenceIds, hitIds: out.hitIds ?? [], ms: out.ms,
       attempts: out.attempts ?? 1,
-      usage: { cost, budgetLeft: budget.left() },
+      usage: { calls, budgetUnit: 'upstream_calls', budgetLeft: budget.left() },
     });
   } catch (e) {
+    // 失败路径也记账: 已发生的上游调用 (随 error.attemptsLog 传出) 必须计入预算, 不能丢账
+    const failedCalls = (e.attemptsLog ?? []).length;
+    if (failedCalls > 0) budget.spend(failedCalls);
     if (e.status === 402) { budget.markExhausted(); return jsonError(res, 402, 'budget_exhausted', '上游余额不足, 已熔断。'); }
     if (e.code === 'TIMEOUT') return jsonError(res, 504, 'upstream_timeout', '模型调用超时, 本次提问已阻断。');
     if (e.status === 429) { res.setHeader('Retry-After', '30'); return jsonError(res, 429, 'upstream_rate_limited', '上游限流, 请稍后再试。'); }

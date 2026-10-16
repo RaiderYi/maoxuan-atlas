@@ -959,21 +959,25 @@ function scrollToPara(view, paraId){
   var locate = function(paras){
     var p = (paras||[]).filter(function(x){ return x.id === paraId; })[0];
     if(!p || !p.text){ toast("样本数据中未找到该段落"); return; }
-    var key = p.text.replace(/\s+/g,"").slice(0, 20);
-    /* 多处匹配消歧: 收集全部候选, 取包含文字最长者 (重复套话段落向内容更具体处定位); 仍并列取首个 */
-    var cands = [];
-    view.querySelectorAll(".artText p").forEach(function(el2){
-      var t = el2.textContent.replace(/\s+/g,"");
-      if(t.length >= 20 ? t.indexOf(key) >= 0 : t === p.text.replace(/\s+/g,"")) cands.push({ el: el2, len: t.length });
-    });
-    if(!cands.length){ toast("正文中未定位到该段落"); return; }
-    cands.sort(function(a,b){ return b.len - a.len; });
-    var elP = cands[0].el;
-    elP.id = "anchor-" + paraId;
-    elP.style.transition = "background .8s";
-    elP.style.background = "rgba(176,58,46,.12)";
-    setTimeout(function(){ elP.style.background = ""; }, 2500);
-    view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
+    var key = p.text.replace(/\s+/g,"");
+    /* 段落定位: 优先"唯一包含"匹配, 无法唯一定位时明确提示, 不静默猜选
+       (固定字宽切分的样本段落可能只占主站自然段的一部分, 或跨自然段) */
+    var domParas = Array.prototype.slice.call(view.querySelectorAll(".artText p"));
+    var norm = function(s){ return (s.textContent || "").replace(/\s+/g,""); };
+    var exact = domParas.filter(function(el2){ return norm(el2) === key; });
+    var containing = exact.length ? exact : domParas.filter(function(el2){ return norm(el2).indexOf(key) >= 0; });
+    if(containing.length === 1){
+      var elP = containing[0];
+      elP.id = "anchor-" + paraId;
+      elP.style.transition = "background .8s";
+      elP.style.background = "rgba(176,58,46,.12)";
+      setTimeout(function(){ elP.style.background = ""; }, 2500);
+      view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
+    } else if(containing.length > 1){
+      toast("该段落文本在正文中出现 " + containing.length + " 处，无法唯一定位，请按编号在原文中查找。");
+    } else {
+      toast("正文分段与样本数据不一致，未能唯一定位该段落。");
+    }
   };
   if(__sampleTopicCache){
     var art = __sampleTopicCache.articles && __sampleTopicCache.articles[artId];

@@ -97,40 +97,28 @@ export async function callModel(provider, { question, scope }, { timeoutMs, maxR
 }
 
 // —— 预算 (环境变量: BUDGET_LIMIT_CREDIT, 非空才允许调用) ——
-// P0 修复: ①spend 返回值必须回写共享累计(此前各请求读旧值回写, 并发丢账)
-//          ②费用未知(cost null)不默认零成本放行 → 记为 pendingUnknown 待结算, 保守预留
-//          ③跨实例持久化钩子: 生产部署注入 KV 适配器 (get/set), 未注入时退化为实例内存级(诚实在文档标注)
+// 计量单位: 1 credit = 1 次上游模型调用 (含失败与重试的调用)。
+// 说明: 当前供应商适配层 (callChat) 拿到的 usage 不含厂商金额 (GLM 只回 token 数),
+//       按金额记账会制造"未知费用当零成本"的假象。故改用"调用次数"记账 — 可直接验证、无需估算依据。
+// 并发: Node 单线程内 spend 为同步原子累加共享静态累计 Budget._spent, 不存在读旧值回写覆盖。
+// 跨实例 (Vercel 多实例) 持久化仍为生产部署前置事项, 见 docs/WP05_DELIVERY.md。
 export class Budget {
-  constructor(limit, spent) { this.limit = limit; this.spent = spent; }
+  constructor(limit) { this.limit = limit; }
   static load() {
     const raw = process.env.BUDGET_LIMIT_CREDIT;
-    if (!raw || !/^\d+(\.\d+)?$/.test(raw)) return new Budget(null, 0); // 未配置 → 阻断
-    return new Budget(parseFloat(raw), Budget._spent);
+    if (!raw || !/^\d+(\.\d+)?$/.test(raw)) return new Budget(null); // 未配置 → 阻断
+    return new Budget(parseFloat(raw));
   }
   get configured() { return this.limit !== null; }
-  exhausted() { return this.configured && this.spent >= this.limit; }
-  left() { return this.configured ? Math.max(0, this.limit - this.spent) : null; }
-  spend(cost) {
-    if (typeof cost === 'number' && cost > 0) {
-      this.spent += cost;
-    } else if (cost === null || cost === undefined || Number.isNaN(cost)) {
-      // 费用未知: 按 1 credit 保守预留 (不默认零成本), 结算时冲销
-      this.spent += 1;
-      this._pendingUnknown = (this._pendingUnknown ?? 0) + 1;
-    }
-    Budget._spent = this.spent;   // P0: 回写共享累计 — 后续请求读到的是最新值
-    return this.spent;
+  get spent() { return Budget._spent; }   // 只读共享累计
+  exhausted() { return this.configured && Budget._spent >= this.limit; }
+  left() { return this.configured ? Math.max(0, this.limit - Budget._spent) : null; }
+  spend(calls) {
+    const n = (typeof calls === 'number' && calls > 0) ? calls : 1; // 缺省按 1 次调用计
+    Budget._spent += n;   // 原子累加共享累计 (并发安全)
+    return Budget._spent;
   }
-  settle(cost) {  // 上游返回实际费用后冲销预留
-    if (this._pendingUnknown && typeof cost === 'number' && cost >= 0) {
-      this.spent -= this._pendingUnknown;       // 先撤销全部保守预留
-      this.spent += cost;                        // 再记实际
-      this._pendingUnknown = 0;
-      Budget._spent = this.spent;
-    }
-    return this.spent;
-  }
-  markExhausted() { this.spent = this.limit; Budget._spent = this.limit; }
+  markExhausted() { Budget._spent = this.limit; }
   static resetForTest() { Budget._spent = 0; }   // 测试隔离用
 }
 Budget._spent = 0;
