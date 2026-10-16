@@ -57,6 +57,17 @@ console.log('promptVersion:', PROMPT_VERSION, '| pipelineVersion:', PIPELINE_VER
   const b4 = Budget.load();
   b4.spend(2);
   ok(Budget.load().spent === 2, 'failed-call count billed via attemptsLog length');
+  // P0-r4: 预占 — 限额=1 时, 两个"同时"请求先后 reserve, 只有第一个能进入
+  Budget.resetForTest();
+  process.env.BUDGET_LIMIT_CREDIT = '1';
+  const r1 = Budget.load();
+  ok(r1.reserve(1) === true, 'first reserve succeeds (limit=1)');
+  const r2 = Budget.load();  // 第二个请求读同一共享累计
+  ok(r2.reserve(1) === false, 'second concurrent reserve blocked (limit=1)');
+  ok(Budget.load().spent === 1, 'spent stays 1 after blocked reserve');
+  // 预占后不超发: reserve 拒绝时不占用额度
+  ok(Budget.load().left() === 0, 'no over-reservation');
+  delete process.env.BUDGET_LIMIT_CREDIT;
   // 耗尽熔断
   Budget.resetForTest();
   process.env.BUDGET_LIMIT_CREDIT = '3';

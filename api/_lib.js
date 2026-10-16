@@ -100,7 +100,9 @@ export async function callModel(provider, { question, scope }, { timeoutMs, maxR
 // 计量单位: 1 credit = 1 次上游模型调用 (含失败与重试的调用)。
 // 说明: 当前供应商适配层 (callChat) 拿到的 usage 不含厂商金额 (GLM 只回 token 数),
 //       按金额记账会制造"未知费用当零成本"的假象。故改用"调用次数"记账 — 可直接验证、无需估算依据。
-// 并发: Node 单线程内 spend 为同步原子累加共享静态累计 Budget._spent, 不存在读旧值回写覆盖。
+// 预占 (reserve): 每次模型调用**前**原子检查+占用额度 (含重试), 限额=1 时两个并发请求只有一个能进入。
+//   之前是"请求完成后 spend 记账", 导致限额=1 时两个同时开始的请求都可进入。reserve 在调用前拦截。
+// 并发: Node 单线程内 reserve/spend 为同步原子操作共享静态累计 Budget._spent, 不存在读旧值回写覆盖。
 // 跨实例 (Vercel 多实例) 持久化仍为生产部署前置事项, 见 docs/WP05_DELIVERY.md。
 export class Budget {
   constructor(limit) { this.limit = limit; }
@@ -113,6 +115,14 @@ export class Budget {
   get spent() { return Budget._spent; }   // 只读共享累计
   exhausted() { return this.configured && Budget._spent >= this.limit; }
   left() { return this.configured ? Math.max(0, this.limit - Budget._spent) : null; }
+  // 预占: 调用前原子检查+占用。返回 true=已占用额度, false=额度耗尽(应阻断)。
+  reserve(calls = 1) {
+    if (!this.configured) return false;              // 未配置 → 阻断
+    const n = (typeof calls === 'number' && calls > 0) ? calls : 1;
+    if (Budget._spent + n > this.limit) return false; // 超限 → 拒绝 (不占用)
+    Budget._spent += n;                               // 原子占用
+    return true;
+  }
   spend(calls) {
     const n = (typeof calls === 'number' && calls > 0) ? calls : 1; // 缺省按 1 次调用计
     Budget._spent += n;   // 原子累加共享累计 (并发安全)

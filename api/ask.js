@@ -106,11 +106,11 @@ export default async function handler(req, res) {
     const out = await askPipeline(q, {
       provider, corpus: (scope.length ? c.filter(p => scope.includes(p.articleId)) : c),
       timeoutMs: provider.timeoutMs, maxRetries: 1,
+      budget,   // 预占: 每次模型调用前 reserve, 耗尽抛 402 (P0-r4)
     }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, ...e })));
 
-    // 预算: 按"上游调用次数"记账 (含重试; 1 credit = 1 次上游调用)。计量单位见 _lib.js Budget 注释。
+    // 额度已由 askPipeline 在每次调用前预占 (reserve), 此处不再重复记账
     const calls = (out.attemptsLog ?? []).length || (out.attempts ?? 1);
-    budget.spend(calls);
     logCall({ ts: Date.now(), sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
       calls, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
       fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length + (out.badQuotesIntercepted ?? []).length,
@@ -130,10 +130,8 @@ export default async function handler(req, res) {
       usage: { calls, budgetUnit: 'upstream_calls', budgetLeft: budget.left() },
     });
   } catch (e) {
-    // 失败路径也记账: 已发生的上游调用 (随 error.attemptsLog 传出) 必须计入预算, 不能丢账
-    const failedCalls = (e.attemptsLog ?? []).length;
-    if (failedCalls > 0) budget.spend(failedCalls);
-    if (e.status === 402) { budget.markExhausted(); return jsonError(res, 402, 'budget_exhausted', '上游余额不足, 已熔断。'); }
+    if (e.code === 'BUDGET_EXHAUSTED') return jsonError(res, 402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。');
+    if (e.status === 402) { budget.markExhausted(); return jsonError(res, 402, 'upstream_insufficient', '上游余额不足, 已熔断。'); }
     if (e.code === 'TIMEOUT') return jsonError(res, 504, 'upstream_timeout', '模型调用超时, 本次提问已阻断。');
     if (e.status === 429) { res.setHeader('Retry-After', '30'); return jsonError(res, 429, 'upstream_rate_limited', '上游限流, 请稍后再试。'); }
     if (e.code === 'citation_invalid') return jsonError(res, 502, 'citation_validation_failed', '模型输出未通过引用校验, 已拦截。');
