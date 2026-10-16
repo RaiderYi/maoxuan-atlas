@@ -1,0 +1,14 @@
+{
+ "run": "r3",
+ "promptVersion": "wp07-r2",
+ "pipelineVersion": "wp07-r3",
+ "model": "glm-5.3",
+ "retrieve": {
+  "top": 8,
+  "minScore": 2,
+  "expandNeighbors": true
+ },
+ "maxRetries": 2,
+ "corpusSha256_16": "d038279340bdbb57",
+ "startedAt": "2026-10-16T08:56:10"
+}

@@ -109,4 +109,7 @@ for no,(q,tag) in enumerate(QUESTIONS,1):
     recs[no]=rec
     with io.open(OUT,'w',encoding='utf-8') as f:
         json.dump([recs[k] for k in sorted(recs)], f, ensure_ascii=False, indent=1)
+    # 请求间隔: 降低高频触发上游连接层限流的概率 (GLM 对密集连续请求会连接重置)
+    if no < len(QUESTIONS):
+        time.sleep(8)
 print('ALL DONE ->', OUT, '| history ->', HIST, flush=True)
