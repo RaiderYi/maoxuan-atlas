@@ -120,13 +120,99 @@ fetch("data/sample-topic.json").then(function(r){
     }
   }catch(e){}
   renderScene(startIdx, false);
-  if(!window.maplibregl){ fallback("三维组件未就绪，已切换文字版"); return; }
+  /* MAP06: AMap is primary; maplibregl is now only the terrain fallback */
   initMap();
 }).catch(function(e){
   fallback("数据包加载失败，已切换文字版（" + (e && e.message || e) + "）");
 });
 
+/* MAP06 (2026-10-17): AMap 3D engine (user-provided key) with MapLibre terrain fallback.
+   AMap JS API v2 viewMode:'3D' = pitched 3D basemap (no DEM relief); the verified
+   MapLibre+terrarium pipeline stays as the automatic fallback for load/key/init failures. */
+var AMAP_KEY = "c464417e4a77c8bd7a4c5ce6ba8c5a34";
+var ENGINE = null;                 /* "amap" | "libre" */
+function loadAMap(cb){
+  if(window.AMap){ cb(true); return; }
+  var s = document.createElement("script");
+  s.src = "https://webapi.amap.com/maps?v=2.0&key=" + AMAP_KEY;
+  s.onload = function(){ cb(!!window.AMap); };
+  s.onerror = function(){ cb(false); };
+  document.head.appendChild(s);
+}
 function initMap(){
+  loadAMap(function(ok){
+    if(ok){
+      try{ initAMap(); return; }
+      catch(e){ /* AMap init failed -> try MapLibre terrain pipeline */ }
+    }
+    if(window.maplibregl){ initMapLibre(); }
+    else fallback("三维组件未就绪，已切换文字版");
+  });
+}
+/* ---------- AMap 3D engine ---------- */
+function saveCamAMap(){
+  if(failed || !map) return;
+  try{
+    var c = map.getCenter();
+    player.userCam = { lng: c.lng !== undefined ? c.lng : c.getLng(),
+      lat: c.lat !== undefined ? c.lat : c.getLat(),
+      zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getRotation() };
+    sessionStorage.setItem("jgs_cam", JSON.stringify({
+      topic: (T && T.topic && T.topic.topicId) || "default",
+      scene: (scenes()[player.idx] && scenes()[player.idx].sceneId) || null,
+      cam: player.userCam, engine: "amap",
+    }));
+  }catch(e){}
+}
+function amapStatus(){ return document.getElementById("status"); }
+function initAMap(){
+  ENGINE = "amap";
+  map = new AMap.Map("stage", {
+    viewMode: "3D",
+    zoom: 10.5, pitch: 55, rotation: -20,
+    center: [114.163, 26.575],
+    mapStyle: "amap://styles/normal",
+    features: ["bg", "road", "building"]
+  });
+  window.__theatreMap = map;   /* diagnostics: instance exists */
+  map.on("complete", function(){
+    loaded = true;
+    log("三维就绪(高德) · 共 " + scenes().length + " 幕");
+    el("attn").style.display = "block";
+    el("attn").textContent = "底图: 高德地图 © GS(2025)号 · 3D视角";
+    addSceneLayersAMap();
+    var uc = null;
+    try{
+      var savedCam = JSON.parse(sessionStorage.getItem("jgs_cam") || "null");
+      if(savedCam && savedCam.cam && typeof savedCam.cam.lng === "number") uc = savedCam.cam;
+    }catch(e){}
+    if(uc){ flyScene(player.idx, 0); log("已恢复上次视角 · 第 " + (player.idx+1) + " 幕"); }
+    else flyScene(player.idx, 0);
+  });
+  map.on("dragstart", function(){ if(player.mode === "playing") pausePlayer(); });
+  map.on("moveend", saveCamAMap);
+}
+function addSceneLayersAMap(){
+  /* stops as AMap markers (places from topic config) */
+  var seen = {};
+  T.topic.scenes.forEach(function(sc){
+    (sc.placeIds || []).forEach(function(pid){
+      var p = placeById(pid);
+      if(!p || p.lat == null || seen[pid]) return;
+      seen[pid] = 1;
+      var d = document.createElement("div");
+      d.className = "mx3d-stoplab";
+      d.textContent = p.name;
+      d.addEventListener("click", function(ev){
+        ev.stopPropagation();
+        map.setZoomAndCenter(11.2, [p.lng, p.lat]);
+      });
+      new AMap.Marker({ content: d, position: [p.lng, p.lat], anchor: "top-center", offset: new AMap.Pixel(0, 10) })
+        .addTo(map);
+    });
+  });
+}
+function initMapLibre(){
   var DEM_URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
   var BASE_URL = "https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png";
   var LABEL_URL = "https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png";
@@ -311,6 +397,15 @@ function renderScene(i, fly){
 function flyScene(i, dur){
   var sc = scenes()[i];
   if(!sc || !sc.camera) return;
+  if(ENGINE === "amap"){
+    try{
+      map.setZoomAndCenter(sc.camera.zoom, sc.camera.center);
+      map.setPitch(sc.camera.pitch);
+      map.setRotation(sc.camera.bearing);
+      saveCamAMap();
+      return;
+    }catch(e){ /* fall through to libre api */ }
+  }
   var cam = {center:sc.camera.center, zoom:sc.camera.zoom,
              pitch:sc.camera.pitch, bearing:sc.camera.bearing,
              duration:dur || 2400};
@@ -390,7 +485,7 @@ function fallback(msg){
   if(failed) return;
   failed = true;
   if(player.timer){ clearTimeout(player.timer); player.timer = null; }
-  try{ if(map) map.remove(); }catch(e){}
+  try{ if(map){ if(ENGINE === "amap" && map.destroy) map.destroy(); else if(map.remove) map.remove(); } }catch(e){}
   map = null;
   log(msg);
   /* MAP01: surface the exact failure reason in the fallback view (copyable) */
