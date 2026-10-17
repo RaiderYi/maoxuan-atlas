@@ -285,7 +285,9 @@ function ensureMap3d(){
     var s = document.createElement("script");
     s.src = "assets/maplibre-gl.js";
     s.onload = function(){ loadMap3dModule(); };
-    s.onerror = function(){ mx3dFail("三维组件下载失败，已切回二维"); };
+    /* MAP06: maplibre is only the terrain FALLBACK now - AMap (loaded inside
+       map3d.js) is primary. A failed maplibre download must not kill 3D. */
+    s.onerror = function(){ loadMap3dModule(); };
     document.head.appendChild(s);
   } else { loadMap3dModule(); }
 }

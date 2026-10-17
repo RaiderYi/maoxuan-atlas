@@ -5,7 +5,19 @@
 "use strict";
 
 var H = window.__MX3D__;                      /* hooks from app.js */
-if(!H || !window.maplibregl){ if(H) H.fail("3D组件未就绪"); return; }
+if(!H){ return; }
+
+/* MAP06 (2026-10-17): AMap 3D primary (user key), MapLibre terrain fallback */
+var AMAP_KEY = "c464417e4a77c8bd7a4c5ce6ba8c5a34";
+var ENGINE = null;                            /* "amap" | "libre" */
+function loadAMap(cb){
+  if(window.AMap){ cb(true); return; }
+  var s = document.createElement("script");
+  s.src = "https://webapi.amap.com/maps?v=2.0&key=" + AMAP_KEY;
+  s.onload = function(){ cb(!!window.AMap); };
+  s.onerror = function(){ cb(false); };
+  document.head.appendChild(s);
+}
 
 var DEM_URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
 var BASE_URL = "https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png";
@@ -54,6 +66,64 @@ function buildNow(){
   buildInit();
 }
 function buildInit(){
+  loadAMap(function(amapOk){
+    if(amapOk){
+      try{ buildAMap(); return; }
+      catch(e){ /* fall through to MapLibre terrain pipeline */ }
+    }
+    if(!window.maplibregl){ fail("3D组件未就绪（高德与MapLibre均不可用）"); return; }
+    buildLibre();
+  });
+}
+
+/* ---------- AMap 3D build ---------- */
+function buildAMap(){
+  ENGINE = "amap";
+  map = new AMap.Map("map3dChart", {
+    viewMode: "3D",
+    zoom: 4.1, pitch: 38, rotation: -12,
+    center: [109.8, 33.8],
+    mapStyle: "amap://styles/normal",
+    features: ["bg", "road", "building"]
+  });
+  window.__mx3dMap = map;
+  map.on("complete", function(){
+    loaded = true;
+    log("三维就绪(高德) · 虚线为顺序示意，非行军道路");
+    addLayersAMap();
+    syncMarkers();
+    map.on("dragstart", function(){ if(player.mode==="playing") pausePlayer(); });
+  });
+}
+function addLayersAMap(){
+  var rd = routeData();
+  /* visited solid / future dashed as AMap polylines */
+  if(rd.visited.length > 1){
+    map.add(new AMap.Polyline({ path: rd.visited, strokeColor: "#8e2f26",
+      strokeWeight: 4, strokeOpacity: 0.95, lineJoin: "round" }));
+    map.add(new AMap.Polyline({ path: rd.visited, strokeColor: "#fff8ea",
+      strokeWeight: 7, strokeOpacity: 0.6, zIndex: 40 }));
+  }
+  if(rd.future.length > 1){
+    map.add(new AMap.Polyline({ path: rd.future, strokeColor: "#b03a2e",
+      strokeWeight: 3, strokeOpacity: 0.75, strokeStyle: "dashed" }));
+  }
+  /* article aggregate circles via CircleMarker-ish: use Circle with small radius in meters */
+  H.places().forEach(function(p){
+    var n = 0;
+    H.visibleArts().forEach(function(a){ if(a.place === p.name) n++; });
+    var visIds = {}; H.visibleArts().forEach(function(a){ visIds[a.id]=1; });
+    n = p.arts.filter(function(a){ return visIds[a.id]; }).length;
+    if(!n) return;
+    var r = 3000 + Math.min(n, 20) * 1800;
+    var c = new AMap.Circle({ center: [p.lng, p.lat], radius: r,
+      strokeColor: "#8e2f26", strokeWeight: 2, strokeOpacity: 0.9,
+      fillColor: "#b03a2e", fillOpacity: 0.45 });
+    c.on("click", function(){ H.selectPlace(p.name); });
+    map.add(c);
+  });
+}
+function buildLibre(){
   /* MAP01/MAP02: localize the failure stage; keep init non-fatal (no white screen) */
   var _el = document.getElementById("map3dChart");
   var _libVer = (window.maplibregl && maplibregl.version) || "unknown";
@@ -166,6 +236,7 @@ function syncMarkers(){
   var rd = routeData();
   var CN = ["A.","B.","C.","D.","E.","F.","G.","H.","I.","J."];
   CN = ["\u2460","\u2461","\u2462","\u2463","\u2464","\u2465","\u2466","\u2467","\u2468","\u2469"];
+  var amapMode = (ENGINE === "amap");
   rd.stops.forEach(function(r, i){
     var el = document.createElement("div");
     el.className = "mx3d-stoplab";
@@ -176,8 +247,13 @@ function syncMarkers(){
       focusStop(i, 1400);
       H.track("map3d_stop_click", {stop:r[0]});
     });
-    stopMarkers.push(new maplibregl.Marker({element:el, anchor:"top", offset:[0,10]})
-      .setLngLat([r[3], r[2]]).addTo(map));
+    if(amapMode){
+      stopMarkers.push(new AMap.Marker({ content: el, position: [r[3], r[2]],
+        anchor: "top-center", offset: new AMap.Pixel(0, 10) }).addTo(map));
+    } else {
+      stopMarkers.push(new maplibregl.Marker({element:el, anchor:"top", offset:[0,10]})
+        .setLngLat([r[3], r[2]]).addTo(map));
+    }
   });
   var z = map.getZoom();
   var vis = H.visibleArts(); var visIds = {};
@@ -188,8 +264,13 @@ function syncMarkers(){
     var el = document.createElement("div");
     el.className = "mx3d-artlab";
     el.textContent = p.name + " " + n + "\u7bc7";
-    artMarkersArr.push(new maplibregl.Marker({element:el, anchor:"bottom", offset:[0,-6]})
-      .setLngLat([p.lng, p.lat]).addTo(map));
+    if(amapMode){
+      artMarkersArr.push(new AMap.Marker({ content: el, position: [p.lng, p.lat],
+        anchor: "bottom-center", offset: new AMap.Pixel(0, -6) }).addTo(map));
+    } else {
+      artMarkersArr.push(new maplibregl.Marker({element:el, anchor:"bottom", offset:[0,-6]})
+        .setLngLat([p.lng, p.lat]).addTo(map));
+    }
   });
 }
 
@@ -220,6 +301,11 @@ function flyStop(i, dur){
   if(!st.length) return;
   i = Math.max(0, Math.min(st.length-1, i));
   var r = st[i];
+  if(ENGINE === "amap"){
+    if(follow){ map.setZoomAndCenter(8.4, [r[3], r[2]]); map.setPitch(55); map.setRotation(-18); }
+    LAST_STOP = [r[3], r[2]];
+    return;
+  }
   if(follow){
     var cam = {center:[r[3], r[2]], zoom:8.4, pitch:55, bearing:-18, duration:dur||2400,
                padding:stopPadding()};
@@ -301,6 +387,13 @@ function destroyPlayer(){
 function refresh(){
   if(!loaded || failed) return;
   var rd = routeData();
+  if(ENGINE === "amap"){
+    /* AMap: clear overlays and rebuild (simple, correct) */
+    map.clearMap();
+    addLayersAMap();
+    syncMarkers();
+    return;
+  }
   map.getSource("lineV").setData(fc(rd.visited.length>1?rd.visited:null));
   map.getSource("lineF").setData(fc(rd.future.length>1?rd.future:null));
   map.getSource("stops").setData(stopsFc(rd.stops));
@@ -314,7 +407,7 @@ function fail(msg){
   failed = true;
   destroyPlayer();
   try{ clearMarkers(); }catch(e){}
-  try{ if(map) map.remove(); }catch(e){}
+  try{ if(map){ if(ENGINE === "amap" && map.destroy) map.destroy(); else if(map.remove) map.remove(); } }catch(e){}
   map = null;
   H.fail(msg || "三维地图初始化失败，已切回二维");
 }
@@ -322,7 +415,7 @@ function fail(msg){
 window.__MX3D_MODULE__ = {
   build:build, refresh:refresh, togglePlayer:togglePlayer, pause:pausePlayer,
   toggleFollow:toggleFollow, setFollow:setFollow,
-  focusStop:focusStop, destroy:function(){ destroyPlayer(); try{ clearMarkers(); }catch(e){} try{ map && map.remove(); }catch(e){} map=null; loaded=false; },
+  focusStop:focusStop, destroy:function(){ destroyPlayer(); try{ clearMarkers(); }catch(e){} try{ if(map){ if(ENGINE === "amap" && map.destroy) map.destroy(); else if(map.remove) map.remove(); } }catch(e){} map=null; loaded=false; },
   isReady:function(){ return loaded && !failed; }
 };
 })();
