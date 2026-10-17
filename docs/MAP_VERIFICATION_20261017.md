@@ -2,9 +2,25 @@
 
 > 环境：本机 Chrome 155.0.8059.84（CDP 9222，独立调试实例）· Windows 11 · 视口 1280×800
 > 方法：CDP 直连（Runtime.evaluate + Network.responseReceived + Page.captureScreenshot），非截图推断
-> 代码基点：线上 aibigplayer.top = commit 87f7cb3（诊断时点）
+> 代码基点：本地 8000 = 最新工作区；线上 aibigplayer.top = 87f7cb3（诊断时点）
 
-## 1. 结论总表
+## 0. MAP06 双引擎切换（2026-10-17 第三轮，commit 26e8523 + dde8526）
+
+产品负责人拍板 3D 换高德（AMap JS API v2 viewMode:'3D'，key 已配置）。架构 = **AMap 优先 + MapLibre 地形兜底**：
+
+| 验证点 | 实测 | 结论 |
+|---|---|---|
+| 剧场 AMap 渲染 | webapi.amap.com/maps 200 · get_tile 200 · WebGLRender 插件 200 · status="三维就绪(高德) · 共 3 幕" · canvas 渲染 · 地标 2 个 | ✅ |
+| 剧场场景切换 | 第3幕：zoom 10.5→11.8, pitch 62→65, rotation -20→40；sceneLabel 正确；播放/暂停工作 | ✅ |
+| 剧场相机持久化 | sessionStorage jgs_cam={scene:sc_jgs_03, zoom:11.8, pitch:65, bearing:40, engine:amap}（程序性切幕后也保存，saveCamAMap 修复） | ✅ |
+| 主站 AMap 渲染 | 全 amap 域流量 200 · status="三维就绪(高德)" · 容器 843×570 · canvas 存在 | ✅ |
+| 主站导览播放器 | 第1站广州：zoom 4.1→8.4，center 飞至 [113.26,23.13] | ✅ |
+| **降级链**（断 webapi.amap.com，Fetch.failRequest 模拟） | t=2s 即 status="三维就绪 · 共 3 幕"，terrain={dem,1.0}，图层 base/dem-shade/labels/place-halo/place-core——AMap 失败自动回退 MapLibre+DEM 地形管线，用户无感 | ✅ |
+| 主站 maplibre-gl.js 下载失败 | app.js onerror 不再判死（AMap 在 map3d.js 内自加载），继续 loadMap3dModule | ✅（代码审查） |
+
+诚实边界：AMap v2 底图是倾斜 3D 视角（无 DEM 高程起伏）；地形起伏体验（944.8/867.1/850m 已验证）保留在 MapLibre 兜底路径。⚠️ 生产域名白名单：若高德控制台未将 aibigplayer.top 加入白名单，线上可能出现 INVALID_KEY——部署后需真机复验。
+
+## 1. 结论总表（MapLibre 时代基线，87f7cb3）
 
 | 入口 | 3D初始化 | terrain | DEM瓦片 | 底图/标注 | 场景/图层 | 截图 | 结论 |
 |---|---|---|---|---|---|---|---|
