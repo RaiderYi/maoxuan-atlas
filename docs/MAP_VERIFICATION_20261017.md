@@ -11,6 +11,13 @@
 | 剧场 theatre.html | ✅ Map创建成功 | ✅ {dem,1.0} | ✅ 148个全200 | ✅ 60个全200 | ✅ 3幕切换(相机pitch/zoom实测变化) | _diag/theatre_3d.png | **真实3D通过** |
 | 主站 map3d.js（真实路径：#/view/map→点3D） | ✅ Map创建+loaded | ✅ {dem,1.0} | ✅（缓存+已加载） | ✅ | ✅ 全栈图层含路线/站点/文章点 | _diag/main3d_realpath.png | **真实3D通过** |
 
+### MAP05 补充（2026-10-17 第二轮，干净标签页）
+
+- `queryTerrainElevation` 实测三采样点：ridge(114.10,26.53)=**944.8m** · ciping_valley(114.16,26.58)=**867.1m** · north_valley(114.16,26.65)=**850.0m** —— 与井冈山真实地理相符（茨坪≈860m），**DEM 高程真实生效，可辨认地形起伏，非平面底图倾斜**
+- `easeTo({bearing:90,pitch:70})` 异步交互生效（bearing 实测 90）
+- 三幕导航点存在且可点：进入罗霄山脉 / 红色政权为什么能够存在 / 军事根据地的稳固
+- 已知现象：map 'idle' 事件 20s 内不触发（DOM label/持续渲染下正常现象，不影响交互）；同一标签页多次导航后 map 实例可能残留卡死（evidence: diag10 旧标签页 easeTo 无响应），新标签页干净复测全部通过——**刷新/新开标签即可恢复，属可接受边缘行为，如实记录**
+
 ## 2. 剧场（theatre）证据明细
 
 - `window.__theatreMap` 存在；status="三维就绪 · 共 3 幕"；fallback display:none（未降级）
