@@ -169,10 +169,21 @@ function initMap(){
     fallback("三维初始化失败 · " + m + " · lib=" + libVer + " · 容器=" + box);
     return;
   }
+  /* MAP02/MAP07: 10s timeout feedback - tiles blocked/slow must not stay 'loading' forever */
+  var loadTimer = setTimeout(function(){
+    if(!loaded && !failed){
+      log("底图/地形加载缓慢或被拦截 · 可正常阅读原文，也可稍后刷新");
+      el("attn").style.display = "none";
+    }
+  }, 10000);
+  map.on("load", function(){ clearTimeout(loadTimer); });
+  var tileErrs = 0;
   window.__theatreMap = map;
   map.on("error", function(e){
     var msg = (e && e.error && e.error.message) || "";
-    if(/WebGL|context|shader/i.test(msg)) fallback("三维渲染不可用，已切换文字版");
+    if(/WebGL|context|shader/i.test(msg)){ clearTimeout(loadTimer); fallback("三维渲染不可用，已切换文字版"); return; }
+    tileErrs++;
+    if(loaded && tileErrs > 20){ log("部分底图/地形瓦片加载失败（" + tileErrs + "）· 阅读与提问不受影响"); }
   });
   map.on("load", function(){
     loaded = true;
