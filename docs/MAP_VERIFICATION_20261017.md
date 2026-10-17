@@ -11,6 +11,17 @@
 | 剧场 theatre.html | ✅ Map创建成功 | ✅ {dem,1.0} | ✅ 148个全200 | ✅ 60个全200 | ✅ 3幕切换(相机pitch/zoom实测变化) | _diag/theatre_3d.png | **真实3D通过** |
 | 主站 map3d.js（真实路径：#/view/map→点3D） | ✅ Map创建+loaded | ✅ {dem,1.0} | ✅（缓存+已加载） | ✅ | ✅ 全栈图层含路线/站点/文章点 | _diag/main3d_realpath.png | **真实3D通过** |
 
+### MAP07 分级降级验证（2026-10-17，CDP Fetch 拦截模拟，本地 8000 + 线上双测）
+
+| 场景 | 实测行为 | 结论 |
+|---|---|---|
+| 断 DEM（仅 terrarium 拦截） | map 存活、场景卡+文章链接+播放条保留；修复前 status 永停"加载中…" → commit 49ceb91 后 10s 出现明确超时提示 | ✅ 通过 |
+| 断 DEM+断底图（terrarium+cartocdn 全拦截） | t=12s 起显示"底图/地形加载缓慢或被拦截 · 可正常阅读原文，也可稍后刷新"；map:true / sceneCard:block / artLink:true / playbar:flex——阅读链完全不受阻 | ✅ 通过 |
+| 无 WebGL | ecbe105 预检代码路径：WebGL 不可用时 fallback 并显示可复制诊断（真机 WebGL 可用故走不到，此路径为代码审查+语法验证，未真机实测——如实记录） | ⚠️ 代码就绪待真机 |
+| WebGL context 耗尽试验 | 单页 20 个 context 后仍可新建（Chrome 155 不复现耗尽），该场景无法本机模拟 | 如实记录：未覆盖 |
+
+验证方法：Cdp Fetch.failRequest(BlockedByClient) 逐个拦截瓦片请求 + 轮询 status 时间线（t=2s..16s 每 2s 采样）。
+
 ### MAP05 补充（2026-10-17 第二轮，干净标签页）
 
 - `queryTerrainElevation` 实测三采样点：ridge(114.10,26.53)=**944.8m** · ciping_valley(114.16,26.58)=**867.1m** · north_valley(114.16,26.65)=**850.0m** —— 与井冈山真实地理相符（茨坪≈860m），**DEM 高程真实生效，可辨认地形起伏，非平面底图倾斜**
