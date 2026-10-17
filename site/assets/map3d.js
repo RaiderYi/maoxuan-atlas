@@ -54,27 +54,45 @@ function buildNow(){
   buildInit();
 }
 function buildInit(){
-  map = new maplibregl.Map({
-    container:"map3dChart",
-    style:{
-      version:8,
-      sources:{
-        base:{type:"raster", tiles:[BASE_URL], tileSize:256, maxzoom:10,
-          attribution:"© OpenStreetMap contributors © CARTO · DEM: Mapzen/AWS"},
-        labels:{type:"raster", tiles:[LABEL_URL], tileSize:256, maxzoom:10},
-        dem:{type:"raster-dem", tiles:[DEM_URL], encoding:"terrarium", tileSize:256, maxzoom:13}
+  /* MAP01/MAP02: localize the failure stage; keep init non-fatal (no white screen) */
+  var _el = document.getElementById("map3dChart");
+  var _libVer = (window.maplibregl && maplibregl.version) || "unknown";
+  var _box = _el ? (_el.clientWidth + "x" + _el.clientHeight) : "missing";
+  var _webglOk = false, _webglMsg = "";
+  try{
+    var _c = document.createElement("canvas");
+    var _gl = _c.getContext("webgl2") || _c.getContext("webgl");
+    if(_gl){ _webglOk = true; }
+    else { _webglMsg = "WebGL context unavailable"; }
+  }catch(e){ _webglMsg = (e && e.name ? e.name + ": " : "") + (e && e.message ? e.message : String(e)); }
+  if(!_webglOk){ fail("3D不可用：" + _webglMsg + " · lib=" + _libVer + " · 容器=" + _box); return; }
+  try{
+    map = new maplibregl.Map({
+      container:"map3dChart",
+      style:{
+        version:8,
+        sources:{
+          base:{type:"raster", tiles:[BASE_URL], tileSize:256, maxzoom:10,
+            attribution:"© OpenStreetMap contributors © CARTO · DEM: Mapzen/AWS"},
+          labels:{type:"raster", tiles:[LABEL_URL], tileSize:256, maxzoom:10},
+          dem:{type:"raster-dem", tiles:[DEM_URL], encoding:"terrarium", tileSize:256, maxzoom:13}
+        },
+        layers:[
+          {id:"base", type:"raster", source:"base", paint:{"raster-opacity":0.94}},
+          {id:"dem-shade", type:"hillshade", source:"dem", paint:{
+            "hillshade-exaggeration":0.45, "hillshade-shadow-color":"#6b5d3f",
+            "hillshade-highlight-color":"#fff8e8", "hillshade-accent-color":"#c9b98d"}},
+          {id:"labels", type:"raster", source:"labels", paint:{"raster-opacity":0.85}}
+        ]
       },
-      layers:[
-        {id:"base", type:"raster", source:"base", paint:{"raster-opacity":0.94}},
-        {id:"dem-shade", type:"hillshade", source:"dem", paint:{
-          "hillshade-exaggeration":0.45, "hillshade-shadow-color":"#6b5d3f",
-          "hillshade-highlight-color":"#fff8e8", "hillshade-accent-color":"#c9b98d"}},
-        {id:"labels", type:"raster", source:"labels", paint:{"raster-opacity":0.85}}
-      ]
-    },
-    center:[109.8, 33.8], zoom:4.1, pitch:38, bearing:-12,
-    maxZoom:12, attributionControl:{compact:true}
-  });
+      center:[109.8, 33.8], zoom:4.1, pitch:38, bearing:-12,
+      maxZoom:12, attributionControl:{compact:true}
+    });
+  }catch(e){
+    var _m = (e && e.name ? e.name + ": " : "") + (e && e.message ? e.message : String(e));
+    fail("3D初始化失败：" + _m + " · lib=" + _libVer + " · 容器=" + _box);
+    return;
+  }
   window.__mx3dMap = map;
   map.on("error", function(e){
     var msg = (e && e.error && e.error.message) || "";

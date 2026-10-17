@@ -130,6 +130,18 @@ function initMap(){
   var DEM_URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
   var BASE_URL = "https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png";
   var LABEL_URL = "https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png";
+  /* MAP01/MAP02: record engine version + container size + WebGL support; keep failure readable */
+  var stageEl = document.getElementById("stage");
+  var libVer = (window.maplibregl && maplibregl.version) || "unknown";
+  var box = stageEl ? (stageEl.clientWidth + "x" + stageEl.clientHeight) : "missing";
+  var webglOk = false, webglMsg = "";
+  try{
+    var cv = document.createElement("canvas");
+    var gl = cv.getContext("webgl2") || cv.getContext("webgl");
+    if(gl){ webglOk = true; }
+    else { webglMsg = "WebGL context unavailable"; }
+  }catch(e){ webglMsg = (e && e.name ? e.name + ": " : "") + (e && e.message ? e.message : String(e)); }
+  if(!webglOk){ fallback("三维初始化失败 · " + webglMsg + " · lib=" + libVer + " · 容器=" + box); return; }
   try{
     map = new maplibregl.Map({
       container:"stage",
@@ -152,7 +164,11 @@ function initMap(){
       center:[114.163, 26.575], zoom:9.8, pitch:60, bearing:-20,
       maxZoom:13, attributionControl:{compact:true}
     });
-  }catch(e){ fallback("三维初始化异常，已切换文字版"); return; }
+  }catch(e){
+    var m = (e && e.name ? e.name + ": " : "") + (e && e.message ? e.message : String(e));
+    fallback("三维初始化失败 · " + m + " · lib=" + libVer + " · 容器=" + box);
+    return;
+  }
   window.__theatreMap = map;
   map.on("error", function(e){
     var msg = (e && e.error && e.error.message) || "";
@@ -366,6 +382,14 @@ function fallback(msg){
   try{ if(map) map.remove(); }catch(e){}
   map = null;
   log(msg);
+  /* MAP01: surface the exact failure reason in the fallback view (copyable) */
+  var note = document.querySelector("#fallback .note");
+  if(note){
+    var d = document.createElement("div");
+    d.style.cssText = "margin-top:8px;font-size:11px;color:#b03a2e;user-select:all;word-break:break-all";
+    d.textContent = "诊断：" + (msg || "");
+    note.appendChild(d);
+  }
   var fb = el("fallback");
   fb.style.display = "block";
   el("sceneCard").style.display = "none";
