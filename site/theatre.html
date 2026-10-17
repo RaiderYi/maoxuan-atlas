@@ -129,10 +129,13 @@ fetch("data/sample-topic.json").then(function(r){
 /* MAP06 (2026-10-17): AMap 3D engine (user-provided key) with MapLibre terrain fallback.
    AMap JS API v2 viewMode:'3D' = pitched 3D basemap (no DEM relief); the verified
    MapLibre+terrarium pipeline stays as the automatic fallback for load/key/init failures. */
-var AMAP_KEY = "c464417e4a77c8bd7a4c5ce6ba8c5a34";
+var AMAP_KEY = "55db0e171c0b7dd03a63a90997c4d465";
+var AMAP_SECRET = "f00878b5b890ea981c06e8dc45b96b9c";
 var ENGINE = null;                 /* "amap" | "libre" */
 function loadAMap(cb){
   if(window.AMap){ cb(true); return; }
+  /* 安全密钥必须在 JS API 脚本加载之前设置 (官方: JS API 安全密钥使用文档) */
+  window._AMapSecurityConfig = window._AMapSecurityConfig || { securityJsCode: AMAP_SECRET };
   var s = document.createElement("script");
   s.src = "https://webapi.amap.com/maps?v=2.0&key=" + AMAP_KEY;
   s.onload = function(){ cb(!!window.AMap); };
