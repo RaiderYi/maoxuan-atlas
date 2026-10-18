@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-"""P05.3 可移植评测器 — 冻结版本重跑 20 题，失败全部保留在分母。
+"""P05.3 / A09 / B06 可移植评测器 — 冻结版本重跑 20 题，失败全部保留在分母。
 
-要点（对应验收）:
-  - 路径全部相对仓库根 (可用 --root 覆盖)，不再硬编码 D:/...
-  - 模型配置只从环境变量读取 (PROVIDER_URL / PROVIDER_KEY / MODEL_ID)，不读本机密钥文件
-  - 启动即核对冻结清单 (pipeline/wp05-frozen.json)：promptVersion / pipelineVersion / 语料 hash / 检索参数
-    * 任一不符 → 拒绝运行 (退出码 3)，不允许"边改边评"
-  - 题目来自冻结题目文件 (pipeline/p05-questions.json)，不从历史结果里挑选
-  - 所有失败 (网络/超时/校验拦截/拒答) 都写入结果并计入分母；不提供 --drop-failures 之类开关
-  - 汇总分开报告: 调用成功率 / 有答案率 / 引文逐字命中率 / 拒答是否恰当；人工正确率由人工标注文件补充
-
-用法:
-  python pipeline/p05_eval.py --check-only           # 只做冻结与可移植性自检 (不调用模型)
-  python pipeline/p05_eval.py --limit 2              # 小样本试跑 (需模型环境变量)
-  python pipeline/p05_eval.py                        # 全量 20 题
+要点:
+  - 路径全部相对仓库根 (--root 可覆盖)，不硬编码本机路径
+  - 模型配置只读环境变量 (PROVIDER_URL / PROVIDER_KEY / MODEL_ID)
+  - 冻结校验同时覆盖: 版本常量、语料文件、语料内容、提示词正文、检索实现、题目文件
+    * 任一不符 → 退出码 3，拒绝"改了实现却沿用旧分数"
+  - A09: 所有 hash 先统一 CRLF/CR → LF，Windows 与 Linux 干净检出结果一致
+  - 所有失败 (网络/超时/校验拦截/拒答) 都写入结果并计入分母
 """
-import argparse, hashlib, json, os, re, subprocess, sys, time
+import argparse
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
 from pathlib import Path
 
 DEFAULT_FROZEN = "pipeline/wp05-frozen.json"
@@ -28,16 +29,34 @@ def repo_root(arg):
     return Path(__file__).resolve().parents[1]
 
 
+def norm_bytes(data):
+    """A09: CRLF/CR → LF 后再 hash，保证跨平台一致"""
+    return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
 def sha16(path):
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(65536), b""):
-            h.update(chunk)
-    return h.hexdigest()[:16]
+    return hashlib.sha256(norm_bytes(Path(path).read_bytes())).hexdigest()[:16]
+
+
+def sha16_text(text):
+    return hashlib.sha256(norm_bytes(text.encode("utf-8"))).hexdigest()[:16]
+
+
+def prompt_block(ask_js):
+    """B06: 抽取真正发给模型的 system 提示词（与版本常量无关）"""
+    i = ask_js.find("const sys =")
+    j = ask_js.find("const user =", i)
+    return ask_js[i:j] if i >= 0 and j > i else ""
+
+
+def retrieve_block(ask_js):
+    i = ask_js.find("export function retrieve(")
+    j = ask_js.find("// ---------- 提示词", i)
+    return ask_js[i:j] if i >= 0 and j > i else ""
 
 
 def corpus_version(path):
-    """与 api/ask.js buildCorpusVersion 同样的口径: 文章 id/title/段落 id/text 的确定性 hash"""
+    """与 api/ask.js buildCorpusVersion 同口径: 文章 id/title/段落 id/text 的确定性 hash"""
     raw = json.loads(Path(path).read_text(encoding="utf-8"))
     parts = []
     for aid in sorted(raw.get("articles", {})):
@@ -50,35 +69,43 @@ def corpus_version(path):
     return hashlib.sha256("\x00".join(parts).encode("utf-8")).hexdigest()
 
 
-def load_frozen(root):
-    p = root / DEFAULT_FROZEN
+def build_frozen(root):
     ask_js = (root / "api/_ask.js").read_text(encoding="utf-8")
     m1 = re.search(r"PROMPT_VERSION\s*=\s*'([^']+)'", ask_js)
     m2 = re.search(r"PIPELINE_VERSION\s*=\s*'([^']+)'", ask_js)
+    qf = root / DEFAULT_QUESTIONS
+    return {
+        "frozenAt": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "hashNormalization": "CRLF/CR -> LF before sha256 (A09)",
+        "promptVersion": m1.group(1) if m1 else "unknown",
+        "pipelineVersion": m2.group(1) if m2 else "unknown",
+        "corpusFile": "site/data/sample-topic.json",
+        "corpusSha256_16": sha16(root / "site/data/sample-topic.json"),
+        "corpusVersionSha256": corpus_version(root / "site/data/sample-topic.json"),
+        "askJsSha256_16": sha16(root / "api/_ask.js"),
+        "promptSha256_16": sha16_text(prompt_block(ask_js)),
+        "retrieveSha256_16": sha16_text(retrieve_block(ask_js)),
+        "retrieve": {"top": 8, "minScore": 2, "expandNeighbors": True},
+        "questionsFile": DEFAULT_QUESTIONS,
+        "questionsSha256_16": sha16(qf) if qf.exists() else None,
+        "note": "修改语料/提示词/检索实现/题目后必须重新冻结，并在提交说明里写明原因",
+    }
+
+
+def load_frozen(root):
+    p = root / DEFAULT_FROZEN
     if not p.exists():
-        # 首次运行: 以当前仓库状态生成冻结清单 (之后必须人工确认再提交)
-        frozen = {
-            "frozenAt": time.strftime("%Y-%m-%dT%H:%M:%S"),
-            "promptVersion": m1.group(1) if m1 else "unknown",
-            "pipelineVersion": m2.group(1) if m2 else "unknown",
-            "corpusFile": "site/data/sample-topic.json",
-            "corpusSha256_16": sha16(root / "site/data/sample-topic.json"),
-            "corpusVersionSha256": corpus_version(root / "site/data/sample-topic.json"),
-            "retrieve": {"top": 8, "minScore": 2, "expandNeighbors": True},
-            "questionsFile": DEFAULT_QUESTIONS,
-            "note": "此清单由 p05_eval.py 首次运行生成; 修改语料/提示词/检索参数后必须重新生成并记录原因",
-        }
+        frozen = build_frozen(root)
         p.write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
         print("[frozen] 已生成冻结清单:", p)
         return frozen
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def ensure_questions(root, frozen, old_records):
+def ensure_questions(root, frozen):
     p = root / frozen.get("questionsFile", DEFAULT_QUESTIONS)
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
-    # 从 r3 冻结结果里提取题目与期望 (只取 question/expect, 不取答案)
     src = root / "pipeline/wp07-20q-records-r3.json"
     if not src.exists():
         sys.exit("[questions] 缺少题目文件且找不到 r3 记录，无法评测")
@@ -92,22 +119,35 @@ def ensure_questions(root, frozen, old_records):
 
 def check_freeze(root, frozen):
     ok = True
-    cur_sha = sha16(root / frozen["corpusFile"])
-    if cur_sha != frozen["corpusSha256_16"]:
-        print(f"[FAIL] 语料文件 hash 变更: 冻结 {frozen['corpusSha256_16']} / 当前 {cur_sha}")
-        ok = False
-    cur_cv = corpus_version(root / frozen["corpusFile"])
-    if frozen.get("corpusVersionSha256") and cur_cv != frozen["corpusVersionSha256"]:
-        print("[FAIL] 语料内容版本变更 (段落 id/文本有改动)，需重新冻结并说明原因")
-        ok = False
     ask_js = (root / "api/_ask.js").read_text(encoding="utf-8")
+
+    cur = sha16(root / frozen["corpusFile"])
+    if cur != frozen["corpusSha256_16"]:
+        print("[FAIL] 语料文件 hash 变更: 冻结 %s / 当前 %s" % (frozen["corpusSha256_16"], cur))
+        ok = False
+    if frozen.get("corpusVersionSha256") and corpus_version(root / frozen["corpusFile"]) != frozen["corpusVersionSha256"]:
+        print("[FAIL] 语料内容版本变更（段落 id/文本有改动）")
+        ok = False
+
     m1 = re.search(r"PROMPT_VERSION\s*=\s*'([^']+)'", ask_js)
     m2 = re.search(r"PIPELINE_VERSION\s*=\s*'([^']+)'", ask_js)
     if m1 and frozen.get("promptVersion") and m1.group(1) != frozen["promptVersion"]:
-        print(f"[FAIL] PROMPT_VERSION 变更: 冻结 {frozen['promptVersion']} / 当前 {m1.group(1)}")
+        print("[FAIL] PROMPT_VERSION 变更: 冻结 %s / 当前 %s" % (frozen["promptVersion"], m1.group(1)))
         ok = False
     if m2 and frozen.get("pipelineVersion") and m2.group(1) != frozen["pipelineVersion"]:
-        print(f"[FAIL] PIPELINE_VERSION 变更: 冻结 {frozen['pipelineVersion']} / 当前 {m2.group(1)}")
+        print("[FAIL] PIPELINE_VERSION 变更: 冻结 %s / 当前 %s" % (frozen["pipelineVersion"], m2.group(1)))
+        ok = False
+
+    # B06: 忘了改版本常量也要被拦住
+    if frozen.get("promptSha256_16") and sha16_text(prompt_block(ask_js)) != frozen["promptSha256_16"]:
+        print("[FAIL] 提示词正文与冻结不一致（版本常量可能未更新）")
+        ok = False
+    if frozen.get("retrieveSha256_16") and sha16_text(retrieve_block(ask_js)) != frozen["retrieveSha256_16"]:
+        print("[FAIL] 检索实现与冻结不一致（top/minScore/邻段扩展等）")
+        ok = False
+    qf = root / frozen.get("questionsFile", DEFAULT_QUESTIONS)
+    if frozen.get("questionsSha256_16") and qf.exists() and sha16(qf) != frozen["questionsSha256_16"]:
+        print("[FAIL] 题目文件与冻结不一致（改题必须重新冻结）")
         ok = False
     return ok
 
@@ -136,7 +176,6 @@ for (const j of jobs) {
       model: r.model, ms: r.ms, attempts: r.attempts ?? 1, error: null,
       promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION });
   } catch (e) {
-    // 失败也写记录 (分母不缩水)
     out.push({ no: j.no, question: j.question, expect: j.expect, status: 'error',
       answer: '', citations: [], model: process.env.MODEL_ID ?? null, ms: Date.now()-t0,
       attempts: (e.attemptsLog||[]).length || 0, error: String(e.message??e), code: e.code??null,
@@ -153,16 +192,16 @@ def summarize(results):
     answered = [r for r in results if r["status"] == "answered"]
     partial = [r for r in results if r["status"] == "partial"]
     refused = [r for r in results if r["status"] == "insufficient"]
-    cits = sum(len(r.get("citations") or []) for r in results)
-    # 引文逐字核验: 引用 quote 必须出现在 evidenceIds 对应段落的原文里 (离线可复核)
     return {
         "total": total,
         "call_ok": total - len(errs),
         "call_fail": len(errs),
         "call_success_rate": round((total - len(errs)) / total, 4) if total else None,
-        "answered": len(answered), "partial": len(partial), "insufficient": len(refused),
+        "answered": len(answered),
+        "partial": len(partial),
+        "insufficient": len(refused),
         "errors": [{"no": r["no"], "code": r.get("code"), "error": r.get("error")} for r in errs],
-        "citations_total": cits,
+        "citations_total": sum(len(r.get("citations") or []) for r in results),
         "denominator_note": "所有失败题保留在分母内；不使用剔除失败题的口径",
     }
 
@@ -178,21 +217,22 @@ def main():
     root = repo_root(a.root)
     print("[root]", root)
     frozen = load_frozen(root)
-    qs = ensure_questions(root, frozen, None)
-    print("[frozen]", json.dumps({k: frozen.get(k) for k in ("promptVersion","pipelineVersion","corpusSha256_16")}, ensure_ascii=False))
+    qs = ensure_questions(root, frozen)
+    print("[frozen]", json.dumps({k: frozen.get(k) for k in
+        ("promptVersion", "pipelineVersion", "corpusSha256_16", "promptSha256_16")}, ensure_ascii=False))
     print("[questions]", len(qs), "题")
     if not check_freeze(root, frozen):
         print("[abort] 冻结项不一致，拒绝评测（避免改动后仍用旧分数宣传）")
         return 3
-    print("[freeze] OK: 语料/提示词/管线与冻结清单一致")
+    print("[freeze] OK: 语料/提示词/检索/题目与冻结清单一致")
 
     if a.check_only:
-        print("[check-only] 可移植性自检通过 (未调用模型)")
+        print("[check-only] 可移植性自检通过（未调用模型）")
         return 0
 
     for k in ("PROVIDER_URL", "PROVIDER_KEY", "MODEL_ID"):
         if not os.environ.get(k):
-            print(f"[abort] 缺少环境变量 {k}；评测需要真实模型配置，不能伪造结果")
+            print("[abort] 缺少环境变量 %s；评测需要真实模型配置，不能伪造结果" % k)
             return 4
 
     jobs = qs[: a.limit] if a.limit else qs

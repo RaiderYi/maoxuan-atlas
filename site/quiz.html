@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你的研读搭档是谁？· 8 问人物卡</title>
+<style>
+:root{--paper:#f5efe0;--paper2:#efe6d0;--ink:#2b2420;--ink2:#5a4f45;--cinnabar:#b03a2e;--gold:#a8842c;--border:#d9cdb4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Serif SC","Songti SC",SimSun,serif;line-height:1.95}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 60px}
+header h1{font-size:22px;letter-spacing:3px;color:var(--cinnabar);margin:0 0 8px}
+header .sub{font-size:13.5px;color:var(--ink2)}
+.note{font-size:12px;color:var(--ink2);background:rgba(168,132,44,.08);border-left:3px solid var(--gold);
+  padding:8px 12px;border-radius:0 8px 8px 0;margin:14px 0 20px;line-height:1.9}
+.btn{font-family:inherit;font-size:13.5px;padding:8px 20px;border-radius:16px;cursor:pointer;
+  border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff;letter-spacing:1px}
+.btn.ghost{background:transparent;color:var(--cinnabar)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.qbar{height:5px;background:rgba(168,132,44,.2);border-radius:3px;overflow:hidden;margin:18px 0 8px}
+.qbar i{display:block;height:100%;background:var(--cinnabar);transition:width .3s}
+.qmeta{font-size:12px;color:var(--ink2);margin-bottom:14px}
+.stem{font-size:17px;line-height:1.9;margin:0 0 16px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;background:#fffdf5;border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;font-family:inherit;font-size:14px;color:var(--ink)}
+.opt:hover{border-color:var(--cinnabar)}
+.opt.on{border-color:var(--cinnabar);box-shadow:0 0 0 2px rgba(176,58,46,.12)}
+.opt .k{flex:0 0 22px;height:22px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);
+  font-size:12px;display:flex;align-items:center;justify-content:center}
+.opt.on .k{background:var(--cinnabar);border-color:var(--cinnabar);color:#fff}
+.acts{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.card{background:#fffdf5;border:1px solid var(--border);border-radius:14px;padding:24px 22px;margin-top:18px}
+.card .rd{font-size:12px;color:var(--gold);letter-spacing:2px}
+.card h2{font-size:22px;letter-spacing:2px;margin:6px 0 4px}
+.card .th{font-size:14px;color:var(--cinnabar);letter-spacing:1px}
+.card .desc{font-size:14px;color:var(--ink);margin-top:10px}
+.card .why{font-size:13px;color:var(--ink2);margin-top:10px;line-height:1.95}
+.card .sug{font-size:13px;color:var(--ink2);background:rgba(90,79,69,.06);border-radius:8px;padding:10px 12px;margin-top:10px}
+.card .task{border-top:1px dashed var(--border);margin-top:14px;padding-top:12px;font-size:13px;color:var(--ink)}
+.card .src{font-size:11.5px;color:var(--ink2);margin-top:10px;line-height:1.8}
+.ties{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.mini{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:#fffdf5}
+.mini b{font-size:15px}
+.mini span{font-size:12.5px;color:var(--ink2)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(43,36,32,.94);color:#f5efe0;
+  font-size:13px;padding:9px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+.toast.on{opacity:1}
+.hidden{display:none}
+footer{font-size:11.5px;color:var(--ink2);margin-top:26px;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="hTitle">你的研读搭档是谁？</h1>
+    <div class="sub" id="hSub"></div>
+  </header>
+  <div class="note" id="hNote"></div>
+
+  <section id="intro">
+    <p style="font-size:14px;color:var(--ink2)">8 道单选题，没有标准答案，每题都可以返回修改。答完后会得到一张人物卡、一份匹配说明和一条阅读任务。</p>
+    <div class="acts">
+      <button class="btn" id="startBtn">开始答题</button>
+      <button class="btn ghost" id="browseBtn">先看全部人物卡</button>
+      <a class="btn ghost" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">返回首页</a>
+    </div>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="qbar"><i id="qbar"></i></div>
+    <div class="qmeta" id="qmeta"></div>
+    <div class="stem" id="stem"></div>
+    <div class="opts" id="opts"></div>
+    <div class="acts">
+      <button class="btn ghost" id="backBtn">上一题</button>
+      <button class="btn" id="nextBtn">下一题</button>
+    </div>
+    <div class="acts" style="margin-top:6px">
+      <button class="btn ghost" id="restartBtn" style="font-size:12.5px;padding:5px 14px">重新开始</button>
+    </div>
+  </section>
+
+  <section id="result" class="hidden"></section>
+  <section id="allCards" class="hidden"></section>
+
+  <footer>
+    本页不调用 AI、不需要账号；答题结果与保存的卡片只存在这台设备。<br>
+    <span id="verLine"></span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="lib/mx-store.js"></script>
+<script>
+(function(){
+"use strict";
+var QUIZ = null;
+var state = { idx: 0, answers: {}, result: null };
+var DRAFT_KEY = "mx_quiz_draft";
+var CARDS_KEY = "mx_persona_cards";
+
+function el(id){ return document.getElementById(id); }
+function toast(msg){
+  var t = el("toast"); if(!t) return;
+  t.textContent = msg; t.classList.add("on");
+  setTimeout(function(){ t.classList.remove("on"); }, 1800);
+}
+/* ---------------- 事件（E11）：只上报 id 与版本，不上报八题答案 ---------------- */
+function track(ev, props){
+  try{
+    var ep = window.MX_ANALYTICS_ENDPOINT;
+    if(!ep) return;
+    var body = JSON.stringify({ event: ev, props: props || {}, ts: Date.now() });
+    if(navigator.sendBeacon) navigator.sendBeacon(ep, body);
+    else fetch(ep, { method: "POST", body: body, keepalive: true }).catch(function(){});
+  }catch(e){}
+}
+
+/* ---------------- 计分（E03：版本化、可复算、并列不随机） ---------------- */
+function score(answers){
+  var raw = {}, maxRaw = {};
+  Object.keys(QUIZ.themes).forEach(function(t){ raw[t] = 0; maxRaw[t] = QUIZ.themes[t].maxRaw; });
+  QUIZ.questions.forEach(function(q){
+    var pick = answers[q.questionId];
+    if(!pick) return;
+    var opt = q.options.filter(function(o){ return o.optionId === pick; })[0];
+    if(opt && raw[opt.themeId] !== undefined) raw[opt.themeId] += 1;
+  });
+  var norm = {};
+  Object.keys(raw).forEach(function(t){
+    /* 内部比较分 = raw × (30 / maxRaw)，整数避免浮点同分误差；不对外显示为百分比 */
+    norm[t] = Math.round(raw[t] * (30 / Math.max(1, maxRaw[t])));
+  });
+  var best = Math.max.apply(null, Object.keys(norm).map(function(t){ return norm[t]; }));
+  var top = Object.keys(norm).filter(function(t){ return norm[t] === best; });
+  return { raw: raw, norm: norm, best: best, top: top };
+}
+function explanations(answers){
+  var out = [];
+  QUIZ.questions.forEach(function(q){
+    var pick = answers[q.questionId];
+    if(!pick) return;
+    var opt = q.options.filter(function(o){ return o.optionId === pick; })[0];
+    if(opt) out.push({ questionId: q.questionId, stem: q.stem, optionId: opt.optionId, text: opt.text, themeId: opt.themeId });
+  });
+  return out;
+}
+
+/* ---------------- 渲染 ---------------- */
+function renderIntro(){
+  el("hSub").textContent = QUIZ.subtitle;
+  el("hNote").textContent = QUIZ.disclaimer;
+  el("verLine").textContent = "题库 " + QUIZ.quizVersion + " · 计分 " + QUIZ.scoringVersion;
+  el("intro").classList.remove("hidden");
+  el("quiz").classList.add("hidden");
+  el("result").classList.add("hidden");
+  el("allCards").classList.add("hidden");
+}
+function renderQuestion(){
+  var q = QUIZ.questions[state.idx];
+  el("intro").classList.add("hidden");
+  el("result").classList.add("hidden");
+  el("allCards").classList.add("hidden");
+  el("quiz").classList.remove("hidden");
+  el("qbar").style.width = Math.round((state.idx) / QUIZ.questions.length * 100) + "%";
+  el("qmeta").textContent = "第 " + (state.idx + 1) + " / " + QUIZ.questions.length + " 题 · 请选择你通常最先采取的做法";
+  el("stem").textContent = q.stem;
+  var box = el("opts");
+  box.innerHTML = "";
+  q.options.forEach(function(o, i){
+    var b = document.createElement("button");
+    b.className = "opt" + (state.answers[q.questionId] === o.optionId ? " on" : "");
+    b.type = "button";
+    var k = document.createElement("span"); k.className = "k"; k.textContent = "ABCD"[i];
+    var t = document.createElement("span"); t.textContent = o.text;
+    b.appendChild(k); b.appendChild(t);
+    b.onclick = function(){
+      state.answers[q.questionId] = o.optionId;
+      saveDraft();
+      renderQuestion();
+      if(state.idx < QUIZ.questions.length - 1){
+        state.idx++;
+        renderQuestion();
+      } else {
+        finish();
+      }
+    };
+    box.appendChild(b);
+  });
+  el("backBtn").disabled = state.idx === 0;
+  el("nextBtn").disabled = !state.answers[q.questionId];
+}
+function saveDraft(){
+  if(!window.MXStore) return;
+  MXStore.write(DRAFT_KEY, { quizVersion: QUIZ.quizVersion, idx: state.idx, answers: state.answers, at: Date.now() });
+}
+function clearDraft(){
+  if(window.MXStore) MXStore.remove(DRAFT_KEY);
+}
+function finish(){
+  var missing = QUIZ.questions.filter(function(q){ return !state.answers[q.questionId]; });
+  if(missing.length){ toast("还有 " + missing.length + " 题没有作答"); return; }
+  var sc = score(state.answers);
+  state.result = {
+    quizVersion: QUIZ.quizVersion, scoringVersion: QUIZ.scoringVersion,
+    top: sc.top, norm: sc.norm, raw: sc.raw,
+    explanations: explanations(state.answers),
+    createdAt: Date.now(),
+  };
+  track("quiz_complete", { qv: QUIZ.quizVersion, sv: QUIZ.scoringVersion, tied: sc.top.length > 1 });
+  renderResult();
+}
+
+function cardBlock(themeId, primary){
+  var c = QUIZ.cards[themeId];
+  var d = document.createElement("div");
+  d.className = "card";
+  var rd = document.createElement("div"); rd.className = "rd"; rd.textContent = primary ? "你本次的研读搭档" : "并列风格";
+  var h2 = document.createElement("h2"); h2.textContent = c.personName;
+  var th = document.createElement("div"); th.className = "th"; th.textContent = "· " + c.themeTitle + " ·";
+  var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = c.description;
+  d.appendChild(rd); d.appendChild(h2); d.appendChild(th); d.appendChild(desc);
+
+  /* 解释只能来自用户实际选择的选项 */
+  var expl = (state.result.explanations || []).filter(function(x){ return x.themeId === themeId; }).slice(0, 2);
+  if(expl.length){
+    var why = document.createElement("div"); why.className = "why";
+    why.textContent = "在本次答题中：" + expl.map(function(x){
+      return "「" + shortStem(x.stem) + "」你选择「" + x.text.replace(/。$/, "") + "」";
+    }).join("；") + "。这次的选择呈现出「" + c.themeTitle + "」的取向。";
+    d.appendChild(why);
+  }
+  var sug = document.createElement("div"); sug.className = "sug"; sug.textContent = c.suggestion;
+  d.appendChild(sug);
+
+  var task = document.createElement("div"); task.className = "task";
+  task.textContent = "阅读邀请：" + c.readingTask.prompt;
+  d.appendChild(task);
+
+  var acts = document.createElement("div"); acts.className = "acts";
+  var read = document.createElement("a"); read.className = "btn"; read.style.textDecoration = "none";
+  read.href = "index.html#/art/" + c.readingTask.articleId;
+  read.textContent = "读这一段 ·《" + c.readingTask.articleTitle + "》";
+  read.onclick = function(){ track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId }); };
+  var save = document.createElement("button"); save.className = "btn ghost"; save.textContent = "保存这张卡";
+  save.onclick = function(){ saveCard(themeId); };
+  var share = document.createElement("button"); share.className = "btn ghost"; share.textContent = "下载卡片文字";
+  share.onclick = function(){ downloadCard(themeId); };
+  acts.appendChild(read); acts.appendChild(save); acts.appendChild(share);
+  d.appendChild(acts);
+
+  var src = document.createElement("div"); src.className = "src";
+  src.textContent = c.sourceNote + " 人物史料依据：" + (c.reviewStatus === "theme_pending_editorial_review" ? "待编辑审校（当前不展示未经核实的语录）" : "已审校") +
+    "；推荐段落：" + (c.readingTask.paragraphId ? c.readingTask.paragraphId : "待人工选定（先链接到整篇，不编造段落号）");
+  d.appendChild(src);
+  return d;
+}
+function shortStem(s){ return String(s || "").replace(/[？?]$/, "").slice(0, 14) + "…"; }
+
+function renderResult(){
+  var box = el("result");
+  box.innerHTML = "";
+  el("intro").classList.add("hidden");
+  el("quiz").classList.add("hidden");
+  box.classList.remove("hidden");
+
+  var top = state.result.top;
+  if(top.length === 1){
+    box.appendChild(cardBlock(top[0], true));
+    var others = Object.keys(QUIZ.cards).filter(function(t){ return t !== top[0]; });
+    var ex = document.createElement("div"); ex.className = "note";
+    ex.textContent = "也可以看看其他风格：" + others.map(function(t){ return QUIZ.cards[t].personName + "（" + QUIZ.cards[t].themeTitle + "）"; }).join(" · ");
+    box.appendChild(ex);
+  } else {
+    var hd = document.createElement("div"); hd.className = "card";
+    var t1 = document.createElement("h2"); t1.textContent = "你的选择呈现多种风格";
+    t1.style.fontSize = "19px";
+    var p1 = document.createElement("div"); p1.className = "desc";
+    p1.textContent = "本次有 " + top.length + " 张卡片同分，说明你的选择在不同场景下会偏向不同做法。下面是并列结果，没有唯一「最像」的人。";
+    hd.appendChild(t1); hd.appendChild(p1);
+    box.appendChild(hd);
+    var ties = document.createElement("div"); ties.className = "ties";
+    top.forEach(function(t){ ties.appendChild(cardBlock(t, false)); });
+    box.appendChild(ties);
+  }
+  var again = document.createElement("div"); again.className = "acts";
+  var b1 = document.createElement("button"); b1.className = "btn ghost"; b1.textContent = "重新答题";
+  b1.onclick = function(){ restart(); };
+  var b2 = document.createElement("button"); b2.className = "btn ghost"; b2.textContent = "浏览全部人物卡";
+  b2.onclick = function(){ renderAllCards(); };
+  var b3 = document.createElement("a"); b3.className = "btn ghost"; b3.href = "index.html"; b3.style.textDecoration = "none";
+  b3.textContent = "返回首页（先做专题）";
+  again.appendChild(b1); again.appendChild(b2); again.appendChild(b3);
+  box.appendChild(again);
+  track("quiz_result_view", { tied: top.length });
+}
+function renderAllCards(){
+  el("intro").classList.add("hidden");
+  el("quiz").classList.add("hidden");
+  el("result").classList.add("hidden");
+  var box = el("allCards");
+  box.classList.remove("hidden");
+  box.innerHTML = "";
+  var hd = document.createElement("div"); hd.className = "note";
+  hd.textContent = "全部 6 张人物卡。答题只是获得推荐，不答题也可以直接看卡与阅读邀请。";
+  box.appendChild(hd);
+  Object.keys(QUIZ.cards).forEach(function(t){
+    var c = QUIZ.cards[t];
+    var m = document.createElement("div"); m.className = "mini";
+    var b = document.createElement("b"); b.textContent = c.personName + " · " + c.themeTitle;
+    var s = document.createElement("span"); s.textContent = " " + c.description;
+    m.appendChild(b); m.appendChild(s);
+    var a = document.createElement("div"); a.className = "acts";
+    var r = document.createElement("a"); r.className = "btn ghost"; r.style.textDecoration = "none";
+    r.href = "index.html#/art/" + c.readingTask.articleId;
+    r.textContent = "读《" + c.readingTask.articleTitle + "》";
+    a.appendChild(r);
+    m.appendChild(a);
+    box.appendChild(m);
+  });
+  var back = document.createElement("div"); back.className = "acts";
+  var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = "回到开始";
+  b.onclick = function(){ renderIntro(); };
+  back.appendChild(b); box.appendChild(back);
+}
+
+/* ---------------- 保存（E09：走统一存储，失败明示） ---------------- */
+function saveCard(themeId){
+  if(!window.MXStore){ toast("本地存储不可用，无法保存"); return; }
+  var c = QUIZ.cards[themeId];
+  var rec = {
+    id: "pc" + Date.now() + "_" + themeId,
+    kind: "persona",
+    cardId: c.cardId,
+    personName: c.personName,
+    themeTitle: c.themeTitle,
+    quizVersion: state.result.quizVersion,
+    scoringVersion: state.result.scoringVersion,
+    topCardIds: state.result.top.slice(),
+    explanationOptionIds: state.result.explanations.map(function(x){ return x.optionId; }),
+    createdAt: Date.now(), updatedAt: Date.now(),
+    readingTask: { articleId: c.readingTask.articleId, articleTitle: c.readingTask.articleTitle,
+                   paragraphId: c.readingTask.paragraphId, prompt: c.readingTask.prompt },
+    readingTaskState: "todo",
+  };
+  var out = MXStore.update(CARDS_KEY, "array", function(list){ return [rec].concat(list); });
+  if(out.ok){
+    toast("已保存到书房 · 人物卡");
+    track("quiz_card_saved", { card: themeId, qv: state.result.quizVersion });
+  } else if(out.status === "corrupt"){
+    toast("保存失败：本地人物卡数据损坏，已保留原值");
+  } else {
+    toast("保存失败：" + (out.error || "本地存储不可用"));
+  }
+}
+function downloadCard(themeId){
+  var c = QUIZ.cards[themeId];
+  var sc = state.result || { quizVersion: QUIZ.quizVersion, scoringVersion: QUIZ.scoringVersion };
+  var lines = [
+    "你的研读搭档：" + c.personName + " · " + c.themeTitle,
+    "",
+    c.description,
+    "",
+    c.suggestion,
+    "",
+    "阅读邀请：" + c.readingTask.prompt,
+    "",
+    "题库版本：" + sc.quizVersion + " · 计分版本：" + sc.scoringVersion,
+    "本卡是依据本次选择生成的趣味阅读推荐，不是人格鉴定。",
+  ];
+  var blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "研读搭档-" + c.personName + ".txt";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  track("quiz_card_download", { card: themeId });
+}
+
+function restart(){
+  state = { idx: 0, answers: {}, result: null };
+  clearDraft();
+  renderIntro();
+}
+/* ---------------- 启动 ---------------- */
+function boot(){
+  fetch("data/quiz.json").then(function(r){ return r.json(); }).then(function(j){
+    QUIZ = j;
+    renderIntro();
+    /* 续答：草稿版本一致才恢复（E06） */
+    var d = window.MXStore ? MXStore.read(DRAFT_KEY, "object") : { status: "missing" };
+    if(d.status === "ok" && d.value && d.value.quizVersion === QUIZ.quizVersion && d.value.answers && Object.keys(d.value.answers).length){
+      state.answers = d.value.answers;
+      state.idx = Math.max(0, Math.min(QUIZ.questions.length - 1, d.value.idx || 0));
+      var resume = document.createElement("div"); resume.className = "note";
+      resume.textContent = "检测到上次未答完的进度（已答 " + Object.keys(state.answers).length + " / 8 题）。";
+      var rb = document.createElement("button"); rb.className = "btn"; rb.textContent = "继续答题";
+      rb.onclick = function(){ renderQuestion(); };
+      var nb = document.createElement("button"); nb.className = "btn ghost"; nb.textContent = "重新开始";
+      nb.onclick = function(){ restart(); };
+      resume.appendChild(document.createElement("br")); resume.appendChild(rb);
+      resume.appendChild(document.createTextNode(" ")); resume.appendChild(nb);
+      el("intro").appendChild(resume);
+    }
+  }).catch(function(){
+    el("hNote").textContent = "题库加载失败。请刷新重试；阅读功能不受影响。";
+  });
+}
+el("startBtn").onclick = function(){
+  state = { idx: 0, answers: {}, result: null };
+  track("quiz_start", { qv: QUIZ ? QUIZ.quizVersion : null });
+  renderQuestion();
+};
+el("browseBtn").onclick = function(){ if(QUIZ) renderAllCards(); };
+el("backBtn").onclick = function(){ if(state.idx > 0){ state.idx--; renderQuestion(); } };
+el("nextBtn").onclick = function(){
+  var q = QUIZ.questions[state.idx];
+  if(!state.answers[q.questionId]){ toast("请先选择一个选项"); return; }
+  if(state.idx < QUIZ.questions.length - 1){ state.idx++; renderQuestion(); }
+  else finish();
+};
+el("restartBtn").onclick = function(){
+  if(confirm("重新开始只会清空本次答题，不影响已保存的人物卡与笔记。")) restart();
+};
+document.addEventListener("keydown", function(e){
+  if(el("quiz").classList.contains("hidden")) return;
+  var k = String(e.key || "").toUpperCase();
+  var i = "ABCD".indexOf(k);
+  if(i >= 0){
+    var opts = el("opts").querySelectorAll(".opt");
+    if(opts[i]) opts[i].click();
+  }
+});
+boot();
+})();
+</script>
+</body>
+</html>

@@ -75,7 +75,7 @@ export default async function handler(req, res) {
   const startedAt = Date.now();
   const fail = (status, code, message, extra) => {
     res.setHeader('X-Request-Id', requestId);
-    recordUsage({ requestId, status: 'error', code, calls: 0, costKnown: false, scope: null });
+    recordUsage({ requestId, attemptId: 'final', status: 'error', code, calls: 0, costKnown: false, scope: null });
     return jsonError(res, status, code, message, extra);
   };
 
@@ -115,9 +115,9 @@ export default async function handler(req, res) {
   }
 
   /* P05.1: 请求校验(400)优先于服务状态(402/503) */
-  const budget = Budget.load();
+  const budget = await makeBudget();
   if (!budget.configured) return fail(503, 'budget_not_configured', 'AI 问答未配置预算, 已阻断。阅读与笔记不受影响。');
-  if (budget.exhausted()) return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。阅读与笔记不受影响。');
+  if (await budget.exhausted()) return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。阅读与笔记不受影响。');
 
 
   const ip = getClientIp(req);
@@ -146,14 +146,14 @@ export default async function handler(req, res) {
     const costKnown = costs.length > 0 && costs.length === (out.attemptsLog ?? []).length;
     const cost = costKnown ? costs.reduce((a, b) => a + b, 0) : null;
 
-    logCall({ ts: Date.now(), requestId, sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
+    logCall({ ts: Date.now(), requestId, sid, qLen: q.length, model: out.model,
       calls, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
       fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length + (out.badQuotesIntercepted ?? []).length,
       scope: scope.mode + ':' + scope.articleIds.join('|'),
       promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION, corpusVersion: CORPUS_VERSION });
 
     const ledger = await recordUsage({
-      requestId, model: out.model, status: out.status, calls, cost, costKnown,
+      requestId, attemptId: 'final', model: out.model, status: out.status, calls, cost, costKnown,
       scope: scope.mode,
     });
 
@@ -172,7 +172,7 @@ export default async function handler(req, res) {
       attempts: out.attempts ?? 1,
       scopeResolved: scope,                       // 前后端范围可逐字段核对
       usage: {
-        calls, budgetUnit: 'upstream_calls', budgetLeft: budget.left(),
+        calls, budgetUnit: 'upstream_calls', budgetLeft: await budget.left(), budgetScope: budget.scope,
         cost: cost, costKnown,                    // 未知金额时 cost=null, 不是 0
         ledgerPersisted: !!ledger.persisted,
       },
@@ -187,7 +187,7 @@ export default async function handler(req, res) {
     const calls = (e.attemptsLog ?? []).length || 0;
     const costs = (e.attemptsLog ?? []).map(a => a.cost).filter(x => typeof x === 'number');
     await recordUsage({
-      requestId, model: provider.model, status: 'error', code: e.code ?? e.status ?? 'upstream_error',
+      requestId, attemptId: 'final', model: provider.model, status: 'error', code: e.code ?? e.status ?? 'upstream_error',
       calls, cost: costs.length ? costs.reduce((a, b) => a + b, 0) : null,
       costKnown: costs.length > 0 && costs.length === calls, scope: scope.mode,
     });

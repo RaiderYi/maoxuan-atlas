@@ -55,3 +55,30 @@ jobs:
       - name: No secrets in frontend
         run: |
           ! grep -rniE "(api[_-]?key|secret|password|bearer)\s*[:=]\s*['\"][A-Za-z0-9]{16,}" site/ --include="*.js" --include="*.html"
+
+      # 5. A08: 数据保全与范围契约回归（故障注入，失败即非零退出）
+      - name: Data-safety regression (A01-A06)
+        run: node tests/regression.mjs
+
+      # 6. A08/B06: 既有 AI 管线离线断言
+      - name: AI pipeline offline assertions
+        run: node api/test-wp07-offline.mjs
+
+      # 7. A09: 跨平台冻结校验（LF 归一后 hash）
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Frozen evaluation check (portable)
+        run: python pipeline/p05_eval.py --check-only
+
+      # 8. A11: 版本文件必须存在且含必要字段
+      - name: Release metadata check
+        run: |
+          set -e
+          node -e '
+          const v = require("./site/data/version.json");
+          for (const k of ["product","releaseTag","builtAt","sourceCommit"]) {
+            if (!(k in v)) throw new Error("version.json missing field: " + k);
+          }
+          console.log("version.json OK:", v.product, v.releaseTag);
+          '

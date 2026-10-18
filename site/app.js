@@ -189,21 +189,23 @@ var TOPIC_CFG = null;
 var TOPIC_CFG_URL = "data/topic-jgs.json";
 var PROG_KEY = "mx_topic_progress";
 var CONCL_KEY = "mx_topic_conclusions";
+var DRAFT_KEY = "mx_topic_drafts";
 
 function loadProg(){
-  try{ var x = JSON.parse(localStorage.getItem(PROG_KEY) || "{}"); return (x && typeof x === "object") ? x : {}; }
-  catch(e){ return {}; }
+  var r = MXStore.read(PROG_KEY, "object");
+  return r.status === "ok" ? r.value : {};
 }
 function saveProg(p){
-  try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); return true; }
-  catch(e){ toast("进度保存失败：本地存储不可用"); return false; }
+  var w = MXStore.write(PROG_KEY, p);
+  if(!w.ok) toast("进度保存失败：" + w.error);
+  return w.ok;
 }
 function topicProg(tid){
   var p = loadProg()[tid] || {};
   if(!p.steps) p.steps = {};
   return p;
 }
-/* P04.3: "打开过"与"完成"分开记录，从不按阅读行为推断完成 */
+/* P04.3: "打开过"与"完成"分开记录，从不按阅读行为推断完成 (A01: 写入统一过 MXStore) */
 function stepState(tid, stepId){
   var st = (topicProg(tid).steps || {})[stepId] || {};
   if(st.doneAt) return "done";
@@ -211,25 +213,60 @@ function stepState(tid, stepId){
   return "todo";
 }
 function setStepOpen(tid, stepId){
-  var all = loadProg(); var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
-  var st = t.steps[stepId] || {};
-  if(!st.openedAt) st.openedAt = Date.now();
-  t.steps[stepId] = st; all[tid] = t; saveProg(all);
+  var out = MXStore.update(PROG_KEY, "object", function(all){
+    var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
+    var st = t.steps[stepId] || {};
+    if(!st.openedAt) st.openedAt = Date.now();
+    t.steps[stepId] = st; all[tid] = t; return all;
+  });
+  if(!out.ok && out.status === "corrupt") toast("进度未记录：本地进度数据损坏，已保留原值。");
+  return out.ok;
 }
 function setStepDone(tid, stepId, done){
-  var all = loadProg(); var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
-  var st = t.steps[stepId] || {};
-  if(done){ st.doneAt = Date.now(); }
-  else { delete st.doneAt; if(!st.openedAt) st.openedAt = Date.now(); }
-  t.steps[stepId] = st; all[tid] = t; saveProg(all);
+  var out = MXStore.update(PROG_KEY, "object", function(all){
+    var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
+    var st = t.steps[stepId] || {};
+    if(done){ st.doneAt = Date.now(); }
+    else { delete st.doneAt; if(!st.openedAt) st.openedAt = Date.now(); }
+    t.steps[stepId] = st; all[tid] = t; return all;
+  });
+  if(!out.ok) toast("进度保存失败：" + (out.error || "本地存储不可用"));
+  return out.ok;
 }
 function loadConcl(){
-  try{ var x = JSON.parse(localStorage.getItem(CONCL_KEY) || "{}"); return (x && typeof x === "object") ? x : {}; }
-  catch(e){ return {}; }
+  var r = MXStore.read(CONCL_KEY, "object");
+  return r.status === "ok" ? r.value : {};
 }
 function saveConcl(o){
-  try{ localStorage.setItem(CONCL_KEY, JSON.stringify(o)); return true; }
-  catch(e){ toast("结论保存失败：本地存储不可用"); return false; }
+  var out = MXStore.update(CONCL_KEY, "object", function(all){
+    Object.keys(o || {}).forEach(function(k){ all[k] = o[k]; });
+    return all;
+  });
+  if(!out.ok){
+    toast("结论保存失败：" + (out.error || "本地存储不可用"));
+    return false;
+  }
+  return true;
+}
+/* C03: 草稿与"完成"分开保存；80 字/引用数只用于"提交完成"的最低检查，不阻止保存半成品 */
+function loadDrafts(){
+  var r = MXStore.read(DRAFT_KEY, "object");
+  return r.status === "ok" ? r.value : {};
+}
+function loadDraft(tid){
+  var d = loadDrafts()[tid] || null;
+  return d;
+}
+function saveDraft(tid, payload){
+  var out = MXStore.update(DRAFT_KEY, "object", function(all){
+    all[tid] = payload;
+    return all;
+  });
+  if(!out.ok){ toast("草稿保存失败：" + (out.error || "本地存储不可用")); return false; }
+  return true;
+}
+function clearDraft(tid){
+  MXStore.update(DRAFT_KEY, "object", function(all){ delete all[tid]; return all; });
 }
 function citationsForTopic(cfg){
   var ids = (cfg.corpus && cfg.corpus.articles) || [];
@@ -314,25 +351,45 @@ function topicHtml(cfg){
     if(s.requirement) h += "<div class='tpReq'>要求：" + esc(s.requirement) + "</div>";
     if(s.task && s.task.type === "conclusion"){
       var concl = loadConcl()[cfg.topicId] || {};
+      var draft = loadDraft(cfg.topicId) || null;
       var cits = citationsForTopic(cfg);
-      h += "<div class='tpTask'><div class='tpTh'>成果任务 · 写下你的结论</div>";
-      h += "<textarea id='tpConcl' rows='6' placeholder='用你自己的话回答核心问题（不少于 " + (s.task.minChars || 80) + " 字）…'>" +
-           esc(concl.text || "") + "</textarea>";
-      h += "<div class='tpCit'><div class='tpCh'>自动附加的依据（来自你的摘录，共 " + cits.length + " 条）</div>";
-      if(cits.length){
-        h += "<ul>" + cits.slice(0, 6).map(function(n){
-          var src = n.source || {};
-          var dt = src.dateRaw ? "（" + String(src.dateRaw).replace(/[（）()]/g, "") + "）" : "";
-          return "<li><b>" + esc(n.paraId || "") + "</b> <span class='q'>" + esc((n.quote || "").slice(0, 60)) + "</span>" +
-                 "<i>" + esc(src.title || "") + esc(dt) + "</i></li>";
-        }).join("") + "</ul>" + (cits.length > 6 ? "<div class='tpMore'>另有 " + (cits.length - 6) + " 条未展开</div>" : "");
-      } else {
-        h += "<div class='tpMissing'>还没有摘录。回上面的步骤，在原文里选中一段文字即可摘录；没有依据的结论不会被当成完成。</div>";
+      var selected = {};
+      var supports = {};
+      if(draft && draft.selectedIds) draft.selectedIds.forEach(function(id){ selected[id] = true; });
+      if(draft && draft.supports) supports = draft.supports;
+      if(!draft && concl && concl.citations){
+        concl.citations.forEach(function(ct){
+          if(ct.noteId) selected[ct.noteId] = true;
+          if(ct.noteId && ct.supports) supports[ct.noteId] = ct.supports;
+        });
       }
-      h += "</div><div class='tpActs2'><button id='tpSave'>保存结论</button>" +
-           "<span id='tpMsg' class='tpMsg'></span></div>";
-      if(concl.text){
-        h += "<div class='tpSaved'>上次保存：" + esc(new Date(concl.updatedAt || concl.createdAt).toLocaleString()) +
+      var draftText = draft ? draft.text : (concl.text || "");
+      h += "<div class='tpTask'><div class='tpTh'>成果任务 · 写下你的结论</div>";
+      h += "<textarea id='tpConcl' rows='6' placeholder='先写下你的判断（可以很短，随时保存草稿）…'>" + esc(draftText) + "</textarea>";
+      /* C04: 依据由用户勾选，不自动把全部摘录挂到结论上 */
+      h += "<div class='tpCit'><div class='tpCh'>选择支撑这条结论的依据（只勾选真正支持你判断的段落）</div>";
+      if(cits.length){
+        h += "<ul class='tpPick'>";
+        cits.forEach(function(n, i){
+          var on = selected[n.id] ? " checked" : "";
+          h += "<li><label><input type='checkbox' class='tpCitPick' value='" + esc(n.id) + "'" + on + ">" +
+               "<b>" + esc(n.paraId || "") + "</b> <span class='q'>" + esc((n.quote || "").slice(0, 60)) + "</span></label>" +
+               "<input class='tpSupports' data-note='" + esc(n.id) + "' placeholder='它支持你的哪一句？（选填）' value='" + esc(supports[n.id] || "") + "'>" +
+               "</li>";
+        });
+        h += "</ul>";
+      } else {
+        h += "<div class='tpMissing'>还没有摘录。回上面的步骤，在原文里选中一段文字即可摘录；没有依据的结论可以被保存为草稿，但不会被标记为完成。</div>";
+      }
+      h += "</div>";
+      h += "<div class='tpActs2'><button id='tpSaveDraft' class='ghost2'>保存草稿</button>" +
+           "<button id='tpSubmit'>提交完成</button><span id='tpMsg' class='tpMsg'></span></div>";
+      if(draft){
+        h += "<div class='tpSaved'>草稿已保存：" + esc(new Date(draft.updatedAt).toLocaleString()) +
+             "（" + (draft.text || "").length + " 字，" + ((draft.selectedIds || []).length) + " 条依据）</div>";
+      }
+      if(concl && concl.text){
+        h += "<div class='tpSaved'>已完成结论：" + esc(new Date(concl.updatedAt || concl.createdAt).toLocaleString()) +
              (concl.pendingSteps && concl.pendingSteps.length ? " · 当时还有 " + concl.pendingSteps.length + " 步未完成" : "") + "</div>";
       }
       h += "</div>";
@@ -379,45 +436,69 @@ function bindTopic(v, cfg){
       if(el) el.scrollIntoView({ block: "start", behavior: "smooth" });
     });
   });
-  var saveBtn = v.querySelector("#tpSave");
-  if(saveBtn){
-    saveBtn.addEventListener("click", function(){
+  function readPicks(){
+    var picked = [], sup = {};
+    v.querySelectorAll(".tpCitPick").forEach(function(cb){ if(cb.checked) picked.push(cb.value); });
+    v.querySelectorAll(".tpSupports").forEach(function(inp){
+      var id = inp.getAttribute("data-note");
+      if(inp.value.trim()) sup[id] = inp.value.trim();
+    });
+    return { selectedIds: picked, supports: sup };
+  }
+  var draftBtn = v.querySelector("#tpSaveDraft");
+  if(draftBtn){
+    draftBtn.addEventListener("click", function(){
+      var ta = v.querySelector("#tpConcl");
+      var text = ((ta && ta.value) || "").trim();
+      var picks = readPicks();
+      if(!text && !picks.selectedIds.length){ toast("草稿为空，未保存"); return; }
+      if(saveDraft(cfg.topicId, { text: text, selectedIds: picks.selectedIds, supports: picks.supports, updatedAt: Date.now() })){
+        toast("草稿已保存（不计为完成）");
+        renderTopic();
+      }
+    });
+  }
+  var submitBtn = v.querySelector("#tpSubmit");
+  if(submitBtn){
+    submitBtn.addEventListener("click", function(){
       var ta = v.querySelector("#tpConcl");
       var msg = v.querySelector("#tpMsg");
       var text = ((ta && ta.value) || "").trim();
+      var picks = readPicks();
       var task = null;
-      (cfg.steps || []).forEach(function(s){ if(s.task && s.task.type === "conclusion") task = s.task; });
+      (cfg.steps || []).forEach(function(st){ if(st.task && st.task.type === "conclusion") task = st.task; });
       var minC = (task && task.minChars) || 80;
       var minQ = (task && task.minCitations) || 1;
-      var cits = citationsForTopic(cfg);
+      var notDone = (cfg.steps || []).filter(function(st){ return stepState(cfg.topicId, st.stepId) !== "done"; });
       var gaps = [];
       if(text.length < minC) gaps.push("结论还差 " + (minC - text.length) + " 字（需至少 " + minC + " 字，现 " + text.length + " 字）");
-      if(cits.length < minQ) gaps.push("还没有摘录原文段落（需至少 " + minQ + " 条依据）");
-      var notDone = (cfg.steps || []).filter(function(s){ return stepState(cfg.topicId, s.stepId) !== "done"; });
+      if(picks.selectedIds.length < minQ) gaps.push("还没有勾选支撑依据（至少 " + minQ + " 条）");
+      if(notDone.length) gaps.push("还有 " + notDone.length + " 步未标记完成：" + notDone.map(function(st){ return st.title; }).join("、"));
       if(gaps.length){
-        if(msg) msg.textContent = "还不能保存：" + gaps.join("；");
+        if(msg) msg.textContent = "还未完成：" + gaps.join("；") + "。可以先保存草稿。";
         track("topic_conclusion_blocked", { topicId: cfg.topicId, gapCount: gaps.length });
-        toast("结论未保存：" + gaps[0]);
         return;
       }
+      var cits = citationsForTopic(cfg).filter(function(n){ return picks.selectedIds.indexOf(n.id) >= 0; });
       var all = loadConcl();
       var prev = all[cfg.topicId] || {};
       all[cfg.topicId] = {
         topicId: cfg.topicId,
         text: text,
         citations: cits.map(function(n){
-          return { paraId: n.paraId, quote: n.quote, articleId: n.articleId, source: n.source || {}, noteId: n.id };
+          return { noteId: n.id, paraId: n.paraId, quote: n.quote, articleId: n.articleId,
+                   supports: picks.supports[n.id] || null, source: n.source || {} };
         }),
-        pendingSteps: notDone.map(function(s){ return s.stepId; }),
+        pendingSteps: [],
         createdAt: prev.createdAt || Date.now(),
         updatedAt: Date.now(),
-        topicVersion: cfg.version || "1"
+        topicVersion: cfg.version || "1",
       };
       if(saveConcl(all)){
+        clearDraft(cfg.topicId);
         track("topic_conclusion_save", { topicId: cfg.topicId, chars: text.length, citations: cits.length });
         renderTopic(); renderHome();
-        toast("结论已保存，已附带 " + cits.length + " 条摘录依据");
-        if(notDone.length) toast("提示：还有 " + notDone.length + " 步未标记完成，专题尚未算完成");
+        toast("结论已保存，附 " + cits.length + " 条你勾选的依据");
       }
     });
   }
@@ -444,46 +525,41 @@ function renderTopic(){
    - 删除先进回收站（mx_trash），可恢复 */
 var LIB_SCHEMA = "mx-library@2";
 var LIB_KEYS = ["mx_notes", "mx_research_cards", "mx_marks", "mx_read", "mx_recent",
-                "mx_topic_progress", "mx_topic_conclusions", "mx_trash"];
+                "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts", "mx_persona_cards", "mx_trash"];
 
 function libGet(key, dflt) {
-  try {
-    var raw = localStorage.getItem(key);
-    if (raw === null) return { ok: true, value: dflt, missing: true };
-    return { ok: true, value: JSON.parse(raw), raw: raw };
-  } catch (e) {
-    var raw2 = null;
-    try { raw2 = localStorage.getItem(key); } catch (e2) {}
-    return { ok: false, corrupt: true, raw: raw2, error: String(e && e.message || e) };
-  }
+  var r = MXStore.read(key, "any");
+  if (r.status === "ok") return { ok: true, value: r.value, raw: r.raw };
+  if (r.status === "missing") return { ok: true, value: dflt, missing: true };
+  return { ok: false, corrupt: r.status === "corrupt", unavailable: r.status === "unavailable",
+           raw: r.raw, error: r.error };
 }
 function libSet(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
-  catch (e) { toast("保存失败：本地存储不可用或空间不足（" + (e && e.name || e) + "）"); return false; }
+  var w = MXStore.write(key, value);
+  if (!w.ok) toast("保存失败：" + w.error);
+  return w.ok;
 }
 /* P06.1: 首次进入书房先做一次快照，再做结构归一（不删任何旧字段） */
 function libMigrate() {
   var ver = null;
   try { ver = localStorage.getItem("mx_schema"); } catch (e) { return { ok: false, error: "storage_blocked" }; }
   if (ver === LIB_SCHEMA) return { ok: true, migrated: false };
-  var snapshot = { schema: "mx-library@1-snapshot", at: Date.now(), data: {} };
-  LIB_KEYS.forEach(function (k) {
-    try { var raw = localStorage.getItem(k); if (raw !== null) snapshot.data[k] = raw; } catch (e) {}
-  });
-  try { localStorage.setItem("mx_backup_p06", JSON.stringify(snapshot)); } catch (e) {}
+  /* A01/A04: 快照写入失败就中止，绝不在没有备份的情况下改写结构 */
+  var snap = MXStore.snapshot(LIB_KEYS, "mx_backup_p06");
+  if (!snap.ok) return { ok: false, error: "snapshot_failed", detail: snap.error };
   /* 研究卡补 answerRaw（原始 AI 回答），人工改写另存 editedAnswer */
-  var cards = libGet("mx_research_cards", []);
-  if (cards.ok && Array.isArray(cards.value) && cards.value.length) {
-    var changed = false;
-    cards.value.forEach(function (c) {
+  MXStore.update("mx_research_cards", "array", function (cards) {
+    cards.forEach(function (c) {
       if (c && typeof c === "object" && c.answerRaw === undefined) {
         c.answerRaw = (c.answerOriginal !== undefined ? c.answerOriginal : (c.answer || ""));
-        changed = true;
+        c.historyMissing = c.answerRaw === "" ? true : c.historyMissing;
       }
       if (c && typeof c === "object" && c.editedAnswer === undefined) c.editedAnswer = null;
+      if (c && typeof c === "object" && !c.createdAt) c.createdAt = c.ts || Date.now();
+      if (c && typeof c === "object" && c.ts === undefined) c.ts = c.createdAt;
     });
-    if (changed) libSet("mx_research_cards", cards.value);
-  }
+    return cards;
+  });
   try { localStorage.setItem("mx_schema", LIB_SCHEMA); } catch (e) { return { ok: false, error: "storage_blocked" }; }
   return { ok: true, migrated: true };
 }
@@ -495,6 +571,7 @@ function libCollection() {
   var recent = libGet("mx_recent", {});
   var prog = libGet("mx_topic_progress", {});
   var concl = libGet("mx_topic_conclusions", {});
+  var persona = libGet("mx_persona_cards", []);
   var trash = libGet("mx_trash", []);
   var health = [];
   [["mx_notes", notes], ["mx_research_cards", cards], ["mx_marks", marks], ["mx_read", reads],
@@ -508,6 +585,7 @@ function libCollection() {
     recent: recent.ok && recent.value && typeof recent.value === "object" ? recent.value : {},
     progress: prog.ok && prog.value && typeof prog.value === "object" ? prog.value : {},
     concl: concl.ok && concl.value && typeof concl.value === "object" ? concl.value : {},
+    persona: persona.ok && Array.isArray(persona.value) ? persona.value : [],
     trash: trash.ok && Array.isArray(trash.value) ? trash.value : [],
     health: health,
   };
@@ -542,6 +620,17 @@ function libItems(c) {
       citations: card.citations || [], source: null, ts: card.createdAt || 0,
     });
   });
+  c.persona.forEach(function (pc) {
+    if (!pc || !pc.id) return;
+    items.push({
+      kind: "persona", kindLabel: "人物卡",
+      id: pc.id, articleId: (pc.readingTask && pc.readingTask.articleId) || null, paraId: null,
+      title: (pc.personName || "") + " · " + (pc.themeTitle || ""),
+      text: pc.readingTask ? ("阅读任务：" + pc.readingTask.prompt) : "",
+      quote: "", source: null, ts: pc.createdAt || 0,
+      quizVersion: pc.quizVersion, scoringVersion: pc.scoringVersion,
+    });
+  });
   return items.sort(function (a, b) { return b.ts - a.ts; });
 }
 function libExportJSON() {
@@ -551,7 +640,9 @@ function libExportJSON() {
     stats: { notes: c.notes.length, cards: c.cards.length, marks: Object.keys(c.marks).length,
              reads: Object.keys(c.reads).length, topics: Object.keys(c.progress).length },
     data: { mx_notes: c.notes, mx_research_cards: c.cards, mx_marks: c.marks, mx_read: c.reads,
-            mx_recent: c.recent, mx_topic_progress: c.progress, mx_topic_conclusions: c.concl },
+            mx_recent: c.recent, mx_topic_progress: c.progress, mx_topic_conclusions: c.concl,
+            mx_topic_drafts: libGet("mx_topic_drafts", {}).value || {},
+            mx_persona_cards: c.persona },
   };
   var blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
   var a = document.createElement("a");
@@ -607,89 +698,137 @@ function libExportMarkdown() {
   setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   toast("已导出 Markdown");
 }
-/* P06.5: 导入 — 只合并不覆盖，冲突有规则，内容不执行 */
+/* A03/A04: 导入 = 预检 → 备份 → 合并预览 → 逐类写入 → 明确报告
+   · 版本精确匹配（只认 mx-library@2）；结构不符直接拒绝
+   · 任一目标 key 损坏/不可写 → 整体中止，不写入任何数据，不假成功
+   · 同 id 内容不同且时间相同 → 保留冲突副本（新 id + conflictOf），不丢数据
+   · 恢复全部已声明类型：收藏 / 阅读位置 / 最近阅读 / 笔记 / 研究卡 / 专题进度 / 专题结论 */
+function libPrecheckBackup(doc) {
+  var errs = [];
+  if (!doc || typeof doc !== "object") errs.push("文件不是对象");
+  if (!doc || doc.schema !== LIB_SCHEMA) errs.push("版本不匹配：需要 " + LIB_SCHEMA + "，实际 " + (doc && doc.schema));
+  if (!doc || !doc.data || typeof doc.data !== "object") errs.push("缺少 data 字段");
+  if (errs.length) return { ok: false, errors: errs };
+  var expect = { mx_notes: "array", mx_research_cards: "array", mx_persona_cards: "array", mx_marks: "object",
+                 mx_read: "object", mx_recent: "object", mx_topic_progress: "object",
+                 mx_topic_conclusions: "object" };
+  Object.keys(expect).forEach(function (k) {
+    if (doc.data[k] === undefined) return;
+    var v = doc.data[k];
+    var bad = (expect[k] === "array") ? !Array.isArray(v) : (v === null || typeof v !== "object" || Array.isArray(v));
+    if (bad) errs.push(k + " 结构不符（期望 " + expect[k] + "）");
+  });
+  return errs.length ? { ok: false, errors: errs } : { ok: true };
+}
 function libImportJSON(text) {
   var doc;
-  try { doc = JSON.parse(text); } catch (e) { return { ok: false, error: "不是合法 JSON：" + (e && e.message) }; }
-  if (!doc || typeof doc !== "object" || !doc.data || typeof doc.data !== "object") {
-    return { ok: false, error: "结构不符：缺少 data 字段（需要本应用导出的备份文件）" };
+  try { doc = JSON.parse(text); } catch (e) { return { ok: false, errors: ["不是合法 JSON：" + (e && e.message)] }; }
+
+  var pre = libPrecheckBackup(doc);
+  if (!pre.ok) return { ok: false, errors: pre.errors };
+
+  /* 预检目标状态：任一损坏/不可用即中止（不覆盖、不半途写入） */
+  var targets = ["mx_notes", "mx_research_cards", "mx_persona_cards", "mx_marks", "mx_read", "mx_recent",
+                 "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts"];
+  var badTargets = [];
+  targets.forEach(function (k) {
+    var r = MXStore.read(k, "any");
+    if (r.status === "corrupt" || r.status === "unavailable") badTargets.push({ key: k, status: r.status, error: r.error });
+  });
+  if (badTargets.length) {
+    return { ok: false, errors: ["本地目标数据损坏或不可用，已中止导入以保留原值：" +
+      badTargets.map(function (x) { return x.key + "(" + x.status + ")"; }).join("、")], badTargets: badTargets };
   }
-  if (doc.schema && String(doc.schema).indexOf("mx-library@") !== 0) {
-    return { ok: false, error: "版本不识别：" + doc.schema };
-  }
-  var report = { added: 0, skippedSame: 0, replacedNewer: 0, keptLocalNewer: 0, badItems: 0 };
-  ["mx_notes", "mx_research_cards"].forEach(function (key) {
+
+  /* 备份当前状态（备份失败也中止） */
+  var snap = MXStore.snapshot(targets, "mx_backup_before_import");
+  if (!snap.ok) return { ok: false, errors: ["导入前备份失败，已中止：" + snap.error] };
+
+  var report = { added: 0, updated: 0, skippedSame: 0, keptLocalNewer: 0, conflicts: 0, badItems: 0, written: [] };
+  var errors = [];
+  var ts = Date.now();
+
+  function mergeArray(key, kindLabel) {
     var incoming = doc.data[key];
-    if (!Array.isArray(incoming)) return;
-    var cur = libGet(key, []);
-    if (!cur.ok) return { ok: false, error: "本地 " + key + " 已损坏，已中止导入以免覆盖" };
-    var list = Array.isArray(cur.value) ? cur.value.slice() : [];
+    if (!Array.isArray(incoming)) return true;
+    var cur = MXStore.read(key, "array");
+    if (cur.status === "corrupt" || cur.status === "unavailable") { errors.push(key + " 读取失败"); return false; }
+    var list = (cur.value || []).slice();
     var byId = {};
     list.forEach(function (x, i) { if (x && x.id) byId[x.id] = i; });
-    incoming.forEach(function (x) {
-      if (!x || typeof x !== "object" || !x.id) { report.badItems++; return; }
-      var clean = JSON.parse(JSON.stringify(x));   // 只保留数据，不保留任何可执行内容
-      var idx = byId[clean.id];
-      if (idx === undefined) { list.push(clean); byId[clean.id] = list.length - 1; report.added++; return; }
+    incoming.forEach(function (raw, i) {
+      if (!raw || typeof raw !== "object" || !raw.id) { report.badItems++; return; }
+      var x = JSON.parse(JSON.stringify(raw));
+      var idx = byId[x.id];
+      if (idx === undefined) { list.push(x); byId[x.id] = list.length - 1; report.added++; return; }
       var old = list[idx] || {};
+      if (JSON.stringify(old) === JSON.stringify(x)) { report.skippedSame++; return; }
       var oldT = old.updatedAt || old.createdAt || 0;
-      var newT = clean.updatedAt || clean.createdAt || 0;
-      if (JSON.stringify(old) === JSON.stringify(clean)) { report.skippedSame++; return; }
-      if (newT > oldT) { list[idx] = clean; report.replacedNewer++; }
-      else { report.keptLocalNewer++; }
+      var newT = x.updatedAt || x.createdAt || 0;
+      if (newT > oldT) { list[idx] = x; report.updated++; return; }
+      if (newT < oldT) { report.keptLocalNewer++; return; }
+      /* 同 id 同时间不同内容 → 冲突副本（不丢失任何一侧） */
+      var copy = JSON.parse(JSON.stringify(x));
+      copy.id = x.id + "-imported-" + ts + "-" + i;
+      copy.conflictOf = x.id;
+      list.push(copy);
+      report.conflicts++;
     });
-    libSet(key, list);
-  });
-  /* 进度/结论: 只补缺, 不覆盖已有更晚记录 */
-  ["mx_topic_progress", "mx_topic_conclusions"].forEach(function (key) {
+    var w = MXStore.write(key, list);
+    if (!w.ok) { errors.push(key + " 写入失败：" + w.error); return false; }
+    report.written.push(key);
+    return true;
+  }
+  function mergeObject(key) {
     var incoming = doc.data[key];
-    if (!incoming || typeof incoming !== "object") return;
-    var cur = libGet(key, {});
-    if (!cur.ok) return;
-    var mine = (cur.value && typeof cur.value === "object") ? cur.value : {};
-    Object.keys(incoming).forEach(function (tid) {
-      if (!mine[tid]) { mine[tid] = incoming[tid]; report.added++; }
+    if (!incoming || typeof incoming !== "object" || Array.isArray(incoming)) return true;
+    var cur = MXStore.read(key, "object");
+    if (cur.status === "corrupt" || cur.status === "unavailable") { errors.push(key + " 读取失败"); return false; }
+    var mine = cur.value || {};
+    Object.keys(incoming).forEach(function (k) {
+      if (mine[k] === undefined) { mine[k] = incoming[k]; report.added++; return; }
+      if (JSON.stringify(mine[k]) === JSON.stringify(incoming[k])) { report.skippedSame++; return; }
+      /* 结论类：较新覆盖；同等保留本地并记冲突副本 */
+      var a = (mine[k] && (mine[k].updatedAt || mine[k].createdAt)) || 0;
+      var b = (incoming[k] && (incoming[k].updatedAt || incoming[k].createdAt)) || 0;
+      if (b > a) { mine[k] = incoming[k]; report.updated++; }
+      else if (b < a) { report.keptLocalNewer++; }
+      else { mine[k + "-imported-" + ts] = incoming[k]; report.conflicts++; }
     });
-    libSet(key, mine);
-  });
+    var w = MXStore.write(key, mine);
+    if (!w.ok) { errors.push(key + " 写入失败：" + w.error); return false; }
+    report.written.push(key);
+    return true;
+  }
+
+  var ok = mergeArray("mx_notes", "笔记");
+  if (ok) ok = mergeArray("mx_research_cards", "研究卡");
+  if (ok) ok = mergeArray("mx_persona_cards", "人物卡");
+  if (ok) ok = mergeObject("mx_marks");
+  if (ok) ok = mergeObject("mx_read");
+  if (ok) ok = mergeObject("mx_recent");
+  if (ok) ok = mergeObject("mx_topic_progress");
+  if (ok) ok = mergeObject("mx_topic_conclusions");
+  if (ok) ok = mergeObject("mx_topic_drafts");
+
+  if (!ok || errors.length) {
+    return { ok: false, errors: errors.length ? errors : ["部分数据写入失败"],
+             report: report, note: "已写入部分已记录在报告中；导入前状态可用 mx_backup_before_import 恢复" };
+  }
   return { ok: true, report: report };
 }
-function libTrash(kind, id, payload) {
-  var t = libGet("mx_trash", []);
-  var list = t.ok && Array.isArray(t.value) ? t.value : [];
-  list.unshift({ kind: kind, id: id, payload: payload, at: Date.now() });
-  if (list.length > 200) list = list.slice(0, 200);
-  libSet("mx_trash", list);
-}
+/* A02/A06: 删除与恢复走事务顺序（先写副本并确认成功，再改主集合；失败回滚） */
 function libDeleteItem(it) {
   if (!confirm("删除这条" + it.kindLabel + "？删除后可在下方「回收站」恢复。")) return false;
-  if (it.kind === "card") {
-    var cards = libGet("mx_research_cards", []);
-    var list = cards.ok && Array.isArray(cards.value) ? cards.value : [];
-    var target = list.filter(function (x) { return x && x.id === it.id; })[0];
-    if (target) libTrash("card", it.id, target);
-    libSet("mx_research_cards", list.filter(function (x) { return !(x && x.id === it.id); }));
-  } else {
-    var notes = libGet("mx_notes", []);
-    var nl = notes.ok && Array.isArray(notes.value) ? notes.value : [];
-    var t2 = nl.filter(function (x) { return x && x.id === it.id; })[0];
-    if (t2) libTrash("note", it.id, t2);
-    libSet("mx_notes", nl.filter(function (x) { return !(x && x.id === it.id); }));
-  }
+  var collKey = it.kind === "card" ? "mx_research_cards" : (it.kind === "persona" ? "mx_persona_cards" : "mx_notes");
+  var kind = it.kind === "card" ? "card" : (it.kind === "persona" ? "persona" : "note");
+  var out = MXStore.deleteWithTrash({ collKey: collKey, kind: kind, id: it.id });
+  if (!out.ok) { toast("删除失败：" + out.error + "（原条目已保留）"); return false; }
   return true;
 }
 function libRestore(index) {
-  var t = libGet("mx_trash", []);
-  var list = t.ok && Array.isArray(t.value) ? t.value : [];
-  var rec = list[index];
-  if (!rec) return false;
-  var key = rec.kind === "card" ? "mx_research_cards" : "mx_notes";
-  var cur = libGet(key, []);
-  var arr = cur.ok && Array.isArray(cur.value) ? cur.value : [];
-  if (!arr.some(function (x) { return x && x.id === rec.id; })) arr.push(rec.payload);
-  libSet(key, arr);
-  list.splice(index, 1);
-  libSet("mx_trash", list);
+  var out = MXStore.restoreFromTrash({ index: index });
+  if (!out.ok) { toast("恢复失败：" + out.error); return false; }
   return true;
 }
 
@@ -854,10 +993,18 @@ function bindStudy(v, filtered, c) {
       var rd = new FileReader();
       rd.onload = function () {
         var out = libImportJSON(String(rd.result || ""));
-        if (!out.ok) { alert("导入失败：" + out.error); return; }
+        if (!out.ok) {
+          alert("导入未完成，没有写入全部数据：\n" + (out.errors || ["未知错误"]).join("\n") +
+                (out.report ? "\n\n已写入：" + (out.report.written || []).join("、") : "") +
+                "\n\n导入前状态保存在 mx_backup_before_import。");
+          renderStudy();
+          return;
+        }
         var r = out.report;
-        alert("导入完成：新增 " + r.added + " 条，跳过相同 " + r.skippedSame + " 条，更新较新 " + r.replacedNewer +
-              " 条，保留本地较新 " + r.keptLocalNewer + " 条" + (r.badItems ? "，忽略无效 " + r.badItems + " 条" : "") + "。");
+        alert("导入完成：新增 " + r.added + " 条，更新 " + r.updated + " 条，跳过相同 " + r.skippedSame +
+              " 条，保留本地较新 " + r.keptLocalNewer + " 条，冲突副本 " + r.conflicts + " 条" +
+              (r.badItems ? "，忽略无效 " + r.badItems + " 条" : "") +
+              "。\n写入的类别：" + (r.written || []).join("、"));
         renderStudy();
       };
       rd.readAsText(f);
@@ -913,6 +1060,7 @@ function renderHome(){
   h += "<a class='homeCard' href='#/view/cats'><i>典</i><b>经典研读</b><span>按卷浏览 217 篇，读到哪记到哪</span></a>";
   h += "<a class='homeCard' href='research.html'><i>问</i><b>AI 研究室</b><span>答案必须引用原文段落，可逐条核对</span></a>";
   h += "<a class='homeCard' href='#/view/study'><i>房</i><b>我的书房</b><span>收藏、阅读记录与研究卡汇总</span></a>";
+  h += "<a class='homeCard' href='quiz.html'><i>签</i><b>8 问领取人物卡</b><span>2 分钟小测试，得到一张阅读邀请（趣味推荐，非心理测评）</span></a>";
   h += "</div>";
   /* 探索工具（降为辅助） */
   h += "<div class='homeGrid'>";
@@ -921,7 +1069,11 @@ function renderHome(){
   h += "<a class='homeCard' href='#/view/graph'><i>图</i><b>探索 · 图谱</b><span>按关系延伸阅读</span></a>";
   h += "<a class='homeCard' href='#/view/stats'><i>数</i><b>探索 · 语料统计</b><span>篇幅与地点分布</span></a>";
   h += "</div>";
-  /* 可问语料说明 */
+  /* A07: 服务状态前置说明 + 可问语料范围 */
+  if(AI_STATUS && !AI_STATUS.enabled){
+    h += "<div class='homeNote aiOff'>AI 问答当前未开放：" + esc(AI_STATUS.reason || "AI 服务当前不可用。") +
+         " 经典研读、专题四步、摘录笔记、书房与备份导出都可以正常使用。</div>";
+  }
   h += "<div class='homeNote'>AI 研究室的回答范围：目前只覆盖《中国的红色政权为什么能够存在？》《井冈山的斗争》两篇原文；其他篇目可以阅读、收藏、记笔记，但不会被 AI 引用。语料不足时会直接说明「资料不足」，不编造。</div>";
   h += "<div class='homeNote'>资料来源：《毛泽东选集》第一至五卷（人民出版社）· 本站仅作个人学习研读之用 · 收藏与阅读位置仅保存在当前浏览器</div>";
   h += "</div>";
@@ -993,8 +1145,32 @@ document.addEventListener("click", function(e){
     __sampleTopicCache = j;
   }).catch(function(){});
 })();
+/* A07: 预取 AI 服务状态（首页在提问前就告知可用性，而不是等用户失败一次） */
+var AI_STATUS = null;
+function loadAiStatus(cb){
+  if(AI_STATUS){ if(cb) cb(AI_STATUS); return; }
+  fetch("api/status").then(function(r){ return r.json(); }).then(function(j){
+    AI_STATUS = (j && j.ok && j.ai) ? j.ai : { enabled:false, reasonCode:"ai_unavailable", reason:"AI 服务当前不可用。阅读与笔记不受影响。" };
+    if(cb) cb(AI_STATUS);
+    if(state.view === "home") renderHome();
+  }).catch(function(){
+    AI_STATUS = { enabled:false, reasonCode:"ai_unavailable", reason:"AI 服务当前不可用。阅读与笔记不受影响。", offline:true };
+    if(cb) cb(AI_STATUS);
+  });
+}
 /* P04: 预取专题配置，首页/书房可显示真实专题状态 */
 (function(){ if(typeof loadTopicCfg === "function") loadTopicCfg(); })();
+(function(){ if(typeof loadAiStatus === "function") loadAiStatus(); })();
+/* A11: 版本标识（页面显示的 commit 与实际部署对应） */
+(function(){
+  fetch("data/version.json").then(function(r){ return r.json(); }).then(function(v){
+    var el = document.getElementById("verTag");
+    if(el && v){
+      el.textContent = (v.product || "AIBIGPLAYER V2") + " · " + (v.releaseTag || "") +
+        (v.sourceCommit ? " · " + String(v.sourceCommit).slice(0, 7) : "");
+    }
+  }).catch(function(){});
+})();
 
 /* ---------- data prep ---------- */
 var ARTS = DATA;
@@ -1975,11 +2151,12 @@ function track(ev, props){
     return;
   }
   try{
-    var key = ev + ":" + (p.articleId || p.pageType || "");
+    /* F09: 去重键包含对象与步骤，避免快速连续操作被误合并；不上传 referrer 原文 */
+    var key = ev + ":" + (p.articleId || p.pageType || "") + ":" + (p.topicId || "") + ":" + (p.stepId || p.kind || "");
     var now = Date.now();
-    if(trackSeq[key] && now - trackSeq[key] < 3000) return;  /* dedupe burst */
+    if(trackSeq[key] && now - trackSeq[key] < 3000) return;
     trackSeq[key] = now;
-    var body = JSON.stringify({event:ev, props:p, ts:now, ref:document.referrer || ""});
+    var body = JSON.stringify({event:ev, props:p, ts:now});
     if(navigator.sendBeacon) navigator.sendBeacon(window.MX_ANALYTICS_ENDPOINT, body);
     else fetch(window.MX_ANALYTICS_ENDPOINT, {method:"POST", body:body, keepalive:true}).catch(function(){});
   }catch(e){}
@@ -2055,28 +2232,37 @@ function doSearch(q){
     bindSearchRows(res);
   });
 }
-/* ---------- P03.4: 本地摘录 / 笔记（不依赖 AI，全部本机存储） ---------- */
+/* ---------- P03.4 / A01: 本地摘录与笔记 —— 统一走 MXStore（损坏绝不覆盖） ---------- */
 var NOTES_KEY = "mx_notes";
 function loadNotes(){
-  try{ var x = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); return Array.isArray(x) ? x : []; }
-  catch(e){ return []; }
+  var r = MXStore.read(NOTES_KEY, "array");
+  return r.status === "ok" ? r.value : [];
 }
+function notesStatus(){ return MXStore.read(NOTES_KEY, "array"); }
 function saveNotes(list){
-  try{ localStorage.setItem(NOTES_KEY, JSON.stringify(list)); return true; }
-  catch(e){ toast("笔记保存失败：本地存储不可用或空间不足"); return false; }
+  var w = MXStore.write(NOTES_KEY, list);
+  if(!w.ok) toast("笔记保存失败：" + w.error);
+  return w.ok;
 }
 function notesFor(artId){
   return loadNotes().filter(function(n){ return n.articleId === artId; });
 }
 function addNote(rec){
-  var list = loadNotes();
   rec.id = "n" + Date.now() + "_" + Math.floor(Math.random() * 1000);
   rec.createdAt = Date.now();
-  list.push(rec);
-  return saveNotes(list) ? rec : null;
+  var out = MXStore.update(NOTES_KEY, "array", function(list){ return list.concat([rec]); });
+  if(out.ok) return rec;
+  if(out.status === "corrupt"){
+    toast("笔记未保存：本地笔记数据已损坏，为保留原始内容已中止写入。请到书房复制原始内容后再处理。");
+  }else{
+    toast("笔记保存失败：" + (out.error || "本地存储不可用"));
+  }
+  return null;
 }
 function delNote(id){
-  saveNotes(loadNotes().filter(function(n){ return n.id !== id; }));
+  var out = MXStore.deleteWithTrash({ collKey: NOTES_KEY, kind: "note", id: id });
+  if(!out.ok) toast("删除失败：" + out.error);
+  return out.ok;
 }
 function initNoteTools(view, a, anchorPara){
   var bar = document.getElementById("selBar");

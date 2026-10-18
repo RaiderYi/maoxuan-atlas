@@ -60,8 +60,11 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .rcard .cbtns button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
 .rcard .aiTag{display:inline-block;font-size:10px;color:#fff;background:var(--gold);border-radius:8px;padding:1px 8px;margin-left:6px;letter-spacing:1px}
 .rcard textarea{width:100%;font-family:inherit;font-size:13px;line-height:1.9;border:1px solid var(--gold);border-radius:8px;padding:8px;background:#fffdf5;color:var(--ink);box-sizing:border-box}
+/* A07: 服务状态提示（读者可见，不含配置细节） */
+.aiBanner{font-size:13px;color:#8a3b2e;background:rgba(176,58,46,.07);border:1px solid rgba(176,58,46,.3);border-radius:10px;padding:12px 14px;margin:0 0 12px;line-height:1.9}
+.aiBanner b{display:block;font-size:13.5px;margin-bottom:4px;color:#7d2f24}
 /* P05.2 / P05.5: 缺口说明 · 下一步 · 纠错 */
-.gapBox{font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px solid var(--gold);
+font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px solid var(--gold);
   padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;line-height:1.9}
 .nextStep{font-size:13px;color:var(--ink2);background:rgba(90,79,69,.06);border-radius:8px;padding:10px 12px;
   margin-top:10px;line-height:1.95}
@@ -90,6 +93,7 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
     <button id="scopeAll">改回全语料</button>
     <a id="scopeBack" style="display:none">← 返回</a>
   </div>
+  <div class="aiBanner" id="aiBanner" style="display:none"></div>
   <div class="qbox">
     <input id="q" maxlength="300" placeholder="例如：红色政权为什么能够存在？">
     <button id="ask">提 问</button>
@@ -117,6 +121,7 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
   </div>
   <div class="footer">答案基于两篇原文；引用可点开核对。研究卡保存在本机浏览器，可导出 Markdown。</div>
 </div>
+<script src="lib/mx-store.js"></script>
 <script>
 (function(){
 "use strict";
@@ -125,9 +130,27 @@ function el(id){ return document.getElementById(id); }
 var ART_TITLES = { v1n03: "\u4e2d\u56fd\u7682\u7ea2\u8272\u653f\u6743\u4e3a\u4ec0\u4e48\u80fd\u591f\u5b58\u5728\uff1f", v1n04: "\u4e95\u5188\u5c71\u7684\u6597\u4e89" };
 var scopeArt = [];
 var scopeFrom = null;
+var scopePara = null;          /* B05: 从正文"解释此段"带来的段落锚点 */
+function anchorToEvidenceId(pid){
+  /* pa-v1n03-033 → pv1n03-033（同一段号，两种 ID 的显式映射） */
+  var m = /^pa-(v\d+n\d+)-(\d+)$/.exec(pid || "");
+  return m ? "p" + m[1] + "-" + m[2] : null;
+}
 (function parseScope(){
   try{
     var u = new URLSearchParams(location.search);
+    var paraRaw = u.get("para") || "";
+    if(paraRaw){
+      scopePara = anchorToEvidenceId(paraRaw);
+      if(!scopePara){
+        /* 已是证据 ID 形式则直接用；否则记原文提示，避免悄悄退回整篇 */
+        scopePara = /^pv\d+n\d+-\d+$/.test(paraRaw) ? paraRaw : null;
+      }
+      if(!scopePara){
+        var pe = document.getElementById("scopeParaWarn");
+        if(pe) pe.style.display = "block";
+      }
+    }
     var a = u.get("art") || "";
     scopeArt = a.split(",").map(function(s){ return s.trim(); }).filter(function(s){ return ART_TITLES[s]; });
     scopeFrom = u.get("from") || null;   // e.g. scene:sc_jgs_02
@@ -193,10 +216,15 @@ function ask(){
   el("answer").textContent = "思考中（模型通常需要 15~40 秒）……";
   el("result").style.display = "block";
   var reqBody = { question: q };
-  if(scopeFrom && scopeFrom.indexOf("topic:") === 0){
-    reqBody.scope = { topicId: scopeFrom.slice(6) };      /* P05.1 专题范围契约 */
+  if(scopePara){
+    /* B05: 段落范围必须真正送到服务端（此前只发 articleIds，等于问整篇） */
+    reqBody.scope = { mode: "paragraphs", paragraphIds: [scopePara] };
+  } else if(scopeFrom && scopeFrom.indexOf("topic:") === 0){
+    reqBody.scope = { topicId: scopeFrom.slice(6) };
   } else if(scopeArt.length){
-    reqBody.scope = { articleIds: scopeArt };             /* P05.1 文章范围契约 */
+    reqBody.scope = { articleIds: scopeArt };
+  } else {
+    reqBody.scope = { mode: "corpus" };                   /* 显式全语料，不依赖默认 */
   }
   fetch("api/ask", {
     method: "POST",
@@ -209,10 +237,11 @@ function ask(){
     var j = o.j;
     if(!j || !j.ok){
       el("result").style.display = "none";
-      var msg = (j && j.error && j.error.message) || ("HTTP " + o.status);
+      var rawMsg = (j && j.error && j.error.message) || ("HTTP " + o.status);
       var code = (j && j.error && j.error.code) || "";
-      el("err").textContent = "请求未成功：" + msg + (code ? "（" + code + "）" : "") +
-        " · 问题已保留在输入框，可修改后重试" + (o.rid ? " · 请求号 " + o.rid : "");
+      el("err").textContent = friendlyError(code, rawMsg) +
+        " 问题已保留在输入框，可修改后重试" +
+        (o.rid ? " · 请求号 " + o.rid + "（反馈时提供）" : "");
       el("err").style.display = "block";
       return;   /* 不自动清空问题：错误后仍可修改重试 */
     }
@@ -291,6 +320,52 @@ el("cancel").onclick = function(){
 };
 el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter" && !busy) ask(); });
 
+/* ---------- A07: 提问前先告知服务状态；关闭态不发出任何模型请求 ---------- */
+var AI_STATE = { enabled: null, reason: "" };
+function friendlyError(code, msg){
+  var map = {
+    provider_not_configured: "AI 服务尚未开放。阅读、摘录与书房都可正常使用。",
+    budget_not_configured: "AI 问答还没有开放。阅读与笔记不受影响。",
+    budget_exhausted: "本次试用额度已用完，AI 问答暂时关闭。阅读与笔记不受影响。",
+    upstream_insufficient: "AI 服务额度暂时用完，已停止生成。阅读与笔记不受影响。",
+    rate_limited: "提问过于频繁，请稍等一分钟再试。",
+    upstream_rate_limited: "上游限流，请稍后重试。",
+    upstream_timeout: "本次回答超时，未产生结果；已发出的调用仍可能计费。",
+    citation_validation_failed: "模型输出未通过引用校验，已拦截，未展示任何未经核验的答案。",
+    scope_invalid: "提问范围无效：" + (msg || "请回到原文重新选择段落。"),
+    scope_empty: "所选范围内没有可检索的原文段落。",
+    ai_unavailable: "AI 服务当前不可用。阅读与笔记不受影响。",
+  };
+  return map[code] || (msg || "请求未成功，请稍后重试。");
+}
+(function loadAiState(){
+  fetch("api/status").then(function(r){ return r.json(); }).then(function(j){
+    if(j && j.ok && j.ai){
+      AI_STATE = j.ai;
+    }
+  }).catch(function(){}).then(function(){
+    if(AI_STATE.enabled === false){
+      var b = el("aiBanner");
+      if(b){
+        b.style.display = "block";
+        b.innerHTML = "";
+        var t = document.createElement("b"); t.textContent = "AI 问答暂未开放";
+        b.appendChild(t);
+        b.appendChild(document.createTextNode(AI_STATE.reason || "AI 服务当前不可用。"));
+        var li = document.createElement("div");
+        li.style.marginTop = "6px";
+        li.textContent = "仍可正常使用：经典研读 · 专题四步 · 摘录与笔记 · 我的书房 · 备份导出。已保存的历史研究卡可以查看与导出。";
+        b.appendChild(li);
+      }
+      el("ask").disabled = true;
+      el("ask").title = AI_STATE.reason || "";
+      el("ask").textContent = "AI 暂未开放";
+      var sug = el("sugg");
+      if(sug) sug.style.opacity = "0.5";
+    }
+  });
+})();
+
 /* ---------- WP08: 本地研究卡 (localStorage, 无账号; 存储失败明确提示不假成功) ---------- */
 var CARDS_KEY = "mx_research_cards";
 var CORPUS_VER_FALLBACK = "sample-topic v1 (v1n03+v1n04, 832段, 2026-10) [前端回退值]";  // 服务端 corpusVersion 缺失时才用
@@ -348,75 +423,143 @@ function sendFlag(kind, citationId){
     })
     .catch(function(e){ alert("反馈发送失败：" + e); });
 }
+/* ---------- A05/A06: 研究卡统一 schema（原始回答不可改）+ 删除可恢复 ----------
+   字段: id, question, answerRaw(不可改), editedAnswer(可空), citations, model, status,
+        corpusVersion, promptVersion, pipelineVersion, scope, requestId, createdAt, updatedAt,
+        historyMissing(旧卡原文不可恢复时明确标注), ts(兼容旧字段) */
+var cardsCorrupt = false;
+function migrateCards(list){
+  var changed = false;
+  list.forEach(function(c){
+    if(!c || typeof c !== "object") return;
+    if(c.answerRaw === undefined){
+      /* 旧卡：若此前已被改写，无法确定原始回答 → 标注缺失，而不是把改写当原文 */
+      if(c.edited){ c.answerRaw = ""; c.historyMissing = true; }
+      else { c.answerRaw = c.answer || ""; }
+      changed = true;
+    }
+    if(c.editedAnswer === undefined){ c.editedAnswer = c.edited ? (c.answer || null) : null; changed = true; }
+    if(!c.createdAt){ c.createdAt = c.ts || Date.now(); changed = true; }
+    if(c.ts === undefined){ c.ts = c.createdAt; changed = true; }
+    if(!c.updatedAt){ c.updatedAt = c.createdAt; changed = true; }
+  });
+  return changed;
+}
+function cardText(c){ return (c.editedAnswer != null && c.editedAnswer !== "") ? c.editedAnswer : (c.answerRaw || c.answer || ""); }
 function loadCards(){
-  try{ return JSON.parse(localStorage.getItem(CARDS_KEY) || "[]"); }catch(e){ return []; }
+  var r = MXStore.read(CARDS_KEY, "array");
+  cardsCorrupt = (r.status === "corrupt");
+  var list = (r.status === "ok") ? (r.value || []) : [];
+  if(migrateCards(list) && !cardsCorrupt) MXStore.write(CARDS_KEY, list);
+  return list;
 }
 function saveCards(list){
-  try{
-    localStorage.setItem(CARDS_KEY, JSON.stringify(list));
-    return true;
-  }catch(e){
-    alert("研究卡保存失败：本地存储不可用（" + e + "）");
-    return false;
-  }
+  var w = MXStore.write(CARDS_KEY, list);
+  if(!w.ok) alert("研究卡保存失败：" + w.error + "（原数据未改动）");
+  return w.ok;
+}
+function updateCard(id, mutator){
+  var out = MXStore.update(CARDS_KEY, "array", function(list){
+    for(var i=0;i<list.length;i++){ if(list[i] && list[i].id === id) mutator(list[i]); }
+    return list;
+  });
+  if(!out.ok) alert("研究卡未保存：" + (out.status === "corrupt" ? "本地数据损坏，已中止写入以保留原值" : out.error));
+  return out.ok;
 }
 function renderCards(){
   var list = loadCards();
   el("cardCnt").textContent = list.length ? "(" + list.length + ")" : "";
   var box = el("cardList");
   box.innerHTML = "";
-  if(!list.length){
+  if(cardsCorrupt){
+    var warn = document.createElement("p");
+    warn.style.cssText = "font-size:12px;color:#8a3b2e;line-height:1.8";
+    warn.textContent = "本地研究卡数据读取失败（不等于没有卡片）。为避免覆盖，本页暂不允许改写或删除；请到书房复制原始内容后再处理。";
+    box.appendChild(warn);
+  }
+  if(!list.length && !cardsCorrupt){
     var p = document.createElement("p");
     p.style.cssText = "font-size:12px;color:var(--ink2)";
-    p.textContent = "还没有研究卡。提问后将答案保存到这里，可编辑、删除、导出 Markdown。";
+    p.textContent = "还没有研究卡。提问后将答案保存到这里，可改写、删除（可从书房回收站恢复）、导出 Markdown。";
     box.appendChild(p);
     return;
   }
   list.forEach(function(c){
     var d = document.createElement("div");
     d.className = "rcard";
-    /* 全部用 textContent 构建 — 用户/AI 内容不进 innerHTML (导出再展示不执行脚本) */
     var q = document.createElement("div"); q.className = "cq";
     q.textContent = "问：" + c.question;
     d.appendChild(q);
     var meta = document.createElement("div"); meta.className = "cmeta";
     var tag = document.createElement("span"); tag.className = "aiTag"; tag.textContent = "AI归纳";
-    meta.textContent = new Date(c.ts).toLocaleString() + " · " + (c.model || "?") + " · 语料 " + (c.corpusVer || "?") + (c.edited ? " · 已人工改写" : "");
+    meta.textContent = new Date(c.createdAt || c.ts).toLocaleString() + " · " + (c.model || "?") +
+      " · 语料 " + (c.corpusVersion || c.corpusVer || "?") +
+      (c.pipelineVersion ? " · 管线 " + c.pipelineVersion : "") +
+      (c.requestId ? " · " + c.requestId : "") +
+      (c.editedAnswer ? " · 含人工改写" : "");
     meta.appendChild(tag);
     d.appendChild(meta);
     var a = document.createElement("div"); a.className = "ca";
-    a.textContent = c.answer;
+    a.textContent = cardText(c);
     d.appendChild(a);
+    if(c.historyMissing){
+      var hm = document.createElement("div");
+      hm.style.cssText = "font-size:11.5px;color:#8a3b2e;margin-top:4px";
+      hm.textContent = "原始 AI 回答缺失（旧数据在改写时未保留副本），当前显示的是人工改写。";
+      d.appendChild(hm);
+    } else if(c.editedAnswer){
+      var raw = document.createElement("details");
+      raw.style.cssText = "margin-top:6px;font-size:12px;color:var(--ink2)";
+      var sum = document.createElement("summary"); sum.textContent = "查看原始 AI 回答";
+      raw.appendChild(sum);
+      var rawBody = document.createElement("div");
+      rawBody.style.cssText = "margin-top:6px;line-height:1.85";
+      rawBody.textContent = c.answerRaw || "";
+      raw.appendChild(rawBody);
+      d.appendChild(raw);
+    }
     if(c.citations && c.citations.length){
       var ci = document.createElement("div"); ci.className = "ccits";
       ci.textContent = "引用：" + c.citations.map(function(x){ return x.id + "（" + (x.quote || "") + "）"; }).join("；");
       d.appendChild(ci);
     }
+    if(c.scope && c.scope.mode){
+      var sc = document.createElement("div");
+      sc.style.cssText = "font-size:11.5px;color:var(--ink2);margin-top:4px";
+      sc.textContent = "提问范围：" + (c.scope.mode === "corpus" ? "全语料" :
+        ((c.scope.paragraphIds && c.scope.paragraphIds.length) ? c.scope.paragraphIds.length + " 个段落" :
+         ((c.scope.articleIds || []).length + " 篇文章" + (c.scope.topicId ? "（专题 " + c.scope.topicId + "）" : ""))));
+      d.appendChild(sc);
+    }
     var btns = document.createElement("div"); btns.className = "cbtns";
     var bEdit = document.createElement("button"); bEdit.textContent = "改写";
     var bDel = document.createElement("button"); bDel.textContent = "删除";
+    if(cardsCorrupt){ bEdit.disabled = true; bDel.disabled = true; }
     btns.appendChild(bEdit); btns.appendChild(bDel);
     d.appendChild(btns);
     bEdit.onclick = function(){
       var ta = document.createElement("textarea");
-      ta.rows = 6; ta.value = c.answer;
+      ta.rows = 6; ta.value = cardText(c);
       a.replaceWith(ta);
       var bSave = document.createElement("button"); bSave.textContent = "保存改写";
       var bCancel = document.createElement("button"); bCancel.textContent = "取消";
       bSave.onclick = function(){
-        var list2 = loadCards();
-        for(var i = 0; i < list2.length; i++){
-          if(list2[i].id === c.id){ list2[i].answer = ta.value; list2[i].edited = true; break; }
-        }
-        if(saveCards(list2)){ renderCards(); }
+        var ok = updateCard(c.id, function(card){
+          card.editedAnswer = ta.value;
+          card.edited = true;
+          card.updatedAt = Date.now();
+          if(card.answerRaw === undefined) card.answerRaw = "";
+        });
+        if(ok) renderCards();
       };
       bCancel.onclick = function(){ renderCards(); };
       btns.innerHTML = "";
       btns.appendChild(bSave); btns.appendChild(bCancel);
     };
     bDel.onclick = function(){
-      if(!confirm("删除这张研究卡？")) return;
-      saveCards(loadCards().filter(function(x){ return x.id !== c.id; }));
+      if(!confirm("删除这张研究卡？删除后可在本站书房的回收站恢复。")) return;
+      var out = MXStore.deleteWithTrash({ collKey: CARDS_KEY, kind: "card", id: c.id });
+      if(!out.ok){ alert("删除失败：" + out.error + "（原卡片已保留）"); return; }
       renderCards();
     };
     box.appendChild(d);
@@ -424,29 +567,48 @@ function renderCards(){
 }
 el("saveCard").onclick = function(){
   if(!lastAnswer){ return; }
-  var list = loadCards();
-  list.unshift({
-    id: "rc" + Date.now(),
-    ts: Date.now(),
+  if(cardsCorrupt){
+    alert("本地研究卡数据损坏，为保留原始内容已中止保存。请到书房复制原始内容后再处理。");
+    return;
+  }
+  var now = Date.now();
+  var card = {
+    id: "rc" + now,
     question: lastAnswer.question,
-    answer: lastAnswer.answer,
+    answerRaw: lastAnswer.answer,
+    editedAnswer: null,
     citations: lastAnswer.citations || [],
     model: lastAnswer.model,
     status: lastAnswer.status,
-    corpusVer: lastAnswer.corpusVer || CORPUS_VER_FALLBACK,
-    edited: false,
-  });
-  if(saveCards(list)){
+    corpusVersion: lastAnswer.corpusVer || CORPUS_VER_FALLBACK,
+    promptVersion: (lastRequest && lastRequest.promptVersion) || null,
+    pipelineVersion: (lastRequest && lastRequest.pipelineVersion) || null,
+    scope: (lastRequest && lastRequest.scope) || null,
+    requestId: (lastRequest && lastRequest.requestId) || null,
+    createdAt: now, updatedAt: now, ts: now, edited: false,
+  };
+  var out = MXStore.update(CARDS_KEY, "array", function(list){ return [card].concat(list); });
+  if(out.ok){
     renderCards();
     el("saveCard").textContent = "已保存 ✓";
     setTimeout(function(){ el("saveCard").textContent = "保存为研究卡"; }, 1500);
+  }else if(out.status === "corrupt"){
+    alert("研究卡未保存：本地数据损坏，已中止写入以保留原值。");
+  }else{
+    alert("研究卡保存失败：" + (out.error || "本地存储不可用"));
   }
 };
 el("clearCards").onclick = function(){
-  if(!loadCards().length){ return; }
-  if(!confirm("确定删除全部研究卡？此操作不可恢复。")) return;
-  saveCards([]);
+  var list = loadCards();
+  if(!list.length){ return; }
+  if(!confirm("将 " + list.length + " 张研究卡移入书房回收站？可逐张恢复。")) return;
+  var moved = 0, failed = 0;
+  list.forEach(function(c){
+    var o = MXStore.deleteWithTrash({ collKey: CARDS_KEY, kind: "card", id: c.id });
+    if(o.ok) moved++; else failed++;
+  });
   renderCards();
+  if(failed) alert("已移入回收站 " + moved + " 张，" + failed + " 张失败（失败的原卡片仍在）。");
 };
 el("exportMd").onclick = function(){
   var list = loadCards();

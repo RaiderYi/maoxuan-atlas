@@ -21,17 +21,30 @@ export class ScopeError extends Error {
  * @returns {{mode:'corpus'|'articles'|'paragraphs', articleIds:string[], paragraphIds:string[], topicId:string|null, note:string|null}}
  */
 export function resolveScope(body, ctx) {
-  const raw = (body && body.scope) || null;
+  const raw = (body && body.scope !== undefined) ? body.scope : undefined;
   const corpus = ctx.corpusParagraphs || [];
-  const knownArticles = new Set(corpus.map(p => p.articleId));
-  const knownParas = new Set(corpus.map(p => p.id));
+  const byArticle = new Map();
+  const knownParas = new Map();
+  for (const p of corpus) {
+    knownParas.set(p.id, p);
+    if (!byArticle.has(p.articleId)) byArticle.set(p.articleId, []);
+    byArticle.get(p.articleId).push(p.id);
+  }
+  const knownArticles = new Set(byArticle.keys());
   const topics = ctx.topics || {};
 
-  // 1) 完全未指定范围 → 全语料 (显式回显, 不隐藏)
-  if (!raw || (typeof raw === 'object' && Object.keys(raw).length === 0)) {
+  // 1) 完全未提供 scope → 全语料（显式回显 mode=corpus，前端与日志都可见）
+  if (raw === undefined || raw === null) {
     return { mode: 'corpus', articleIds: [...knownArticles].sort(), paragraphIds: [], topicId: null, note: null };
   }
-  if (typeof raw !== 'object') throw new ScopeError('scope_invalid', 'scope 必须是对象');
+  // 2) 提供了但结构非法 → 拒绝（绝不悄悄当成全库）
+  if (typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new ScopeError('scope_invalid', 'scope 必须是对象；查询全语料请省略 scope 或传 {"mode":"corpus"}');
+  }
+  const keys = Object.keys(raw);
+  if (keys.length === 0) {
+    throw new ScopeError('scope_invalid', 'scope 为空对象；查询全语料请省略 scope 或传 {"mode":"corpus"}');
+  }
 
   const mode = String(raw.mode || '').toLowerCase();
   const articleIds = Array.isArray(raw.articleIds) ? [...new Set(raw.articleIds.map(String))] : [];
@@ -39,41 +52,76 @@ export function resolveScope(body, ctx) {
   const topicId = raw.topicId ? String(raw.topicId) : null;
   const note = raw.note ? String(raw.note).slice(0, 120) : null;
 
-  // 2) 主题范围: 必须存在, 且不得夹带该主题以外的文章
+  // 3) 显式全语料
+  if (mode === 'corpus') {
+    if (articleIds.length || paragraphIds.length || topicId) {
+      throw new ScopeError('scope_invalid', 'mode=corpus 不能同时指定 articleIds/paragraphIds/topicId');
+    }
+    return { mode: 'corpus', articleIds: [...knownArticles].sort(), paragraphIds: [], topicId: null, note };
+  }
+  if (mode && !['articles', 'paragraphs'].includes(mode)) {
+    throw new ScopeError('scope_invalid', '未知 scope.mode: ' + mode);
+  }
+
+  // 4) 先校验所有显式 ID（任何非法 ID 都拒绝，不返回半合法范围）
+  const badArticles = articleIds.filter(a => !knownArticles.has(a));
+  if (badArticles.length) throw new ScopeError('scope_invalid', '未知文章: ' + badArticles.join('、'), { badArticles });
+  const badParas = paragraphIds.filter(id => !knownParas.has(id));
+  if (badParas.length) throw new ScopeError('scope_invalid', '未知段落: ' + badParas.slice(0, 5).join('、'), { badParagraphs: badParas });
+
+  // 5) 专题范围
+  let topicArticles = null;
   if (topicId) {
     const t = topics[topicId];
     if (!t) throw new ScopeError('scope_invalid', '未知专题: ' + topicId, { topicId });
-    const allowed = new Set(t.articles || []);
-    const extra = articleIds.filter(a => !allowed.has(a));
+    topicArticles = new Set(t.articles || []);
+    const extra = articleIds.filter(a => !topicArticles.has(a));
     if (extra.length) {
       throw new ScopeError('scope_invalid', '范围包含专题之外的文章: ' + extra.join('、'),
-        { topicId, allowed: [...allowed], extra });
+        { topicId, allowed: [...topicArticles], extra });
     }
-    const arts = articleIds.length ? articleIds : [...allowed];
-    return { mode: 'articles', articleIds: arts.sort(), paragraphIds: [], topicId, note };
   }
 
-  // 3) 段落范围: 全部必须存在; 未给 articleIds 时由段落推导
+  // 6) 段落范围（可与专题/文章组合，但必须一致，不能被忽略）
   if (paragraphIds.length) {
-    const bad = paragraphIds.filter(id => !knownParas.has(id));
-    if (bad.length) throw new ScopeError('scope_invalid', '未知段落: ' + bad.slice(0, 5).join('、'), { badParagraphs: bad });
-    const derived = [...new Set(paragraphIds.map(id => (corpus.find(p => p.id === id) || {}).articleId).filter(Boolean))];
+    const derived = [...new Set(paragraphIds.map(id => knownParas.get(id).articleId))];
+    if (topicArticles) {
+      const outside = derived.filter(a => !topicArticles.has(a));
+      if (outside.length) {
+        throw new ScopeError('scope_invalid', '段落不属于该专题: ' + outside.join('、'), { topicId, outside });
+      }
+    }
     if (articleIds.length) {
       const mismatch = derived.filter(a => !articleIds.includes(a));
-      if (mismatch.length) throw new ScopeError('scope_invalid', '段落与文章范围不一致: ' + mismatch.join('、'), { mismatch });
+      if (mismatch.length) {
+        throw new ScopeError('scope_invalid', '段落与文章范围不一致: ' + mismatch.join('、'), { mismatch });
+      }
     }
-    return { mode: 'paragraphs', articleIds: (articleIds.length ? articleIds : derived).sort(), paragraphIds, topicId: null, note };
+    if (mode === 'articles') {
+      throw new ScopeError('scope_invalid', 'mode=articles 不能同时指定 paragraphIds');
+    }
+    return {
+      mode: 'paragraphs',
+      articleIds: (articleIds.length ? articleIds : derived).sort(),
+      paragraphIds,
+      topicId,
+      note,
+    };
+  }
+  if (mode === 'paragraphs') {
+    throw new ScopeError('scope_invalid', 'mode=paragraphs 需要提供 paragraphIds');
   }
 
-  // 4) 文章范围: 全部必须存在
+  // 7) 文章范围（专题时取专题允许集合）
   if (articleIds.length) {
-    const bad = articleIds.filter(a => !knownArticles.has(a));
-    if (bad.length) throw new ScopeError('scope_invalid', '未知文章: ' + bad.join('、'), { badArticles: bad });
-    return { mode: 'articles', articleIds: articleIds.sort(), paragraphIds: [], topicId: null, note };
+    return { mode: 'articles', articleIds: articleIds.sort(), paragraphIds: [], topicId, note };
+  }
+  if (topicArticles) {
+    return { mode: 'articles', articleIds: [...topicArticles].sort(), paragraphIds: [], topicId, note };
   }
 
-  // 5) 给了 scope 但等于空集 → 拒绝 (绝不悄悄返回全库)
-  throw new ScopeError('scope_invalid', 'scope 未包含任何有效范围; 若要查询全语料请显式省略 scope 或传 mode:"corpus"');
+  // 8) 提供了 scope 但没有任何有效范围 → 拒绝
+  throw new ScopeError('scope_invalid', 'scope 未包含任何有效范围；查询全语料请省略 scope 或传 {"mode":"corpus"}');
 }
 
 export function scopeParagraphs(scope, corpusParagraphs) {
@@ -98,8 +146,11 @@ async function kvCmd(args) {
     headers: { Authorization: `Bearer ${KV_TOKEN}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(args),
   });
-  if (!r.ok) throw new Error('kv ' + r.status);
-  return r.json();
+  if (!r.ok) throw new Error('kv http ' + r.status);
+  const j = await r.json().catch(() => ({}));
+  // Upstash/Vercel KV 在命令错误时仍返回 HTTP 200，body 里带 error 字段
+  if (j && j.error) throw new Error('kv cmd error: ' + String(j.error));
+  return j;
 }
 
 const memBuckets = new Map();
@@ -133,13 +184,14 @@ export async function rateLimit(key, maxPerWindow, windowMs = 60_000) {
 const LEDGER_KEY = 'ledger:ai';
 
 export async function recordUsage(entry, { dayKey } = {}) {
-  // entry: { calls, costKnown, cost, requestId, model, status, code }
+  // entry: { calls, costKnown, cost, requestId, attemptId, model, status, code }
   const day = dayKey || new Date().toISOString().slice(0, 10);
   const calls = Number(entry.calls ?? 0);
   const cost = entry.costKnown && typeof entry.cost === 'number' ? entry.cost : null;
   const line = {
     t: 'ai_ledger', ts: Date.now(), day,
     requestId: entry.requestId ?? null,
+    attemptId: entry.attemptId ?? null,
     model: entry.model ?? null,
     status: entry.status ?? null,
     code: entry.code ?? null,
@@ -151,16 +203,29 @@ export async function recordUsage(entry, { dayKey } = {}) {
   console.log(JSON.stringify(line));   // 始终落 stdout (Vercel 日志)
   if (kvConfigured()) {
     try {
-      await kvCmd(['HINCRBY', `${LEDGER_KEY}:${day}`, 'calls', String(calls)]);
-      if (cost === null) await kvCmd(['HINCRBY', `${LEDGER_KEY}:${day}`, 'unknownCostCalls', String(calls)]);
-      else await kvCmd(['INCRBYFLOAT', `${LEDGER_KEY}:${day}`, 'cost', String(cost)]);
-      await kvCmd(['EXPIRE', `${LEDGER_KEY}:${day}`, String(60 * 60 * 24 * 90)]);
+      // 幂等: 同一 (requestId|attemptId) 只结算一次; 重试/重复回调不会重复计费
+      const idemKey = `ledger:idem:${entry.requestId ?? 'noreq'}:${entry.attemptId ?? 'final'}`;
+      const idem = await kvCmd(['SET', idemKey, '1', 'NX', 'EX', '86400']);
+      if (idem && idem.result === null) {
+        return { persisted: true, deduped: true, ...line };
+      }
+      const hk = `${LEDGER_KEY}:${day}`;
+      await kvCmd(['HINCRBY', hk, 'calls', String(calls)]);
+      if (cost === null) {
+        await kvCmd(['HINCRBY', hk, 'unknownCostCalls', String(calls)]);
+      } else {
+        // 金额在 hash 字段上累加, 必须用 HINCRBYFLOAT (INCRBYFLOAT 是字符串键命令)
+        await kvCmd(['HINCRBYFLOAT', hk, 'cost', String(cost)]);
+      }
+      await kvCmd(['EXPIRE', hk, String(60 * 60 * 24 * 90)]);
       return { persisted: true, ...line };
     } catch (e) {
       console.log(JSON.stringify({ t: 'kv_error', where: 'ledger', msg: String(e.message) }));
+      // 落库失败不得伪装成功: persisted=false + 原因
+      return { persisted: false, ...line, error: String(e.message) };
     }
   }
-  return { persisted: false, ...line };
+  return { persisted: false, ...line, reason: 'kv_not_configured' };
 }
 
 export async function readUsage(dayKey) {
@@ -206,4 +271,67 @@ export async function recordFeedback(entry) {
     }
   }
   return { persisted: false };
+}
+
+/* ---------- B02/B03: 跨实例原子预算 ----------
+   - 有 KV: INCRBY 原子预占, 超限立刻 DECRBY 回滚; 冷启动/多实例共享同一计数
+   - KV 故障: 一律拒绝新增调用 (不因治理服务故障而放开成本控制)
+   - 无 KV: 进程内计数, 明确标注 scope='instance' (不当成全局额度) */
+export async function makeBudget() {
+  const rawLimit = process.env.BUDGET_LIMIT_CREDIT;
+  const limit = (rawLimit && /^\d+(\.\d+)?$/.test(String(rawLimit))) ? parseFloat(rawLimit) : null;
+  const period = process.env.BUDGET_PERIOD || new Date().toISOString().slice(0, 10);
+  const key = `budget:used:${period}`;
+  const kv = kvConfigured();
+  let instanceUsed = 0;
+  const api = {
+    configured: limit !== null,
+    limit,
+    period,
+    scope: kv ? 'global' : 'instance',
+    async reserve(n = 1) {
+      if (limit === null) return false;
+      if (kv) {
+        try {
+          const r = await kvCmd(['INCRBY', key, String(n)]);
+          const used = Number(r.result);
+          if (!Number.isFinite(used)) throw new Error('kv bad reply');
+          if (used > limit) { await kvCmd(['DECRBY', key, String(n)]); return false; }
+          return true;
+        } catch (e) {
+          console.log(JSON.stringify({ t: 'kv_error', where: 'budget', msg: String(e && e.message) }));
+          return false;                       // 治理服务故障 → 停止新增调用
+        }
+      }
+      if (instanceUsed + n > limit) return false;
+      instanceUsed += n;
+      return true;
+    },
+    async release(n = 1) {
+      if (kv) { try { await kvCmd(['DECRBY', key, String(n)]); } catch { /* 释放失败不掩盖 */ } }
+      else instanceUsed = Math.max(0, instanceUsed - n);
+    },
+    async used() {
+      if (kv) {
+        try { const r = await kvCmd(['GET', key]); return Number(r.result || 0) || 0; }
+        catch { return null; }
+      }
+      return instanceUsed;
+    },
+    async left() {
+      if (limit === null) return null;
+      const u = await api.used();
+      return u === null ? null : Math.max(0, limit - u);
+    },
+    async exhausted() {
+      if (limit === null) return false;
+      const u = await api.used();
+      if (u === null) return true;            // 读不到状态 → 视为不可用, 阻断
+      return u >= limit;
+    },
+    markExhausted() { if (!kv && limit !== null) instanceUsed = limit; },
+    /* 兼容同步调用点 (测试/旧代码): 无 KV 时的快速判断 */
+    _instanceUsed: () => instanceUsed,
+  };
+  return api;
 }

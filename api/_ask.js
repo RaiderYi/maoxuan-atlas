@@ -218,7 +218,7 @@ export async function askPipeline(question, opts, log) {
     const tCall = Date.now();
     let r;
     // P0-r4: 每次模型调用**前**预占额度 (含重试)。额度耗尽 → 抛 402 阻断, 不发起调用。
-    if (opts.budget && !opts.budget.reserve(1)) {
+    if (opts.budget && !(await opts.budget.reserve(1))) {
       const err = new Error('budget exhausted (pre-reserve)');
       err.code = 'BUDGET_EXHAUSTED';
       err.status = 402;

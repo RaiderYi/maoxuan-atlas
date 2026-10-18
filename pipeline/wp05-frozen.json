@@ -1,15 +1,20 @@
 {
- "frozenAt": "2026-10-18T18:01:15",
+ "frozenAt": "2026-10-18T22:58:29",
+ "hashNormalization": "CRLF/CR -> LF before sha256 (A09)",
  "promptVersion": "wp07-r2",
  "pipelineVersion": "wp07-r3",
  "corpusFile": "site/data/sample-topic.json",
- "corpusSha256_16": "2b6ab3753853bcd3",
+ "corpusSha256_16": "d038279340bdbb57",
  "corpusVersionSha256": "7ffb02f16c799564abbc23860494ac388a63ef5ba89a297697466b4d33da56d6",
+ "askJsSha256_16": "4ae7dd0b5418ead9",
+ "promptSha256_16": "ab8831b8e4f88151",
+ "retrieveSha256_16": "851ee18266163e67",
  "retrieve": {
   "top": 8,
   "minScore": 2,
   "expandNeighbors": true
  },
  "questionsFile": "pipeline/p05-questions.json",
- "note": "此清单由 p05_eval.py 首次运行生成; 修改语料/提示词/检索参数后必须重新生成并记录原因"
+ "questionsSha256_16": "f417a572c95dc24a",
+ "note": "修改语料/提示词/检索实现/题目后必须重新冻结，并在提交说明里写明原因"
 }
