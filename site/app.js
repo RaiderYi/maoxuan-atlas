@@ -167,7 +167,10 @@ function renderCatalog(){
   h += "<div class='catNote'>共收录 217 篇 · 数据为本站语料统计 · 收藏标记仅保存在当前浏览器</div></div>";
   v.innerHTML = h;
   v.querySelectorAll("li[data-id]").forEach(function(li){
-    li.addEventListener("click", function(){ setHash("#/art/"+li.getAttribute("data-id")); });
+    li.addEventListener("click", function(){
+      setOrigin({ type:"cats" });
+      setHash("#/art/"+li.getAttribute("data-id"));
+    });
   });
   v.querySelectorAll(".catBar button[data-vol]").forEach(function(b){
     b.addEventListener("click", function(){
@@ -245,6 +248,8 @@ function renderStudy(){
   h += "<div class='studyCard'><div class='num'>" + reads.length + "</div><div class='lb'>已读篇目（有阅读位置记录）</div><a class='lk' href='#/view/cats'>去经典研读</a></div>";
   h += "<div class='studyCard'><div class='num'>" + marks.length + "</div><div class='lb'>收藏篇目</div><a class='lk' href='#/view/cats'>在目录中查看带 ★ 的篇目</a></div>";
   h += "<div class='studyCard'><div class='num'>" + cards.length + "</div><div class='lb'>研究卡</div><a class='lk' href='research.html'>去 AI 研究室查看 / 导出</a></div>";
+  var noteCnt = loadNotes().length;
+  h += "<div class='studyCard'><div class='num'>" + noteCnt + "</div><div class='lb'>摘录与笔记</div><a class='lk' href='#/view/cats'>在原文中选中文字即可摘录</a></div>";
   h += "</div>";
 
   if(recentIds.length){
@@ -361,6 +366,23 @@ document.querySelectorAll("nav button, #tabbar button").forEach(function(b){
   document.addEventListener("click", function(e){
     if(!g.contains(e.target)){ menu.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
   });
+})();
+
+/* P03.3: 从专题/书房/首页卡片进入文章时记录来源，供文章页显示对应返回按钮 */
+document.addEventListener("click", function(e){
+  var a = e.target && e.target.closest ? e.target.closest("a[href^='#/art/']") : null;
+  if(!a) return;
+  var v = state && state.view;
+  if(v === "topic") setOrigin({ type:"topic" });
+  else if(v === "study") setOrigin({ type:"study" });
+  else if(v === "cats") setOrigin({ type:"cats" });
+});
+/* P03.2: 预取样本段落数据，保证深链锚点可同步解析 */
+(function(){
+  if(typeof fetch !== "function") return;
+  fetch("data/sample-topic.json").then(function(r){ return r.json(); }).then(function(j){
+    __sampleTopicCache = j;
+  }).catch(function(){});
 })();
 
 /* ---------- data prep ---------- */
@@ -901,16 +923,19 @@ function renderStats(){
 
 /* ---------- READER ---------- */
 var FONT_SIZES = [17,19,21];
-function fmtText(raw){
+function fmtText(raw, artId){
   var paras = raw.split(/\n+/);
-  var out = [], head = 2;
+  var out = [], head = 2, pi = 0;
   for(var i=0;i<paras.length;i++){
     var t = paras[i].trim();
     if(!t) continue;
     t = esc(t);                                /* N03: escape article body (defense in depth for future corpus edits) */
-    if(head>0 && (t.indexOf("一九")===0 || /^[（(].*[）)]$/.test(t))){ out.push("<p class='note' style='text-align:center;text-indent:0'>"+t+"</p>"); head--; continue; }
-    if((/^\*/.test(t) || /^〔\d+〕/.test(t) || /^注[:：]/.test(t)) && out.length>10){ out.push("<p class='note'>"+t+"</p>"); continue; }
-    out.push("<p>"+t+"</p>");
+    pi++;                                      /* P03.2: 稳定段号，从 1 开始（与样本 seq 一致） */
+    var pid = artId ? "pa-" + artId + "-" + ("000" + pi).slice(-3) : "";
+    var idAttr = pid ? " id='" + pid + "' data-pi='" + pi + "'" : "";
+    if(head>0 && (t.indexOf("一九")===0 || /^[（(].*[）)]$/.test(t))){ out.push("<p class='note'"+idAttr+" style='text-align:center;text-indent:0'>"+t+"</p>"); head--; continue; }
+    if((/^\*/.test(t) || /^〔\d+〕/.test(t) || /^注[:：]/.test(t)) && out.length>10){ out.push("<p class='note'"+idAttr+">"+t+"</p>"); continue; }
+    out.push("<p"+idAttr+">"+t+"</p>");
   }
   return out.join("");
 }
@@ -943,8 +968,8 @@ function buildToc(){
   v.querySelectorAll(".artText > p").forEach(function(p, i){
     var t = p.textContent.trim();
     if(t.length>=8 && t.length<=42 && /^(一|二|三|四|五|六|七|八|九|十|[0-9]+)[、.．]/.test(t) && !p.classList.contains("note")){
-      p.id = "para-"+i;
-      toc.push({id:"para-"+i, text:t.slice(0,26)});
+      if(!p.id) p.id = "para-"+i;              /* P03.2: 保留 fmtText 生成的稳定段锚点，不覆盖 */
+      toc.push({id:p.id, text:t.slice(0,26)});
     }
   });
   return toc;
@@ -986,45 +1011,62 @@ function lastReadArticle(){
 
 var articleSeq = 0;
 var lastOpenedId = null;          /* D01: last SUCCESSFULLY rendered article */
-/* WP06: 段落锚点定位 — sample-topic.json 的段落 id (pv1n03-033 等) → 按 20 字前缀文本在渲染后的
-   .artText 段落中定位 (对主站 txt 分段与数据包分段的差异鲁棒); 找到则滚过去高亮 2.5s */
+/* ---------- P03.1/P03.2: 段落锚点定位 ----------
+   新锚点 pa-<artId>-<NNN> 由渲染时生成，直接按 id 定位（稳定、不依赖文本）。
+   旧样本切片 id p<artId>-<NNN>（如 pv1n03-033）保留原编号，通过 1:1 索引映射到
+   渲染自然段（已对账：v1n03 234/234、v1n04 645/645，字符数逐字一致）。
+   若某篇段落数与样本不一致 → 退回"唯一文本包含"匹配；仍不唯一则明确提示，不猜选。 */
 var __sampleTopicCache = null;
+function _domParas(view){
+  return Array.prototype.slice.call(view.querySelectorAll(".artText > p"));
+}
+function _highlightPara(view, elP){
+  elP.style.transition = "background .8s";
+  elP.style.background = "rgba(176,58,46,.12)";
+  setTimeout(function(){ elP.style.background = ""; }, 2500);
+  view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
+}
 function scrollToPara(view, paraId){
+  if(/^pa-v\d+n\d+-\d+$/.test(paraId)){
+    var el = document.getElementById(paraId);
+    if(el){ _highlightPara(view, el); return true; }
+    toast("页面上不存在该段落锚点：" + paraId);
+    return false;
+  }
   var m = /^p(v\d+n\d+)-(\d+)$/.exec(paraId);
-  if(!m){ toast("段落链接格式无法识别"); return; }
-  var artId = m[1];
-  var locate = function(paras){
+  if(!m){ toast("段落链接格式无法识别"); return false; }
+  var artId = m[1], seq = parseInt(m[2], 10);
+  var domParas = _domParas(view);
+  var art = __sampleTopicCache && __sampleTopicCache.articles && __sampleTopicCache.articles[artId];
+  if(art && art.paragraphs && art.paragraphs.length === domParas.length && seq >= 1 && seq <= domParas.length){
+    _highlightPara(view, domParas[seq-1]);
+    return true;
+  }
+  var applyText = function(paras){
     var p = (paras||[]).filter(function(x){ return x.id === paraId; })[0];
-    if(!p || !p.text){ toast("样本数据中未找到该段落"); return; }
+    if(!p || !p.text){ toast("样本数据中未找到该段落"); return false; }
     var key = p.text.replace(/\s+/g,"");
-    /* 段落定位: 优先"唯一包含"匹配, 无法唯一定位时明确提示, 不静默猜选
-       (固定字宽切分的样本段落可能只占主站自然段的一部分, 或跨自然段) */
-    var domParas = Array.prototype.slice.call(view.querySelectorAll(".artText p"));
     var norm = function(s){ return (s.textContent || "").replace(/\s+/g,""); };
-    var exact = domParas.filter(function(el2){ return norm(el2) === key; });
-    var containing = exact.length ? exact : domParas.filter(function(el2){ return norm(el2).indexOf(key) >= 0; });
-    if(containing.length === 1){
-      var elP = containing[0];
-      elP.id = "anchor-" + paraId;
-      elP.style.transition = "background .8s";
-      elP.style.background = "rgba(176,58,46,.12)";
-      setTimeout(function(){ elP.style.background = ""; }, 2500);
-      view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
-    } else if(containing.length > 1){
-      toast("该段落文本在正文中出现 " + containing.length + " 处，无法唯一定位，请按编号在原文中查找。");
-    } else {
-      toast("正文分段与样本数据不一致，未能唯一定位该段落。");
+    var exact = domParas.filter(function(e){ return norm(e) === key; });
+    var containing = exact.length ? exact : domParas.filter(function(e){ return norm(e).indexOf(key) >= 0; });
+    if(containing.length === 1){ _highlightPara(view, containing[0]); return true; }
+    if(containing.length > 1){
+      toast("该段文本在正文中出现 " + containing.length + " 处，无法唯一定位，请按第 " + seq + " 段查找。");
+      return false;
     }
+    toast("正文分段与样本数据不一致，未能唯一定位该段落（第 " + seq + " 段）。");
+    return false;
   };
   if(__sampleTopicCache){
-    var art = __sampleTopicCache.articles && __sampleTopicCache.articles[artId];
-    locate(art && art.paragraphs); return;
+    var a2 = __sampleTopicCache.articles && __sampleTopicCache.articles[artId];
+    return applyText(a2 && a2.paragraphs);
   }
   fetch("data/sample-topic.json").then(function(r){ return r.json(); }).then(function(j){
     __sampleTopicCache = j;
-    var art = j.articles && j.articles[artId];
-    locate(art && art.paragraphs);
+    var a3 = j.articles && j.articles[artId];
+    applyText(a3 && a3.paragraphs);
   }).catch(function(){ toast("段落定位失败：样本数据不可用"); });
+  return null;
 }
 function openArticle(id, fromRoute, anchorPara){
   var a = byId[id];
@@ -1061,8 +1103,17 @@ function openArticle(id, fromRoute, anchorPara){
       "<span class='fsGrp'><button data-fs='0' class='"+(fs===0?"on":"")+"'>小</button><button data-fs='1' class='"+(fs===1?"on":"")+"'>中</button><button data-fs='2' class='"+(fs===2?"on":"")+"'>大</button></span>"+
       "<button id='rtMark' class='"+(isMarked?"on":"")+"'>"+(isMarked?"★ 已收藏":"☆ 收藏")+"</button>"+
       "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button>"+
-      (lastQuery() ? "<button id='rtBackSearch' style='color:#a8842c;border-color:#a8842c'>← 返回检索</button>" : "")+
-      (anchorPara ? "<button id='rtBackScene' style='color:#b03a2e;border-color:#b03a2e'>← 返回</button>" : "")+
+      "<button id='rtNotes'>笔记"+(notesFor(a.id).length?" ("+notesFor(a.id).length+")":"")+"</button>"+
+      ((function(){ var ob = originBack() || (anchorPara ? { label:"← 返回专题", hash:"#/view/topic" } : null);
+        return ob ? "<button id='rtBackOrigin' class='rtBack'>"+ob.label+"</button>" : ""; })())+
+      "</div>"+
+      "<div id='notePanel' class='notePanel' style='display:none'></div>"+
+      "<div id='selBar' class='selBar' style='display:none'>"+
+        "<span class='sbTxt' id='sbTxt'></span>"+
+        "<button data-sa='quote'>摘录</button>"+
+        "<button data-sa='note'>写笔记</button>"+
+        "<button data-sa='link'>复制段链接</button>"+
+        "<button data-sa='ask'>解释此段</button>"+
       "</div>"+
       "<div class='readWrap'><div class='readHead'><div class='vol'>《毛泽东选集》第"+["一","二","三","四","五"][a.vol-1]+"卷</div>"+
       "<h2>"+esc(a.title)+"</h2><div class='date'>"+esc(a.dateRaw.replace(/[（）()]/g,""))+"</div></div>"+
@@ -1076,7 +1127,7 @@ function openArticle(id, fromRoute, anchorPara){
       (links.length? "<div class='linkArts'><h4>关联文章 · 本站推荐</h4><div class='lks'>"+
         links.map(function(t){return "<a data-id='"+esc(titleIndex[t].id)+"'>"+esc(t)+"</a>";}).join("")+
         "</div></div>":"")+
-      "<div class='artText' style='font-size:"+FONT_SIZES[fs]+"px'>"+fmtText(body)+"</div>";
+      "<div class='artText' style='font-size:"+FONT_SIZES[fs]+"px'>"+fmtText(body, a.id)+"</div>";
     var prev = ARTS[ARTS.indexOf(a)-1], next = ARTS[ARTS.indexOf(a)+1];
     h += "<div class='readNav'>"+
       (prev? "<a data-id='"+esc(prev.id)+"'>← 前篇 · "+esc(prev.title)+"</a>":"<span></span>")+
@@ -1132,25 +1183,16 @@ function openArticle(id, fromRoute, anchorPara){
         toast(url);
       }
     });
-    /* P02.3: 从检索点进来的文章，允许一键回到原检索结果 */
-    var rtBs = document.getElementById("rtBackSearch");
-    if(rtBs) rtBs.addEventListener("click", function(){
-      var q = lastQuery();
-      if(q) setHash("#/search/" + encodeURIComponent(q));
-      else setHash("#/view/cats");
+    /* P03.3: 统一来源感知返回（检索/专题/书房/目录/研究室），无来源则不显示按钮 */
+    var rtOrig = document.getElementById("rtBackOrigin");
+    if(rtOrig) rtOrig.addEventListener("click", function(){
+      var ob = originBack();
+      if(!ob) return;
+      if(ob.href) location.href = ob.href;
+      else if(ob.hash) setHash(ob.hash);
     });
-    /* P01.3: 来源感知返回 — 剧场已下线，不再引用 theatre.html/jgs_scene。
-       从研究室进入则返回研究室，否则返回目录；直接深链也提供目录入口。 */
-    var rtBack = document.getElementById("rtBackScene");
-    if(rtBack) rtBack.addEventListener("click", function(){
-      if(history.length > 1 && document.referrer.indexOf("research.html") >= 0){
-        history.back();
-      }else if(history.length > 1){
-        history.back();
-      }else{
-        location.href = "index.html#/view/cats";
-      }
-    });
+    /* P03.4: 摘录 / 写笔记 / 复制段链接 / 解释此段（全部不需要 AI 也能完成） */
+    initNoteTools(v, a, anchorPara);
     /* restore reading position */
     var saved = restoreScroll(id);
     v.scrollTop = saved;
@@ -1369,9 +1411,252 @@ function doSearch(q){
     bindSearchRows(res);
   });
 }
+/* ---------- P03.4: 本地摘录 / 笔记（不依赖 AI，全部本机存储） ---------- */
+var NOTES_KEY = "mx_notes";
+function loadNotes(){
+  try{ var x = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); return Array.isArray(x) ? x : []; }
+  catch(e){ return []; }
+}
+function saveNotes(list){
+  try{ localStorage.setItem(NOTES_KEY, JSON.stringify(list)); return true; }
+  catch(e){ toast("笔记保存失败：本地存储不可用或空间不足"); return false; }
+}
+function notesFor(artId){
+  return loadNotes().filter(function(n){ return n.articleId === artId; });
+}
+function addNote(rec){
+  var list = loadNotes();
+  rec.id = "n" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+  rec.createdAt = Date.now();
+  list.push(rec);
+  return saveNotes(list) ? rec : null;
+}
+function delNote(id){
+  saveNotes(loadNotes().filter(function(n){ return n.id !== id; }));
+}
+function initNoteTools(view, a, anchorPara){
+  var bar = document.getElementById("selBar");
+  var panel = document.getElementById("notePanel");
+  var rtNotes = document.getElementById("rtNotes");
+  var cur = { text: "", paraId: "" };
+
+  function paraOf(node){
+    var el = node && node.nodeType === 1 ? node : (node && node.parentElement);
+    while(el && el !== view){
+      if(el.tagName === "P" && el.parentElement && el.parentElement.classList.indexOf === undefined &&
+         el.parentElement.classList.contains("artText")) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+  function hideBar(){ if(bar) bar.style.display = "none"; }
+  function markPara(el){
+    if(el) { el.classList.add("hasNote"); el.setAttribute("data-note", "1"); }
+  }
+  function copyText(t){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ toast("已复制"); }, function(){ toast(t); });
+    } else { toast(t); }
+  }
+  function askThisPara(){
+    if(a.id === "v1n03" || a.id === "v1n04"){
+      setOrigin({ type:"research", art:a.id });
+      location.href = "research.html?art=" + encodeURIComponent(a.id) +
+        (cur.paraId ? "&para=" + encodeURIComponent(cur.paraId) : "") + "&from=art:" + encodeURIComponent(a.id);
+    } else {
+      toast("该篇不在 AI 可问范围（目前仅两篇原文）；可先写下自己的笔记，不影响阅读。");
+    }
+  }
+  function showEditor(quote){
+    if(!panel) return;
+    panel.style.display = "block";
+    panel.textContent = "";
+    var hd = document.createElement("div"); hd.className = "npHd"; hd.textContent = "写下自己的理解";
+    panel.appendChild(hd);
+    if(quote){
+      var q = document.createElement("div"); q.className = "npQ"; q.textContent = "「" + quote + "」";
+      panel.appendChild(q);
+    }
+    var ta = document.createElement("textarea");
+    ta.rows = 4;
+    ta.placeholder = "用你自己的话写：这段说了什么？依据是什么？哪些条件下才成立？";
+    panel.appendChild(ta);
+    var row = document.createElement("div"); row.className = "npRow";
+    var ok = document.createElement("button"); ok.textContent = "保存笔记";
+    var cancel = document.createElement("button"); cancel.className = "ghost"; cancel.textContent = "取消";
+    row.appendChild(ok); row.appendChild(cancel);
+    panel.appendChild(row);
+    ok.addEventListener("click", function(){
+      var v2 = ta.value.trim();
+      if(!v2){ toast("笔记为空，未保存"); return; }
+      var rec = addNote({
+        kind: "note", articleId: a.id, paraId: cur.paraId, quote: quote || "",
+        note: v2,
+        source: { title: a.title, vol: a.vol, dateRaw: a.dateRaw, place: a.place }
+      });
+      if(rec){
+        markPara(cur.paraId ? document.getElementById(cur.paraId) : null);
+        panel.style.display = "none";
+        renderPanel();
+        updateCount();
+      }
+    });
+    cancel.addEventListener("click", function(){ panel.style.display = "none"; });
+    ta.focus();
+  }
+  function updateCount(){
+    if(!rtNotes) return;
+    var n = notesFor(a.id).length;
+    rtNotes.textContent = "笔记" + (n ? " (" + n + ")" : "");
+  }
+  function renderPanel(){
+    if(!panel) return;
+    var list = notesFor(a.id);
+    panel.textContent = "";
+    panel.style.display = "block";
+    if(!list.length){
+      var d = document.createElement("div"); d.className = "npEmpty";
+      d.textContent = "本篇还没有摘录或笔记。选中正文任意一段，即可摘录、写笔记或复制段链接。";
+      panel.appendChild(d);
+      return;
+    }
+    var hd = document.createElement("div"); hd.className = "npHd";
+    hd.textContent = "本篇摘录与笔记（" + list.length + "）";
+    panel.appendChild(hd);
+    list.slice().reverse().forEach(function(n){
+      var it = document.createElement("div"); it.className = "npItem";
+      var top = document.createElement("div"); top.className = "npTop";
+      var kind = document.createElement("span"); kind.className = "npKind";
+      kind.textContent = n.kind === "quote" ? "摘录" : "笔记";
+      var time = document.createElement("span"); time.className = "npTime";
+      try{ time.textContent = new Date(n.createdAt).toLocaleString(); }catch(e){}
+      top.appendChild(kind); top.appendChild(time);
+      it.appendChild(top);
+      if(n.quote){
+        var q = document.createElement("div"); q.className = "npQ"; q.textContent = "「" + n.quote.slice(0, 160) + "」";
+        it.appendChild(q);
+      }
+      if(n.note){
+        var nt = document.createElement("div"); nt.className = "npNote"; nt.textContent = n.note;
+        it.appendChild(nt);
+      }
+      var row = document.createElement("div"); row.className = "npRow";
+      if(n.paraId){
+        var jump = document.createElement("button"); jump.textContent = "定位到本段";
+        jump.addEventListener("click", function(){
+          var el = document.getElementById(n.paraId);
+          if(el){ _highlightPara(view, el); el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+          else { toast("该段落不在当前渲染范围内"); }
+        });
+        row.appendChild(jump);
+      }
+      var del = document.createElement("button"); del.className = "ghost"; del.textContent = "删除";
+      del.addEventListener("click", function(){
+        delNote(n.id);
+        renderPanel();
+        updateCount();
+        toast("已删除");
+      });
+      row.appendChild(del);
+      it.appendChild(row);
+      panel.appendChild(it);
+    });
+  }
+
+  /* 选中正文 → 浮动操作条 */
+  function onSel(){
+    var sel = window.getSelection();
+    if(!sel || sel.isCollapsed){ hideBar(); return; }
+    var txt = String(sel).trim();
+    if(txt.length < 2){ hideBar(); return; }
+    var p = paraOf(sel.anchorNode);
+    if(!p){ hideBar(); return; }
+    cur.text = txt.slice(0, 600);
+    cur.paraId = p.id || "";
+    if(bar){
+      var r = sel.getRangeAt(0).getBoundingClientRect();
+      bar.style.display = "flex";
+      bar.style.left = Math.max(8, Math.min(window.innerWidth - 320, r.left)) + "px";
+      bar.style.top = Math.max(8, r.top - 46) + "px";
+      var sb = document.getElementById("sbTxt");
+      if(sb) sb.textContent = cur.text.slice(0, 20) + (cur.text.length > 20 ? "…" : "");
+    }
+  }
+  view.addEventListener("mouseup", function(){ setTimeout(onSel, 10); });
+  view.addEventListener("touchend", function(){ setTimeout(onSel, 10); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ hideBar(); if(panel) panel.style.display = "none"; }
+  });
+
+  if(bar){
+    bar.addEventListener("click", function(e){
+      var btn = e.target && e.target.getAttribute ? e.target : null;
+      var act = btn && btn.getAttribute("data-sa");
+      if(!act) return;
+      var pEl = cur.paraId ? document.getElementById(cur.paraId) : null;
+      if(act === "quote"){
+        if(addNote({
+          kind: "quote", articleId: a.id, paraId: cur.paraId, quote: cur.text,
+          source: { title: a.title, vol: a.vol, dateRaw: a.dateRaw, place: a.place }
+        })){
+          markPara(pEl); updateCount(); renderPanel();
+        }
+        hideBar(); try{ window.getSelection().removeAllRanges(); }catch(e2){}
+      } else if(act === "note"){
+        showEditor(cur.text);
+        hideBar();
+      } else if(act === "link"){
+        copyText(location.origin + location.pathname + "#/art/" + a.id + (cur.paraId ? "/" + cur.paraId : ""));
+        hideBar();
+      } else if(act === "ask"){
+        askThisPara();
+        hideBar();
+      }
+    });
+  }
+  if(rtNotes){
+    rtNotes.addEventListener("click", function(){
+      if(panel && panel.style.display === "block"){ panel.style.display = "none"; }
+      else { renderPanel(); }
+    });
+  }
+  /* 已保存的段落加标记 */
+  notesFor(a.id).forEach(function(n){
+    if(n.paraId) markPara(document.getElementById(n.paraId));
+  });
+  if(anchorPara){
+    var ap = document.getElementById(anchorPara);
+    if(ap) markPara(ap);
+  }
+}
+
+/* ---------- P03.3: 来源感知返回上下文 ---------- */
+function setOrigin(o){
+  try{ sessionStorage.setItem("mx_origin", JSON.stringify(o || {})); }catch(e){}
+}
+function getOrigin(){
+  try{ return JSON.parse(sessionStorage.getItem("mx_origin") || "null"); }catch(e){ return null; }
+}
+function originBack(){
+  var o = getOrigin();
+  if(!o || !o.type) return null;
+  if(o.type === "search"){
+    var q = o.q || lastQuery();
+    return q ? { label: "← 返回检索", hash: "#/search/" + encodeURIComponent(q) } : { label: "← 返回检索", hash: "#/view/cats" };
+  }
+  if(o.type === "topic") return { label: "← 返回专题", hash: "#/view/topic" };
+  if(o.type === "study") return { label: "← 返回书房", hash: "#/view/study" };
+  if(o.type === "cats") return { label: "← 返回目录", hash: "#/view/cats" };
+  if(o.type === "research") return { label: "← 返回研究室", href: "research.html" + (o.art ? "?art=" + encodeURIComponent(o.art) : "") };
+  return null;
+}
 function bindSearchRows(res){
   res.querySelectorAll("li[data-id]").forEach(function(li){
-    li.onclick = function(){ track("search_result_open",{resultType:"search"}); setHash("#/art/"+li.getAttribute("data-id")); };
+    li.onclick = function(){
+      track("search_result_open",{resultType:"search"});
+      setOrigin({ type:"search", q: lastQuery() });
+      setHash("#/art/"+li.getAttribute("data-id"));
+    };
   });
 }
 function srow(a, t, d, frag, q){

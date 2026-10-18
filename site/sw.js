@@ -1,5 +1,5 @@
-/* MaoXuan Viz sw.js v7: P02 五项导航/专题/书房 — bump cache to evict v6 shell */
-var CACHE = "mx-v7";
+/* MaoXuan Viz sw.js v8: P03 五项导航/专题/书房 — bump cache to evict v6 shell */
+var CACHE = "mx-v8";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",
@@ -53,7 +53,24 @@ self.addEventListener("fetch", function(e){
     return;
   }
 
-  /* same-origin app assets & texts: cache-first, revalidate in background */
+  /* P03/T48: app shell (HTML/JS/CSS/manifest) → network-first.
+     部署后首次访问即拿到新版本；断网时回落到缓存（离线阅读仍可用）。 */
+  var isShell = /\.(html|js|css|webmanifest)$/i.test(url.pathname) || url.pathname === "/" || url.pathname.slice(-1) === "/";
+  if(url.origin === location.origin && isShell){
+    e.respondWith(
+      caches.open(CACHE).then(function(c){
+        return fetch(req).then(function(res){
+          if(res && res.ok) c.put(req, res.clone());
+          return res;
+        }).catch(function(){
+          return c.match(req).then(function(hit){ return hit || Response.error(); });
+        });
+      })
+    );
+    return;
+  }
+
+  /* same-origin texts/data: cache-first, revalidate in background (rarely change) */
   if(url.origin === location.origin){
     e.respondWith(
       caches.open(CACHE).then(function(c){

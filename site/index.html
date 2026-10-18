@@ -446,6 +446,42 @@ html.dark .navMenu{background:#211e19}
 .statePanel .note{font-size:12px;color:var(--ink2);margin-top:14px;border-top:1px dashed var(--border);padding-top:12px;text-align:left}
 /* topic (专题研读) */
 .topicWrap{max-width:900px;margin:0 auto;padding:8px 0 40px}
+/* P03.4: 选中正文浮动操作条 */
+.selBar{position:fixed;z-index:1200;display:none;align-items:center;gap:6px;padding:6px 8px;
+  background:rgba(43,36,32,.95);border-radius:10px;box-shadow:0 6px 20px rgba(30,24,18,.35)}
+.selBar .sbTxt{color:#f5efe0;font-size:11.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selBar button{font-family:inherit;font-size:12px;padding:3px 10px;border-radius:8px;cursor:pointer;
+  border:1px solid rgba(245,239,224,.35);background:transparent;color:#f5efe0}
+.selBar button:hover{background:var(--cinnabar);border-color:var(--cinnabar)}
+/* P03.4: 笔记面板 */
+.notePanel{max-width:900px;margin:0 auto 14px;padding:14px 16px;background:var(--cardbg,#fffdf5);
+  border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:10px}
+.notePanel .npHd{font-size:13px;color:var(--cinnabar);letter-spacing:2px;margin-bottom:8px}
+.notePanel .npEmpty{font-size:12.5px;color:var(--ink2);line-height:1.9}
+.notePanel .npQ{font-size:12.5px;color:var(--ink2);border-left:2px solid var(--border);padding-left:8px;margin:6px 0;line-height:1.8}
+.notePanel textarea{width:100%;font-family:inherit;font-size:13.5px;line-height:1.9;padding:8px 10px;
+  border:1px solid var(--border);border-radius:8px;background:#fffdf5;color:var(--ink);box-sizing:border-box}
+.notePanel .npRow{display:flex;gap:8px;margin-top:8px}
+.notePanel .npRow button{font-family:inherit;font-size:12.5px;padding:4px 14px;border-radius:14px;cursor:pointer;
+  border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff}
+.notePanel .npRow button.ghost{background:transparent;color:var(--cinnabar)}
+.notePanel .npItem{border-top:1px dashed var(--border);padding:10px 0}
+.notePanel .npTop{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2)}
+.notePanel .npKind{color:var(--gold);letter-spacing:1px}
+.notePanel .npNote{font-size:13px;color:var(--ink);line-height:1.9;margin:4px 0}
+/* P03.2/P03.4: 有笔记的段落标记 + 返回按钮 */
+.artText p.hasNote{border-left:2px solid rgba(168,132,44,.55);padding-left:10px;margin-left:-12px}
+.readTools .rtBack{color:var(--cinnabar)!important;border-color:var(--cinnabar)!important}
+/* P03.5: 窄屏（≤360px，覆盖 320px 设备） */
+@media (max-width:360px){
+  .readTools{gap:4px}
+  .readTools button,.readTools .fsGrp button{font-size:11px;padding:3px 8px}
+  .selBar{max-width:calc(100vw - 16px);flex-wrap:wrap}
+  .selBar .sbTxt{display:none}
+  .statePanel{margin:24px 8px;padding:22px 16px}
+  .topicHero{padding:18px 16px}
+  .studyGrid{grid-template-columns:1fr}
+}
 .topicHero{background:var(--cardbg,#fffdf5);border:1px solid var(--border);border-left:4px solid var(--cinnabar);
   border-radius:12px;padding:24px 26px;margin-bottom:18px}
 .topicHero h2{font-size:20px;letter-spacing:2px;color:var(--ink);margin-bottom:8px}
