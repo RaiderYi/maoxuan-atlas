@@ -184,49 +184,248 @@ function renderCatalog(){
   }
   track("page_view", {pageType:"catalog"});
 }
-/* ---------- P02.2/P04: 专题（首版只列真实存在的一份，未建步骤明示） ---------- */
-var TOPICS = [{
-  id: "jgs",
-  title: "井冈山：红色政权为什么能够存在",
-  q: "红色政权存在的条件是什么？根据地又面临哪些问题？",
-  articles: ["v1n03", "v1n04"],
-  why: "两篇同期文章：一篇讲存在的条件，一篇讲根据地建设的实际问题。放在一起读，能看出条件与困难是同一局势的两面。",
-  steps: [
-    { t: "先读条件", d: "《中国的红色政权为什么能够存在？》——作者列出的几个条件，以及这些条件为什么在当时成立。", art: "v1n03" },
-    { t: "再读问题", d: "《井冈山的斗争》——根据地建设中的实际困难，以及当时的应对。", art: "v1n04" },
-    { t: "比对异同", d: "两篇对同一局势的判断是否一致？哪些结论是有条件的、只在特定前提下成立？", art: null },
-    { t: "写下自己的结论", d: "用自己的话回答核心问题，并附上你引用的原文段落。", art: null }
-  ]
-}];
+/* ---------- P04: 专题（配置化四步导读 · 进度分开记录 · 末步成果任务） ---------- */
+var TOPIC_CFG = null;
+var TOPIC_CFG_URL = "data/topic-jgs.json";
+var PROG_KEY = "mx_topic_progress";
+var CONCL_KEY = "mx_topic_conclusions";
 
-function topicHtml(){
-  var t = TOPICS[0];
-  var h = "<div class='topicWrap'>";
-  h += "<div class='topicHero'><h2>" + esc(t.title) + "<span class='badge'>首版专题</span></h2>";
-  h += "<p class='q'>核心问题：" + esc(t.q) + "</p>";
-  h += "<p class='meta'>" + esc(t.why) + "<br>语料范围：2 篇原文 · AI 研究室可直接就这两篇提问（其余篇目可读可记笔记，但不进入 AI 引用范围）。</p></div>";
-  h += "<ul class='stepList'>";
-  t.steps.forEach(function(s, i){
-    h += "<li class='stepItem'><div class='st'>第 " + (i+1) + " 步</div><div class='tt'>" + esc(s.t) + "</div><div class='ds'>" + esc(s.d) + "</div>";
-    if(s.art){
-      var a = ARTS.filter(function(x){ return x.id === s.art; })[0];
-      h += "<a class='go' href='#/art/" + esc(s.art) + "'>读原文" + (a ? " ·《" + esc(a.title) + "》" : "") + " →</a>";
-    } else {
-      h += "<span class='badge'>成果任务 · 建设中</span>";
-      h += " <a class='go' href='research.html?art=" + t.articles.join(",") + "&from=topic:" + t.id + "'>先去研究室就这两篇提问 →</a>";
+function loadProg(){
+  try{ var x = JSON.parse(localStorage.getItem(PROG_KEY) || "{}"); return (x && typeof x === "object") ? x : {}; }
+  catch(e){ return {}; }
+}
+function saveProg(p){
+  try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); return true; }
+  catch(e){ toast("进度保存失败：本地存储不可用"); return false; }
+}
+function topicProg(tid){
+  var p = loadProg()[tid] || {};
+  if(!p.steps) p.steps = {};
+  return p;
+}
+/* P04.3: "打开过"与"完成"分开记录，从不按阅读行为推断完成 */
+function stepState(tid, stepId){
+  var st = (topicProg(tid).steps || {})[stepId] || {};
+  if(st.doneAt) return "done";
+  if(st.openedAt) return "opened";
+  return "todo";
+}
+function setStepOpen(tid, stepId){
+  var all = loadProg(); var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
+  var st = t.steps[stepId] || {};
+  if(!st.openedAt) st.openedAt = Date.now();
+  t.steps[stepId] = st; all[tid] = t; saveProg(all);
+}
+function setStepDone(tid, stepId, done){
+  var all = loadProg(); var t = all[tid] || { steps:{} }; if(!t.steps) t.steps = {};
+  var st = t.steps[stepId] || {};
+  if(done){ st.doneAt = Date.now(); }
+  else { delete st.doneAt; if(!st.openedAt) st.openedAt = Date.now(); }
+  t.steps[stepId] = st; all[tid] = t; saveProg(all);
+}
+function loadConcl(){
+  try{ var x = JSON.parse(localStorage.getItem(CONCL_KEY) || "{}"); return (x && typeof x === "object") ? x : {}; }
+  catch(e){ return {}; }
+}
+function saveConcl(o){
+  try{ localStorage.setItem(CONCL_KEY, JSON.stringify(o)); return true; }
+  catch(e){ toast("结论保存失败：本地存储不可用"); return false; }
+}
+function citationsForTopic(cfg){
+  var ids = (cfg.corpus && cfg.corpus.articles) || [];
+  return loadNotes().filter(function(n){ return ids.indexOf(n.articleId) >= 0 && n.quote; });
+}
+function topicStatus(cfg){
+  var tid = cfg.topicId, steps = cfg.steps || [];
+  var done = steps.filter(function(s){ return stepState(tid, s.stepId) === "done"; }).length;
+  var concl = loadConcl()[tid];
+  var next = steps.filter(function(s){ return stepState(tid, s.stepId) !== "done"; })[0] || null;
+  return { tid: tid, total: steps.length, done: done, hasConclusion: !!concl,
+           complete: done === steps.length && !!concl, nextStep: next };
+}
+function loadTopicCfg(cb){
+  if(TOPIC_CFG){ if(cb) cb(TOPIC_CFG); return; }
+  fetch(TOPIC_CFG_URL).then(function(r){ return r.json(); }).then(function(j){
+    if(!j || !j.steps || !j.steps.length) throw new Error("empty");
+    TOPIC_CFG = j;
+    if(cb) cb(j);
+    if(state.view === "topic") renderTopic();
+    if(state.view === "home") renderHome();
+  }).catch(function(){
+    if(cb) cb(null);
+    var v = document.getElementById("view-topic");
+    if(v && state.view === "topic"){
+      v.innerHTML = "<div class='statePanel'><h2>专题数据暂时无法载入</h2>" +
+        "<p>导读配置（data/topic-jgs.json）没有取到，原文阅读不受影响。</p>" +
+        "<div class='acts'><a href='#/view/cats'>先浏览全部篇目</a>" +
+        "<button class='ghost' id='tpRetry'>重试</button></div></div>";
+      var rb = document.getElementById("tpRetry");
+      if(rb) rb.addEventListener("click", function(){ loadTopicCfg(function(){ renderTopic(); }); });
     }
-    h += "</li>";
   });
-  h += "</ul>";
-  h += "<div class='homeNote'>专题的阅读步骤来自真实原文；比对与成果任务在建设中（P04）。不使用未经审校的背景补充，也不要求照抄标准答案。</div>";
+}
+var STEP_BADGE = { todo: "未开始", opened: "已打开 · 未标完成", done: "已完成" };
+
+function topicHtml(cfg){
+  var st = topicStatus(cfg);
+  var pct = Math.round(st.done / Math.max(1, st.total) * 100);
+  var h = "<div class='topicWrap'>";
+  h += "<div class='topicHero'><h2>" + esc(cfg.title) + "<span class='badge'>首版专题 · v" + esc(cfg.version || "1") + "</span></h2>";
+  h += "<p class='q'>核心问题：" + esc(cfg.question) + "</p>";
+  var labels = (cfg.corpus && cfg.corpus.articles) || [];
+  h += "<p class='meta'>" + esc(cfg.summary || "") + "<br>" +
+       labels.map(function(id){ return esc((cfg.corpus.labels && cfg.corpus.labels[id]) || id); }).join("　·　") +
+       "<br>" + esc((cfg.corpus && cfg.corpus.note) || "") + "</p>";
+  h += "<div class='topicProg'><div class='tpBar'><span style='width:" + pct + "%'></span></div>" +
+       "<div class='tpTxt'>已完成 " + st.done + "/" + st.total + " 步 · " + (st.hasConclusion ? "已写结论" : "结论未保存") +
+       (st.complete ? " · <b>专题已完成</b>" : (st.nextStep ? " · 下一步：" + esc(st.nextStep.title) : "")) + "</div></div>";
+  if(!st.complete && st.nextStep){
+    h += "<div class='topicActs'><button class='tpGo' data-jump='" + esc(st.nextStep.stepId) + "'>继续第 " +
+         st.nextStep.seq + " 步 · " + esc(st.nextStep.title) + "</button></div>";
+  }
+  h += "</div>";
+
+  (cfg.steps || []).forEach(function(s){
+    var ss = stepState(cfg.topicId, s.stepId);
+    h += "<div class='stepItem' id='step-" + esc(s.stepId) + "' data-state='" + ss + "'>";
+    h += "<div class='stRow'><span class='st'>第 " + s.seq + " 步</span>" +
+         "<span class='stBadge " + ss + "'>" + STEP_BADGE[ss] + "</span></div>";
+    h += "<div class='tt'>" + esc(s.title) + "</div>";
+    if(s.intro) h += "<div class='ds'>" + esc(s.intro) + "</div>";
+    if(s.quote && s.quote.text){
+      h += "<blockquote class='tpQuote'><p>" + esc(s.quote.text) + "</p>" +
+           "<cite><a href='#/art/" + esc(s.quote.articleId) + "/" + esc(s.quote.fromId) + "' data-step='" + esc(s.stepId) + "'>" +
+           "定位到原文 · " + esc(s.quote.fromId) + "</a></cite></blockquote>";
+    }
+    if(s.questions && s.questions.length){
+      h += "<div class='tpQs'><div class='tpQh'>读的时候想这两件事</div><ul>" +
+           s.questions.map(function(q){ return "<li>" + esc(q) + "</li>"; }).join("") + "</ul></div>";
+    }
+    if(s.reads && s.reads.length){
+      h += "<div class='tpReads'>";
+      s.reads.forEach(function(r){
+        var a = ARTS.filter(function(x){ return x.id === r.articleId; })[0];
+        var label = r.label || (a ? a.title : r.articleId);
+        h += "<a class='go' href='#/art/" + esc(r.articleId) + (r.paragraphId ? "/" + esc(r.paragraphId) : "") +
+             "' data-step='" + esc(s.stepId) + "'>读原文 · " + esc(label) + " →</a>";
+      });
+      h += "</div>";
+    }
+    if(s.requirement) h += "<div class='tpReq'>要求：" + esc(s.requirement) + "</div>";
+    if(s.task && s.task.type === "conclusion"){
+      var concl = loadConcl()[cfg.topicId] || {};
+      var cits = citationsForTopic(cfg);
+      h += "<div class='tpTask'><div class='tpTh'>成果任务 · 写下你的结论</div>";
+      h += "<textarea id='tpConcl' rows='6' placeholder='用你自己的话回答核心问题（不少于 " + (s.task.minChars || 80) + " 字）…'>" +
+           esc(concl.text || "") + "</textarea>";
+      h += "<div class='tpCit'><div class='tpCh'>自动附加的依据（来自你的摘录，共 " + cits.length + " 条）</div>";
+      if(cits.length){
+        h += "<ul>" + cits.slice(0, 6).map(function(n){
+          var src = n.source || {};
+          var dt = src.dateRaw ? "（" + String(src.dateRaw).replace(/[（）()]/g, "") + "）" : "";
+          return "<li><b>" + esc(n.paraId || "") + "</b> <span class='q'>" + esc((n.quote || "").slice(0, 60)) + "</span>" +
+                 "<i>" + esc(src.title || "") + esc(dt) + "</i></li>";
+        }).join("") + "</ul>" + (cits.length > 6 ? "<div class='tpMore'>另有 " + (cits.length - 6) + " 条未展开</div>" : "");
+      } else {
+        h += "<div class='tpMissing'>还没有摘录。回上面的步骤，在原文里选中一段文字即可摘录；没有依据的结论不会被当成完成。</div>";
+      }
+      h += "</div><div class='tpActs2'><button id='tpSave'>保存结论</button>" +
+           "<span id='tpMsg' class='tpMsg'></span></div>";
+      if(concl.text){
+        h += "<div class='tpSaved'>上次保存：" + esc(new Date(concl.updatedAt || concl.createdAt).toLocaleString()) +
+             (concl.pendingSteps && concl.pendingSteps.length ? " · 当时还有 " + concl.pendingSteps.length + " 步未完成" : "") + "</div>";
+      }
+      h += "</div>";
+    }
+    h += "<div class='tpStepActs'>" + (ss === "done"
+      ? "<button class='tpUndo' data-undone='" + esc(s.stepId) + "'>撤销完成</button>"
+      : "<button class='tpDone' data-done='" + esc(s.stepId) + "'>我读完了本步</button>") + "</div>";
+    h += "</div>";
+  });
+  h += "<div class='homeNote'>步骤与引文来自两篇原文；比对与结论由你自己完成，本站不提供未经审校的背景补充，也不要求照抄标准答案。进度与结论只保存在这台设备。</div>";
   h += "</div>";
   return h;
 }
+
+function bindTopic(v, cfg){
+  v.querySelectorAll("a[data-step]").forEach(function(a){
+    a.addEventListener("click", function(){
+      setStepOpen(cfg.topicId, a.getAttribute("data-step"));
+      setOrigin({ type: "topic" });
+    });
+  });
+  v.querySelectorAll("[data-done]").forEach(function(b){
+    b.addEventListener("click", function(){
+      setStepDone(cfg.topicId, b.getAttribute("data-done"), true);
+      renderTopic(); renderHome();
+      toast("已标记完成（可撤销）");
+    });
+  });
+  v.querySelectorAll("[data-undone]").forEach(function(b){
+    b.addEventListener("click", function(){
+      setStepDone(cfg.topicId, b.getAttribute("data-undone"), false);
+      renderTopic(); renderHome();
+    });
+  });
+  v.querySelectorAll("[data-jump]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var el = document.getElementById("step-" + b.getAttribute("data-jump"));
+      if(el) el.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  });
+  var saveBtn = v.querySelector("#tpSave");
+  if(saveBtn){
+    saveBtn.addEventListener("click", function(){
+      var ta = v.querySelector("#tpConcl");
+      var msg = v.querySelector("#tpMsg");
+      var text = ((ta && ta.value) || "").trim();
+      var task = null;
+      (cfg.steps || []).forEach(function(s){ if(s.task && s.task.type === "conclusion") task = s.task; });
+      var minC = (task && task.minChars) || 80;
+      var minQ = (task && task.minCitations) || 1;
+      var cits = citationsForTopic(cfg);
+      var gaps = [];
+      if(text.length < minC) gaps.push("结论还差 " + (minC - text.length) + " 字（需至少 " + minC + " 字，现 " + text.length + " 字）");
+      if(cits.length < minQ) gaps.push("还没有摘录原文段落（需至少 " + minQ + " 条依据）");
+      var notDone = (cfg.steps || []).filter(function(s){ return stepState(cfg.topicId, s.stepId) !== "done"; });
+      if(gaps.length){
+        if(msg) msg.textContent = "还不能保存：" + gaps.join("；");
+        toast("结论未保存：" + gaps[0]);
+        return;
+      }
+      var all = loadConcl();
+      var prev = all[cfg.topicId] || {};
+      all[cfg.topicId] = {
+        topicId: cfg.topicId,
+        text: text,
+        citations: cits.map(function(n){
+          return { paraId: n.paraId, quote: n.quote, articleId: n.articleId, source: n.source || {}, noteId: n.id };
+        }),
+        pendingSteps: notDone.map(function(s){ return s.stepId; }),
+        createdAt: prev.createdAt || Date.now(),
+        updatedAt: Date.now(),
+        topicVersion: cfg.version || "1"
+      };
+      if(saveConcl(all)){
+        renderTopic(); renderHome();
+        toast("结论已保存，已附带 " + cits.length + " 条摘录依据");
+        if(notDone.length) toast("提示：还有 " + notDone.length + " 步未标记完成，专题尚未算完成");
+      }
+    });
+  }
+}
+
 function renderTopic(){
   var v = document.getElementById("view-topic");
   if(!v) return;
-  v.innerHTML = topicHtml();
   track("page_view", {pageType:"topic"});
+  if(!TOPIC_CFG){
+    v.innerHTML = "<div class='statePanel'><h2>正在载入专题…</h2><p>导读配置读取中。</p></div>";
+    loadTopicCfg();
+    return;
+  }
+  v.innerHTML = topicHtml(TOPIC_CFG);
+  bindTopic(v, TOPIC_CFG);
 }
 
 /* ---------- P02/P06: 我的书房（聚合本机已有成果，只读真实数据，不造进度） ---------- */
@@ -250,6 +449,17 @@ function renderStudy(){
   h += "<div class='studyCard'><div class='num'>" + cards.length + "</div><div class='lb'>研究卡</div><a class='lk' href='research.html'>去 AI 研究室查看 / 导出</a></div>";
   var noteCnt = loadNotes().length;
   h += "<div class='studyCard'><div class='num'>" + noteCnt + "</div><div class='lb'>摘录与笔记</div><a class='lk' href='#/view/cats'>在原文中选中文字即可摘录</a></div>";
+  if(TOPIC_CFG){
+    var tst = topicStatus(TOPIC_CFG);
+    h += "<div class='studyCard'><div class='num'>" + tst.done + "/" + tst.total + "</div>" +
+         "<div class='lb'>专题步骤 · " + esc(TOPIC_CFG.title) + (tst.complete ? "（已完成）" : "") + "</div>" +
+         "<a class='lk' href='#/view/topic'>" + (tst.nextStep ? "继续第 " + tst.nextStep.seq + " 步：" + esc(tst.nextStep.title) : "查看专题") + "</a></div>";
+    var tc = loadConcl()[TOPIC_CFG.topicId];
+    if(tc && tc.text){
+      h += "<div class='studyCard'><div class='num'>" + (tc.citations ? tc.citations.length : 0) + "</div>" +
+           "<div class='lb'>我的专题结论依据条数</div><a class='lk' href='#/view/topic'>查看结论与依据</a></div>";
+    }
+  }
   h += "</div>";
 
   if(recentIds.length){
@@ -296,6 +506,15 @@ function renderHome(){
   }
   if(readCnt || marks.length || cardCnt){
     h += "<p class='heroNote'>本机记录：已读 "+readCnt+" 篇 · 收藏 "+marks.length+" 篇 · 研究卡 "+cardCnt+" 张 · <a href='#/view/study' style='color:var(--cinnabar)'>进入我的书房</a></p>";
+  }
+  /* P04.5: 首页显示专题真实完成状态（只读本地记录，不推断） */
+  if(TOPIC_CFG){
+    var ts = topicStatus(TOPIC_CFG);
+    h += "<p class='heroNote'>专题《" + esc(TOPIC_CFG.title) + "》 · " +
+      (ts.complete ? "<b style='color:var(--cinnabar)'>已完成</b>"
+        : (ts.done + "/" + ts.total + " 步" + (ts.nextStep ? " · 下一步：" + esc(ts.nextStep.title) : " · 全部标完成") +
+           (ts.hasConclusion ? " · 结论已保存" : " · 结论未保存"))) +
+      " · <a href='#/view/topic' style='color:var(--cinnabar)'>" + (ts.complete ? "回看专题" : "继续专题") + "</a></p>";
   }
   h += "</div>";
   /* P02.2/P02.3: 主任务入口（研读/专题/研究室/书房） */
@@ -384,6 +603,8 @@ document.addEventListener("click", function(e){
     __sampleTopicCache = j;
   }).catch(function(){});
 })();
+/* P04: 预取专题配置，首页/书房可显示真实专题状态 */
+(function(){ if(typeof loadTopicCfg === "function") loadTopicCfg(); })();
 
 /* ---------- data prep ---------- */
 var ARTS = DATA;
@@ -923,20 +1144,50 @@ function renderStats(){
 
 /* ---------- READER ---------- */
 var FONT_SIZES = [17,19,21];
+/* P03.1/P04.1: 校正显示结构 —— 语料是每行约 30 字的硬换行，直接按行渲染会碎成几百个短段。
+   改为：连续行合并成自然段；小节标题单独成行；注释行归入注释块。
+   同时**逐行保留锚点**（span id=pa-<artId>-<NNN>），旧切片 id 可直接换算，编号不变。 */
 function fmtText(raw, artId){
-  var paras = raw.split(/\n+/);
-  var out = [], head = 2, pi = 0;
-  for(var i=0;i<paras.length;i++){
-    var t = paras[i].trim();
-    if(!t) continue;
-    t = esc(t);                                /* N03: escape article body (defense in depth for future corpus edits) */
-    pi++;                                      /* P03.2: 稳定段号，从 1 开始（与样本 seq 一致） */
-    var pid = artId ? "pa-" + artId + "-" + ("000" + pi).slice(-3) : "";
-    var idAttr = pid ? " id='" + pid + "' data-pi='" + pi + "'" : "";
-    if(head>0 && (t.indexOf("一九")===0 || /^[（(].*[）)]$/.test(t))){ out.push("<p class='note'"+idAttr+" style='text-align:center;text-indent:0'>"+t+"</p>"); head--; continue; }
-    if((/^\*/.test(t) || /^〔\d+〕/.test(t) || /^注[:：]/.test(t)) && out.length>10){ out.push("<p class='note'"+idAttr+">"+t+"</p>"); continue; }
-    out.push("<p"+idAttr+">"+t+"</p>");
+  var lines = raw.split(/\n+/);
+  var out = [], buf = [], head = 2, pi = 0;
+  function pad(n){ return ("000" + n).slice(-3); }
+  function anchor(inner){
+    pi++;
+    var id = artId ? "pa-" + artId + "-" + pad(pi) : "";
+    var t = esc(inner);
+    if(!id) return t;
+    return "<span class='pa' id='" + id + "' data-pi='" + pi + "'>" + t + "</span>";
   }
+  function flushPara(){
+    if(!buf.length) return;
+    out.push("<p>" + buf.join("") + "</p>");
+    buf = [];
+  }
+  for(var i=0;i<lines.length;i++){
+    var t = lines[i].trim();
+    if(!t) continue;
+    /* 卷首标题/成文日期 */
+    if(head>0 && (t.indexOf("一九")===0 || /^[（(].*[）)]$/.test(t) || t.length <= 20)){
+      flushPara();
+      out.push("<p class='note artFirst' style='text-align:center;text-indent:0'>" + anchor(t) + "</p>");
+      head--;
+      continue;
+    }
+    /* 小节标题：一　二　三… / （一） / 1. */
+    if(/^[一二三四五六七八九十]+[、．\s　]/.test(t) && t.length <= 30){
+      flushPara();
+      out.push("<h3 class='artH'>" + anchor(t) + "</h3>");
+      continue;
+    }
+    /* 注释行 */
+    if(/^(\*|〔\d+〕|注[:：])/.test(t) && out.length > 3){
+      flushPara();
+      out.push("<p class='note artNote'>" + anchor(t) + "</p>");
+      continue;
+    }
+    buf.push(anchor(t));            /* 合并进行中段落：不加分隔符（中文直接连写） */
+  }
+  flushPara();
   return out.join("");
 }
 function loadReadMem(){
@@ -965,12 +1216,12 @@ function saveScroll(id, top){
 function buildToc(){
   var toc = [];
   var v = document.getElementById("view-read");
-  v.querySelectorAll(".artText > p").forEach(function(p, i){
-    var t = p.textContent.trim();
-    if(t.length>=8 && t.length<=42 && /^(一|二|三|四|五|六|七|八|九|十|[0-9]+)[、.．]/.test(t) && !p.classList.contains("note")){
-      if(!p.id) p.id = "para-"+i;              /* P03.2: 保留 fmtText 生成的稳定段锚点，不覆盖 */
-      toc.push({id:p.id, text:t.slice(0,26)});
-    }
+  v.querySelectorAll(".artText h3.artH").forEach(function(h, i){
+    var t = h.textContent.trim();
+    var a = h.querySelector(".pa");
+    var id = a && a.id ? a.id : ("para-"+i);
+    if(!a || !a.id){ if(h.id) id = h.id; }
+    toc.push({id:id, text:t.slice(0,26)});
   });
   return toc;
 }
@@ -1021,40 +1272,39 @@ function _domParas(view){
   return Array.prototype.slice.call(view.querySelectorAll(".artText > p"));
 }
 function _highlightPara(view, elP){
+  if(!elP) return;
   elP.style.transition = "background .8s";
-  elP.style.background = "rgba(176,58,46,.12)";
+  elP.style.background = "rgba(176,58,46,.18)";
+  elP.style.borderRadius = "2px";
   setTimeout(function(){ elP.style.background = ""; }, 2500);
-  view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" });
+  try{ elP.scrollIntoView({ block: "center", behavior: "smooth" }); }
+  catch(e){ view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" }); }
+}
+/* P03.2: 旧切片 id pv1n03-033 ↔ 新锚点 pa-v1n03-033（编号一致，直接换算） */
+function _paIdOf(paraId){
+  var m = /^p(v\d+n\d+)-(\d+)$/.exec(paraId);
+  if(!m) return null;
+  return "pa-" + m[1] + "-" + ("000" + parseInt(m[2], 10)).slice(-3);
 }
 function scrollToPara(view, paraId){
-  if(/^pa-v\d+n\d+-\d+$/.test(paraId)){
-    var el = document.getElementById(paraId);
-    if(el){ _highlightPara(view, el); return true; }
-    toast("页面上不存在该段落锚点：" + paraId);
-    return false;
-  }
+  var targetId = /^pa-v\d+n\d+-\d+$/.test(paraId) ? paraId : _paIdOf(paraId);
+  if(!targetId){ toast("段落链接格式无法识别"); return false; }
+  var el = document.getElementById(targetId);
+  if(el){ _highlightPara(view, el); return true; }
+  /* 兜底：按样本文本唯一匹配（不猜选） */
   var m = /^p(v\d+n\d+)-(\d+)$/.exec(paraId);
-  if(!m){ toast("段落链接格式无法识别"); return false; }
+  if(!m){ toast("页面上不存在该段落锚点：" + paraId); return false; }
   var artId = m[1], seq = parseInt(m[2], 10);
-  var domParas = _domParas(view);
-  var art = __sampleTopicCache && __sampleTopicCache.articles && __sampleTopicCache.articles[artId];
-  if(art && art.paragraphs && art.paragraphs.length === domParas.length && seq >= 1 && seq <= domParas.length){
-    _highlightPara(view, domParas[seq-1]);
-    return true;
-  }
+  var norm = function(s){ return (s || "").replace(/\s+/g, ""); };
   var applyText = function(paras){
-    var p = (paras||[]).filter(function(x){ return x.id === paraId; })[0];
+    var p = (paras || []).filter(function(x){ return x.id === paraId; })[0];
     if(!p || !p.text){ toast("样本数据中未找到该段落"); return false; }
-    var key = p.text.replace(/\s+/g,"");
-    var norm = function(s){ return (s.textContent || "").replace(/\s+/g,""); };
-    var exact = domParas.filter(function(e){ return norm(e) === key; });
-    var containing = exact.length ? exact : domParas.filter(function(e){ return norm(e).indexOf(key) >= 0; });
-    if(containing.length === 1){ _highlightPara(view, containing[0]); return true; }
-    if(containing.length > 1){
-      toast("该段文本在正文中出现 " + containing.length + " 处，无法唯一定位，请按第 " + seq + " 段查找。");
-      return false;
-    }
-    toast("正文分段与样本数据不一致，未能唯一定位该段落（第 " + seq + " 段）。");
+    var key = norm(p.text);
+    var spans = Array.prototype.slice.call(view.querySelectorAll(".artText .pa"));
+    var hit = spans.filter(function(s){ return norm(s.textContent) === key; });
+    if(hit.length === 1){ _highlightPara(view, hit[0]); return true; }
+    if(hit.length > 1){ toast("该段文本在正文中出现 " + hit.length + " 处，无法唯一定位，请按第 " + seq + " 段查找。"); return false; }
+    toast("正文与该段数据不一致，已按第 " + seq + " 段换算仍未命中，请按编号查找。");
     return false;
   };
   if(__sampleTopicCache){
@@ -1443,8 +1693,7 @@ function initNoteTools(view, a, anchorPara){
   function paraOf(node){
     var el = node && node.nodeType === 1 ? node : (node && node.parentElement);
     while(el && el !== view){
-      if(el.tagName === "P" && el.parentElement && el.parentElement.classList.indexOf === undefined &&
-         el.parentElement.classList.contains("artText")) return el;
+      if(el.id && el.id.indexOf("pa-") === 0) return el;   /* P03.4: 锚点 span 即"段" */
       el = el.parentElement;
     }
     return null;
@@ -1570,6 +1819,16 @@ function initNoteTools(view, a, anchorPara){
     var txt = String(sel).trim();
     if(txt.length < 2){ hideBar(); return; }
     var p = paraOf(sel.anchorNode);
+    if(!p){
+      /* 兜底：按选区与实际锚点 span 的相交关系定位（浏览器锚点/焦点差异下更稳） */
+      try{
+        var rng0 = sel.getRangeAt(0);
+        var hitSpan = Array.prototype.slice.call(view.querySelectorAll(".artText .pa")).filter(function(sp){
+          try{ return rng0.intersectsNode(sp); }catch(e){ return false; }
+        });
+        p = hitSpan[0] || null;
+      }catch(e){}
+    }
     if(!p){ hideBar(); return; }
     cur.text = txt.slice(0, 600);
     cur.paraId = p.id || "";
@@ -1593,6 +1852,7 @@ function initNoteTools(view, a, anchorPara){
       var btn = e.target && e.target.getAttribute ? e.target : null;
       var act = btn && btn.getAttribute("data-sa");
       if(!act) return;
+      if((act === "quote" || act === "note") && !cur.text){ toast("请先在正文中选中一段文字"); hideBar(); return; }
       var pEl = cur.paraId ? document.getElementById(cur.paraId) : null;
       if(act === "quote"){
         if(addNote({
