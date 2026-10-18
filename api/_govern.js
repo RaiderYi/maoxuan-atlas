@@ -67,7 +67,12 @@ export function resolveScope(body, ctx) {
   const badArticles = articleIds.filter(a => !knownArticles.has(a));
   if (badArticles.length) throw new ScopeError('scope_invalid', '未知文章: ' + badArticles.join('、'), { badArticles });
   const badParas = paragraphIds.filter(id => !knownParas.has(id));
-  if (badParas.length) throw new ScopeError('scope_invalid', '未知段落: ' + badParas.slice(0, 5).join('、'), { badParagraphs: badParas });
+  if (badParas.length) {
+    // 为什么可能是"存在但不能引用": 题注/尾注段落不作为文本证据，服务端语料里没有它们
+    throw new ScopeError('scope_invalid',
+      '段落不存在或不可作为引用范围: ' + badParas.slice(0, 5).join('、') +
+      '（题注与注释类段落不作文本证据）', { badParagraphs: badParas });
+  }
 
   // 5) 专题范围
   let topicArticles = null;
@@ -332,6 +337,95 @@ export async function makeBudget() {
     markExhausted() { if (!kv && limit !== null) instanceUsed = limit; },
     /* 兼容同步调用点 (测试/旧代码): 无 KV 时的快速判断 */
     _instanceUsed: () => instanceUsed,
+  };
+  return api;
+}
+
+/* ---------- 50 元真实计费预算 (CNY) ----------
+   价格口径: DeepSeek deepseek-flash 官方价, 取【高峰价】做保守估算
+     输入 缓存命中 0.04 元/百万 · 缓存未命中 2.00 元/百万 · 输出 8.00 元/百万
+   结算: 先按单次上限预留, 拿到 usage 后按实际 token 结算并退回差额 */
+export const PRICE_CNY_PER_M = { in_hit: 0.04, in_miss: 2.0, out: 8.0 };
+
+export function costOfUsage(usage) {
+  const u = usage || {};
+  const hit = Number(u.prompt_cache_hit_tokens || 0);
+  const miss = Number(u.prompt_cache_miss_tokens != null
+    ? u.prompt_cache_miss_tokens
+    : Math.max(0, Number(u.prompt_tokens || 0) - hit));
+  const out = Number(u.completion_tokens || 0);
+  const cny = (hit * PRICE_CNY_PER_M.in_hit + miss * PRICE_CNY_PER_M.in_miss + out * PRICE_CNY_PER_M.out) / 1e6;
+  return {
+    cny: Math.round(cny * 1e6) / 1e6,
+    hitTokens: hit, missTokens: miss, outTokens: out,
+    totalTokens: hit + miss + out,
+    priceBasis: 'deepseek-flash peak (in_miss 2.0 / out 8.0 / in_hit 0.04 CNY per 1M)',
+  };
+}
+
+export async function makeCnyBudget() {
+  const raw = process.env.BUDGET_LIMIT_CNY;
+  const limit = (raw && /^\d+(\.\d+)?$/.test(String(raw))) ? parseFloat(raw) : null;
+  const period = process.env.BUDGET_PERIOD || new Date().toISOString().slice(0, 7);
+  const key = `budget:cny:${period}`;
+  const kv = kvConfigured();
+  let instanceSpent = 0;
+  const api = {
+    currency: 'CNY',
+    configured: limit !== null,
+    limit,
+    period,
+    scope: kv ? 'global' : 'instance',
+    async used() {
+      if (kv) {
+        try { const r = await kvCmd(['GET', key]); return Number(r.result || 0) || 0; }
+        catch { return null; }
+      }
+      return instanceSpent;
+    },
+    async left() {
+      if (limit === null) return null;
+      const u = await api.used();
+      return u === null ? null : Math.max(0, limit - u);
+    },
+    async exhausted() {
+      if (limit === null) return false;
+      const u = await api.used();
+      if (u === null) return true;      // 读不到状态 → 视为不可用, 阻断
+      return u >= limit;
+    },
+    /** 预留一次请求的上限费用; 超限返回 false 并回滚 */
+    async reserve(amount) {
+      if (limit === null) return false;
+      const amt = Math.max(0, Number(amount) || 0);
+      if (kv) {
+        try {
+          const r = await kvCmd(['INCRBYFLOAT', key, String(amt)]);
+          const v = Number(r.result);
+          if (!Number.isFinite(v)) throw new Error('kv bad reply');
+          if (v > limit) { await kvCmd(['INCRBYFLOAT', key, String(-amt)]); return false; }
+          return true;
+        } catch (e) {
+          console.log(JSON.stringify({ t: 'kv_error', where: 'budget_cny', msg: String(e && e.message) }));
+          return false;
+        }
+      }
+      if (instanceSpent + amt > limit) return false;
+      instanceSpent += amt;
+      return true;
+    },
+    /** 用实际费用替换预留 (差额可为负) */
+    async settle(reserved, actual) {
+      const delta = (Number(actual) || 0) - (Number(reserved) || 0);
+      const d = Math.round(delta * 1e6) / 1e6;
+      if (kv) {
+        try { await kvCmd(['INCRBYFLOAT', key, String(d)]); return { ok: true, delta: d }; }
+        catch (e) { return { ok: false, delta: d, error: String(e && e.message) }; }
+      }
+      instanceSpent = Math.max(0, instanceSpent + d);
+      return { ok: true, delta: d };
+    },
+    async release(reserved) { return api.settle(reserved, 0); },
   };
   return api;
 }

@@ -237,6 +237,17 @@ export async function askPipeline(question, opts, log) {
       throw e;
     }
     ret.model = r.model;
+    /* 费用核算: 累计每次上游调用的 token 用量（含重试），供 50 元预算结算 */
+    if (!ret.usage) ret.usage = { prompt_tokens: 0, completion_tokens: 0,
+      prompt_cache_hit_tokens: 0, prompt_cache_miss_tokens: 0, calls: 0 };
+    const u = r.usage || {};
+    ret.usage.calls += 1;
+    ret.usage.prompt_tokens += Number(u.prompt_tokens || 0);
+    ret.usage.completion_tokens += Number(u.completion_tokens || 0);
+    ret.usage.prompt_cache_hit_tokens += Number(u.prompt_cache_hit_tokens || 0);
+    ret.usage.prompt_cache_miss_tokens += Number(
+      u.prompt_cache_miss_tokens != null ? u.prompt_cache_miss_tokens
+        : Math.max(0, Number(u.prompt_tokens || 0) - Number(u.prompt_cache_hit_tokens || 0)));
     ret.attemptsLog.push({ attempt, ms: Date.now() - tCall,
       cost: r.usage?.cost?.amount ?? r.usage?.total_cost ?? null,
       tokens: r.usage?.total_tokens ?? null });
