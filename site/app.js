@@ -128,7 +128,7 @@ function applyRoute(){
   if(r.v==="year"){ show("tl"); selectYear(r.y); return; }
   if(r.v==="search"){ document.getElementById("q").value = r.q; doSearch(r.q); return; }
   if(r.v==="place"){ show("map"); selectPlace(r.p); return; }
-  show(r.v==="map"||r.v==="tl"||r.v==="graph"||r.v==="stats"||r.v==="read"||r.v==="cats"||r.v==="home" ? r.v : "home");
+  show(r.v==="map"||r.v==="tl"||r.v==="graph"||r.v==="stats"||r.v==="read"||r.v==="cats"||r.v==="home"||r.v==="topic"||r.v==="study" ? r.v : "home");
   if(r.v==="map"||!r.v) document.title = "毛选时空研读";
 }
 window.addEventListener("popstate", applyRoute);
@@ -181,27 +181,134 @@ function renderCatalog(){
   }
   track("page_view", {pageType:"catalog"});
 }
+/* ---------- P02.2/P04: 专题（首版只列真实存在的一份，未建步骤明示） ---------- */
+var TOPICS = [{
+  id: "jgs",
+  title: "井冈山：红色政权为什么能够存在",
+  q: "红色政权存在的条件是什么？根据地又面临哪些问题？",
+  articles: ["v1n03", "v1n04"],
+  why: "两篇同期文章：一篇讲存在的条件，一篇讲根据地建设的实际问题。放在一起读，能看出条件与困难是同一局势的两面。",
+  steps: [
+    { t: "先读条件", d: "《中国的红色政权为什么能够存在？》——作者列出的几个条件，以及这些条件为什么在当时成立。", art: "v1n03" },
+    { t: "再读问题", d: "《井冈山的斗争》——根据地建设中的实际困难，以及当时的应对。", art: "v1n04" },
+    { t: "比对异同", d: "两篇对同一局势的判断是否一致？哪些结论是有条件的、只在特定前提下成立？", art: null },
+    { t: "写下自己的结论", d: "用自己的话回答核心问题，并附上你引用的原文段落。", art: null }
+  ]
+}];
+
+function topicHtml(){
+  var t = TOPICS[0];
+  var h = "<div class='topicWrap'>";
+  h += "<div class='topicHero'><h2>" + esc(t.title) + "<span class='badge'>首版专题</span></h2>";
+  h += "<p class='q'>核心问题：" + esc(t.q) + "</p>";
+  h += "<p class='meta'>" + esc(t.why) + "<br>语料范围：2 篇原文 · AI 研究室可直接就这两篇提问（其余篇目可读可记笔记，但不进入 AI 引用范围）。</p></div>";
+  h += "<ul class='stepList'>";
+  t.steps.forEach(function(s, i){
+    h += "<li class='stepItem'><div class='st'>第 " + (i+1) + " 步</div><div class='tt'>" + esc(s.t) + "</div><div class='ds'>" + esc(s.d) + "</div>";
+    if(s.art){
+      var a = ARTS.filter(function(x){ return x.id === s.art; })[0];
+      h += "<a class='go' href='#/art/" + esc(s.art) + "'>读原文" + (a ? " ·《" + esc(a.title) + "》" : "") + " →</a>";
+    } else {
+      h += "<span class='badge'>成果任务 · 建设中</span>";
+      h += " <a class='go' href='research.html?art=" + t.articles.join(",") + "&from=topic:" + t.id + "'>先去研究室就这两篇提问 →</a>";
+    }
+    h += "</li>";
+  });
+  h += "</ul>";
+  h += "<div class='homeNote'>专题的阅读步骤来自真实原文；比对与成果任务在建设中（P04）。不使用未经审校的背景补充，也不要求照抄标准答案。</div>";
+  h += "</div>";
+  return h;
+}
+function renderTopic(){
+  var v = document.getElementById("view-topic");
+  if(!v) return;
+  v.innerHTML = topicHtml();
+  track("page_view", {pageType:"topic"});
+}
+
+/* ---------- P02/P06: 我的书房（聚合本机已有成果，只读真实数据，不造进度） ---------- */
+function renderStudy(){
+  var v = document.getElementById("view-study");
+  if(!v) return;
+  var marks = [], reads = [], recent = {}, cards = [];
+  try{ marks = Object.keys(JSON.parse(localStorage.getItem("mx_marks") || "{}")); }catch(e){}
+  try{ reads = Object.keys(JSON.parse(localStorage.getItem("mx_read") || "{}")); }catch(e){}
+  try{ recent = JSON.parse(localStorage.getItem("mx_recent") || "{}") || {}; }catch(e){}
+  try{ cards = JSON.parse(localStorage.getItem("mx_research_cards") || "[]") || []; }catch(e){}
+  if(!Array.isArray(cards)) cards = [];
+  var recentIds = Object.keys(recent).sort(function(a, b){ return (recent[b]||0) - (recent[a]||0); }).slice(0, 5);
+
+  var h = "<div class='topicWrap'>";
+  h += "<div class='topicHero'><h2>我的书房</h2>";
+  h += "<p class='meta'>这里的数字全部来自这台设备的本地记录：没有记录就显示 0，不预填、不估算。数据只存在当前浏览器，不上传。完整书房（按文章/专题查找、备份恢复、Markdown 导出集中管理）在建设中（P06）。</p></div>";
+  h += "<div class='studyGrid'>";
+  h += "<div class='studyCard'><div class='num'>" + reads.length + "</div><div class='lb'>已读篇目（有阅读位置记录）</div><a class='lk' href='#/view/cats'>去经典研读</a></div>";
+  h += "<div class='studyCard'><div class='num'>" + marks.length + "</div><div class='lb'>收藏篇目</div><a class='lk' href='#/view/cats'>在目录中查看带 ★ 的篇目</a></div>";
+  h += "<div class='studyCard'><div class='num'>" + cards.length + "</div><div class='lb'>研究卡</div><a class='lk' href='research.html'>去 AI 研究室查看 / 导出</a></div>";
+  h += "</div>";
+
+  if(recentIds.length){
+    h += "<ul class='stepList' style='margin-top:18px'>";
+    recentIds.forEach(function(id){
+      var a = ARTS.filter(function(x){ return x.id === id; })[0];
+      if(!a) return;
+      var d = "";
+      try{ d = new Date(recent[id]).toLocaleString(); }catch(e){}
+      h += "<li class='stepItem'><div class='st'>最近阅读" + (d ? " · " + esc(d) : "") + "</div>";
+      h += "<div class='tt'>" + esc(a.title) + "</div>";
+      h += "<a class='go' href='#/art/" + esc(id) + "'>回到这篇 →</a></li>";
+    });
+    h += "</ul>";
+  } else {
+    h += "<div class='statePanel' style='margin-top:22px'><h2>还没有阅读记录</h2>";
+    h += "<p>读过的篇目和阅读位置会自动保存在这台设备上，下次打开可以直接接着读。</p>";
+    h += "<div class='acts'><a href='#/view/cats'>浏览全部篇目</a><a class='ghost' href='#/view/topic'>从一份专题开始</a></div></div>";
+  }
+  h += "<div class='homeNote'>收藏、阅读位置、研究卡都可以在各自页面导出或删除；本页只做汇总，不会修改你的数据。</div>";
+  h += "</div>";
+  v.innerHTML = h;
+  track("page_view", {pageType:"study"});
+}
+
 function renderHome(){
   var v = document.getElementById("view-home");
   var last = lastReadArticle();
-  var marks = [];
+  var marks = [], readCnt = 0, cardCnt = 0;
   try{ marks = Object.keys(JSON.parse(localStorage.getItem("mx_marks")||"{}")); }catch(e){}
+  try{ readCnt = Object.keys(JSON.parse(localStorage.getItem("mx_read")||"{}")).length; }catch(e){}
+  try{ var cc = JSON.parse(localStorage.getItem("mx_research_cards")||"[]"); cardCnt = Array.isArray(cc) ? cc.length : 0; }catch(e){}
   var h = "<div class='homeWrap'>";
-  h += "<div class='hero'><h1>毛选时空研读</h1><p class='sub'>沿着时间、地点和文章之间的联系，开始一次有脉络的阅读。</p>";
-  h += "<div class='heroBtns'><a class='btnMain' href='#/view/cats'>开始研读 · 浏览全部篇目</a>";
+  h += "<div class='hero'><h1>毛选时空研读</h1><p class='sub'>从一个问题开始：找到原文、读懂上下文、核查引用，再写下自己的理解。</p>";
+  h += "<div class='heroBtns'><a class='btnMain' href='#/view/topic'>开始一份专题</a>" +
+       "<a class='btnCont' href='#/view/cats'>浏览全部篇目</a></div>";
+  /* P02.2: 继续阅读 — 只用真实记录，无记录时给明确开始动作，不生成假进度 */
   if(last){
     var t = "";
     try{ t = new Date(JSON.parse(localStorage.getItem("mx_recent")||"{}")[last.id]).toLocaleDateString(); }catch(e){}
-    h += "<a class='btnCont' href='#/art/"+esc(last.id)+"'>继续上次 ·《"+esc(last.title)+"》"+(t?"（"+t+"）":"")+"</a>";
+    h += "<p class='heroNote'>继续上次 ·《<a href='#/art/"+esc(last.id)+"' style='color:var(--cinnabar);text-decoration:none;border-bottom:1px dashed var(--cinnabar)'>"+esc(last.title)+"</a>》"+(t?" · "+t:"")+"</p>";
+  }else{
+    h += "<p class='heroNote'>还没有阅读记录。点上面任一入口开始，读到哪会自动记住，下次接着读。</p>";
   }
-  h += "</div><p class='heroNote'>本站收录 217 篇；数量反映当前数据库。</p></div>";
-  /* explore entries */
-  h += "<div class='homeGrid'>";
-  h += "<a class='homeCard' href='#/view/map'><i>舆</i><b>从地点找文章</b><span>文章写作之地落于山川舆图</span></a>";
-  h += "<a class='homeCard' href='#/view/tl'><i>谱</i><b>从年份看脉络</b><span>1925—1957 年谱纵览</span></a>";
-  h += "<a class='homeCard' href='#/view/graph'><i>图</i><b>沿关系延伸阅读</b><span>文章与事件的关联图谱</span></a>";
-  h += "<a class='homeCard' href='#/view/stats'><i>数</i><b>本站语料统计</b><span>篇幅与地点分布</span></a>";
+  if(readCnt || marks.length || cardCnt){
+    h += "<p class='heroNote'>本机记录：已读 "+readCnt+" 篇 · 收藏 "+marks.length+" 篇 · 研究卡 "+cardCnt+" 张 · <a href='#/view/study' style='color:var(--cinnabar)'>进入我的书房</a></p>";
+  }
   h += "</div>";
+  /* P02.2/P02.3: 主任务入口（研读/专题/研究室/书房） */
+  h += "<div class='homeGrid'>";
+  h += "<a class='homeCard' href='#/view/topic'><i>题</i><b>从一份专题开始</b><span>围绕一个问题串读两篇原文，带着任务读完</span></a>";
+  h += "<a class='homeCard' href='#/view/cats'><i>典</i><b>经典研读</b><span>按卷浏览 217 篇，读到哪记到哪</span></a>";
+  h += "<a class='homeCard' href='research.html'><i>问</i><b>AI 研究室</b><span>答案必须引用原文段落，可逐条核对</span></a>";
+  h += "<a class='homeCard' href='#/view/study'><i>房</i><b>我的书房</b><span>收藏、阅读记录与研究卡汇总</span></a>";
+  h += "</div>";
+  /* 探索工具（降为辅助） */
+  h += "<div class='homeGrid'>";
+  h += "<a class='homeCard' href='#/view/map'><i>舆</i><b>探索 · 舆图</b><span>从写作地点找文章</span></a>";
+  h += "<a class='homeCard' href='#/view/tl'><i>谱</i><b>探索 · 年谱</b><span>1925—1957 按年看脉络</span></a>";
+  h += "<a class='homeCard' href='#/view/graph'><i>图</i><b>探索 · 图谱</b><span>按关系延伸阅读</span></a>";
+  h += "<a class='homeCard' href='#/view/stats'><i>数</i><b>探索 · 语料统计</b><span>篇幅与地点分布</span></a>";
+  h += "</div>";
+  /* 可问语料说明 */
+  h += "<div class='homeNote'>AI 研究室的回答范围：目前只覆盖《中国的红色政权为什么能够存在？》《井冈山的斗争》两篇原文；其他篇目可以阅读、收藏、记笔记，但不会被 AI 引用。语料不足时会直接说明「资料不足」，不编造。</div>";
   h += "<div class='homeNote'>资料来源：《毛泽东选集》第一至五卷（人民出版社）· 本站仅作个人学习研读之用 · 收藏与阅读位置仅保存在当前浏览器</div>";
   h += "</div>";
   v.innerHTML = h;
@@ -209,12 +316,14 @@ function renderHome(){
 }
 function show(v){
   state.view = v;
-  ["map","tl","graph","read","search","stats","cats","home"].forEach(function(k){
+  ["map","tl","graph","read","search","stats","cats","home","topic","study"].forEach(function(k){
     var el = document.getElementById("view-"+k);
     if(el) el.classList.toggle("on", k===v);
   });
   if(v==="cats") renderCatalog();
   if(v==="home") renderHome();
+  if(v==="topic") renderTopic();
+  if(v==="study") renderStudy();
   document.querySelectorAll("nav button, #tabbar button").forEach(function(b){
     b.classList.toggle("on", b.getAttribute("data-v")===v);
   });
@@ -231,10 +340,28 @@ function show(v){
 document.querySelectorAll("nav button, #tabbar button").forEach(function(b){
   b.addEventListener("click", function(){
     var v = b.getAttribute("data-v");
+    if(!v) return;                                  /* P02.1: 探索 menu trigger has no data-v */
     if(v==="read"){ if(state.curArt) setHash("#/art/"+state.curArt.id); return; }
+    var m = document.getElementById("navMenu");
+    if(m) m.classList.remove("open");
     setHash("#/view/"+v);
   });
 });
+/* P02.1: 探索 dropdown (舆图/年谱/图谱/统计 降为辅助入口) */
+(function(){
+  var g = document.getElementById("navGroup");
+  var btn = document.getElementById("navExplore");
+  var menu = document.getElementById("navMenu");
+  if(!g || !btn || !menu) return;
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var open = menu.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", function(e){
+    if(!g.contains(e.target)){ menu.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
+  });
+})();
 
 /* ---------- data prep ---------- */
 var ARTS = DATA;
@@ -934,6 +1061,7 @@ function openArticle(id, fromRoute, anchorPara){
       "<span class='fsGrp'><button data-fs='0' class='"+(fs===0?"on":"")+"'>小</button><button data-fs='1' class='"+(fs===1?"on":"")+"'>中</button><button data-fs='2' class='"+(fs===2?"on":"")+"'>大</button></span>"+
       "<button id='rtMark' class='"+(isMarked?"on":"")+"'>"+(isMarked?"★ 已收藏":"☆ 收藏")+"</button>"+
       "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button>"+
+      (lastQuery() ? "<button id='rtBackSearch' style='color:#a8842c;border-color:#a8842c'>← 返回检索</button>" : "")+
       (anchorPara ? "<button id='rtBackScene' style='color:#b03a2e;border-color:#b03a2e'>← 返回</button>" : "")+
       "</div>"+
       "<div class='readWrap'><div class='readHead'><div class='vol'>《毛泽东选集》第"+["一","二","三","四","五"][a.vol-1]+"卷</div>"+
@@ -1003,6 +1131,13 @@ function openArticle(id, fromRoute, anchorPara){
       }else{
         toast(url);
       }
+    });
+    /* P02.3: 从检索点进来的文章，允许一键回到原检索结果 */
+    var rtBs = document.getElementById("rtBackSearch");
+    if(rtBs) rtBs.addEventListener("click", function(){
+      var q = lastQuery();
+      if(q) setHash("#/search/" + encodeURIComponent(q));
+      else setHash("#/view/cats");
     });
     /* P01.3: 来源感知返回 — 剧场已下线，不再引用 theatre.html/jgs_scene。
        从研究室进入则返回研究室，否则返回目录；直接深链也提供目录入口。 */
@@ -1165,32 +1300,48 @@ function track(ev, props){
 }
 
 var searchSeq = 0;
+/* P02.3: 最近一次检索词（仅存在本机会话，用于"返回检索"） */
+function lastQuery(){
+  try{ return sessionStorage.getItem("mx_lastQuery") || ""; }catch(e){ return ""; }
+}
+/* P02.3: 结果按来源分区 —— 原文命中 / 标题命中 / 背景资料命中（非原文），并保留检索上下文 */
 function doSearch(q){
   if(!q || q.length<2){ show("map"); return; }
-  var seq = ++searchSeq;                       /* A02: stale query can never overwrite */
+  var seq = ++searchSeq;
+  try{ sessionStorage.setItem("mx_lastQuery", q); }catch(e){}
   var res = document.getElementById("view-search");
-  var hitsMeta = ARTS.filter(function(a){
-    return a.title.indexOf(q)>=0 || (a.why||"").indexOf(q)>=0 || (a.event||"").indexOf(q)>=0 || a.place.indexOf(q)>=0;
+  var byTitle = [], byEnrich = [];
+  ARTS.forEach(function(a){
+    if(a.title.indexOf(q)>=0){ byTitle.push(a); return; }
+    if((a.why||"").indexOf(q)>=0 || (a.event||"").indexOf(q)>=0 || a.place.indexOf(q)>=0) byEnrich.push(a);
   });
-  /* container with .sres ALWAYS present so late appends cannot be lost (A02) */
-  var h = "<div class='seStats' id='seStats'>命中 " + hitsMeta.length + " 篇（标题/背景/地点）· 全文检索中…</div>" +
-          "<ul class='sres' id='sresList'></ul>";
+  var h = "<div class='seStats' id='seStats'>标题命中 " + byTitle.length + " 篇 · 背景资料命中 " + byEnrich.length +
+          " 篇（非原文）· 全文检索中…</div>" +
+          "<div class='seSec'><h4>原文命中 <span id='seFullCnt'>检索中…</span></h4><ul class='sres' id='seFull'></ul></div>" +
+          "<div class='seSec'><h4>标题命中 <span>" + byTitle.length + "</span></h4><ul class='sres' id='seTitle'></ul></div>";
+  if(byEnrich.length){
+    h += "<div class='seSec'><h4>背景资料命中（站点富化信息，非原文） <span>" + byEnrich.length + "</span></h4><ul class='sres' id='seEnrich'></ul></div>";
+  }
   res.innerHTML = h;
-  var ul = res.querySelector("#sresList");
-  var rowsHtml = "";
-  hitsMeta.forEach(function(a){
-    rowsHtml += srow(a, hl(esc(a.title), q), esc(a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place+" · "+a.event), "", q);
-  });
-  ul.innerHTML = rowsHtml;
+  var tUl = document.getElementById("seTitle");
+  var eUl = document.getElementById("seEnrich");
+  if(tUl) tUl.innerHTML = byTitle.map(function(a){
+    return srow(a, hl(esc(a.title), q), esc(a.dateRaw.replace(/[（）()]/g,"") + " · " + a.place + " · " + a.event), "", q);
+  }).join("");
+  if(eUl) eUl.innerHTML = byEnrich.map(function(a){
+    return srow(a, esc(a.title), esc(a.dateRaw.replace(/[（）()]/g,"") + " · " + a.place), esc(a.why || a.event || ""), q);
+  }).join("");
   bindSearchRows(res);
   show("search");
   track("page_view", {pageType:"search"});
-  /* async full-text pass */
+  /* async full-text pass → 原文命中 分区 */
   preloadTexts(function(){
     if(seq !== searchSeq) return;              /* a newer query started: discard */
     if(document.getElementById("q").value.trim() !== q) return;
-    var seenIds = {}; hitsMeta.forEach(function(a){seenIds[a.id]=1;});
-    var extra = "", fullHits = 0;
+    var ul = document.getElementById("seFull");
+    if(!ul) return;
+    var seenIds = {}; byTitle.forEach(function(a){seenIds[a.id]=1;}); byEnrich.forEach(function(a){seenIds[a.id]=1;});
+    var rows = "", fullHits = 0;
     ARTS.forEach(function(a){
       if(seenIds[a.id]) return;
       var t = textCache[a.id];
@@ -1200,15 +1351,21 @@ function doSearch(q){
       fullHits++;
       var s = Math.max(0, i-40);
       var frag = esc(t.slice(s, i+70).replace(/\n/g," "));
-      extra += srow(a, esc(a.title), esc(a.dateRaw.replace(/[（）()]/g,"")+" · "+a.place), frag, q);
+      rows += srow(a, esc(a.title), esc(a.dateRaw.replace(/[（）()]/g,"") + " · " + a.place), frag, q);
     });
-    if(extra) ul.insertAdjacentHTML("beforeend", extra);
+    ul.innerHTML = rows;
+    var cnt = document.getElementById("seFullCnt");
+    if(cnt) cnt.textContent = fullHits + " 篇";
     var st = document.getElementById("seStats");
-    var msg = "命中 " + hitsMeta.length + " 篇（标题/背景/地点）+ " + fullHits + " 篇（全文）";
+    var msg = "原文命中 " + fullHits + " 篇 · 标题命中 " + byTitle.length + " 篇 · 背景资料命中 " + byEnrich.length + " 篇（非原文）";
     if(textLoadFail>0) msg += " · 有 " + textLoadFail + " 篇正文加载失败，结果可能不完整";
     if(st) st.textContent = msg;
-    if(!hitsMeta.length && !fullHits)
-      res.innerHTML = "<div class='hint' style='padding:40px 10px;max-width:900px;margin:0 auto'>未检出「"+esc(q)+"」相关篇章。</div>";
+    if(!byTitle.length && !byEnrich.length && !fullHits){
+      res.innerHTML = "<div class='statePanel'><h2>没有检出相关篇章</h2><p>「" + esc(q) + "」在标题、背景资料与全部正文中均未命中。</p>" +
+        "<div class='acts'><a href='#/view/cats'>浏览全部篇目</a><a class='ghost' href='#/view/topic'>从一份专题开始</a></div>" +
+        "<div class='note'>换个更短的关键词，或先按卷浏览目录。</div></div>";
+      return;
+    }
     bindSearchRows(res);
   });
 }

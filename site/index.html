@@ -273,6 +273,11 @@ main{flex:1 1 auto;min-height:0;position:relative}
 .linkArts .lks a:hover{text-decoration:underline}
 
 #view-search .sres{list-style:none;max-width:900px;margin:0 auto}
+/* P02.3: 检索结果分区标题 */
+#view-search .seSec{max-width:900px;margin:18px auto 0}
+#view-search .seSec h4{font-size:13px;color:var(--cinnabar);letter-spacing:2px;padding:0 12px 8px;
+  border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline}
+#view-search .seSec h4 span{font-size:12px;color:var(--ink2);letter-spacing:1px}
 #view-search .sres li{padding:13px 12px;border-bottom:1px dashed var(--border);cursor:pointer}
 #view-search .sres li:hover{background:rgba(176,58,46,.05)}
 #view-search .sres .t{font-size:16px;color:var(--ink)}
@@ -416,6 +421,51 @@ html.dark .yearRow{border-left-color:rgba(160,145,115,.2)}
 .homeCard i{font-style:normal;font-size:26px;color:var(--cinnabar)}
 .homeCard b{font-size:15px;color:var(--ink);letter-spacing:1px}
 .homeCard span{font-size:12.5px;color:var(--ink2)}
+/* P02.1: nav link + 探索 dropdown (探索工具降为辅助入口) */
+nav .navLink{font-family:inherit;font-size:13px;padding:6px 14px;border-radius:15px;text-decoration:none;
+  border:1px solid var(--gold);color:var(--gold);letter-spacing:1px;transition:.15s;white-space:nowrap}
+nav .navLink:hover{background:var(--gold);color:#fff}
+.navGroup{position:relative;display:inline-block}
+.navMenu{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:800;min-width:132px;
+  background:var(--cardbg,#fffdf5);border:1px solid var(--border);border-radius:10px;padding:6px;
+  box-shadow:0 6px 20px var(--shadow);flex-direction:column;gap:2px}
+.navMenu.open{display:flex}
+.navMenu button{width:100%;text-align:left;border:none;background:none;padding:7px 12px;border-radius:7px;
+  font-family:inherit;font-size:13px;color:var(--ink2);letter-spacing:1px;cursor:pointer}
+.navMenu button:hover{background:rgba(176,58,46,.08);color:var(--cinnabar)}
+html.dark .navMenu{background:#211e19}
+/* P02.5: unified empty / state panels */
+.statePanel{max-width:640px;margin:60px auto;padding:32px 34px;background:var(--cardbg,#fffdf5);
+  border:1px solid var(--border);border-radius:14px;text-align:center;line-height:2}
+.statePanel h2{font-size:19px;color:var(--cinnabar);letter-spacing:3px;margin-bottom:10px}
+.statePanel p{font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.statePanel .acts{margin-top:18px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.statePanel .acts a,.statePanel .acts button{font-family:inherit;font-size:13px;padding:7px 18px;border-radius:15px;
+  text-decoration:none;cursor:pointer;border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff;letter-spacing:1px}
+.statePanel .acts .ghost{background:transparent;color:var(--cinnabar)}
+.statePanel .note{font-size:12px;color:var(--ink2);margin-top:14px;border-top:1px dashed var(--border);padding-top:12px;text-align:left}
+/* topic (专题研读) */
+.topicWrap{max-width:900px;margin:0 auto;padding:8px 0 40px}
+.topicHero{background:var(--cardbg,#fffdf5);border:1px solid var(--border);border-left:4px solid var(--cinnabar);
+  border-radius:12px;padding:24px 26px;margin-bottom:18px}
+.topicHero h2{font-size:20px;letter-spacing:2px;color:var(--ink);margin-bottom:8px}
+.topicHero .q{font-size:14px;color:var(--cinnabar);margin-bottom:10px;letter-spacing:1px}
+.topicHero .meta{font-size:12.5px;color:var(--ink2);line-height:1.9}
+.stepList{list-style:none;display:flex;flex-direction:column;gap:12px}
+.stepItem{background:var(--cardbg,#fffdf5);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.stepItem .st{font-size:11.5px;color:var(--gold);letter-spacing:2px}
+.stepItem .tt{font-size:15px;color:var(--ink);margin:5px 0 7px}
+.stepItem .ds{font-size:12.5px;color:var(--ink2);line-height:1.85}
+.stepItem .go{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--cinnabar);text-decoration:none;
+  border-bottom:1px dashed var(--cinnabar)}
+.badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:9px;margin-left:6px;
+  background:rgba(168,132,44,.14);color:var(--gold);letter-spacing:1px}
+/* study (我的书房) */
+.studyGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.studyCard{background:var(--cardbg,#fffdf5);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.studyCard .num{font-size:28px;color:var(--cinnabar);letter-spacing:1px}
+.studyCard .lb{font-size:12.5px;color:var(--ink2);margin-top:4px}
+.studyCard .lk{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--cinnabar);text-decoration:none;border-bottom:1px dashed var(--cinnabar)}
 .homeNote{font-size:11.5px;color:var(--ink2);margin-top:28px;letter-spacing:1px;line-height:1.9;text-align:center}
 html.dark .homeCard{background:var(--cardbg)}
 /* ===== CATALOG (C02) ===== */
@@ -483,12 +533,12 @@ html.dark .catBar button{background:var(--cardbg)}
     background:rgba(255,252,243,.97);border-top:2px solid var(--cinnabar);
     box-shadow:0 -3px 14px var(--shadow);
   }
-  #tabbar button{
-    flex:1;font-family:inherit;background:none;border:none;cursor:pointer;
+  #tabbar button, #tabbar .tbLink{
+    flex:1;font-family:inherit;background:none;border:none;cursor:pointer;text-decoration:none;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
     font-size:11px;color:var(--ink2);letter-spacing:2px;
   }
-  #tabbar button .tbIc{font-size:17px;line-height:1}
+  #tabbar button .tbIc, #tabbar .tbLink .tbIc{font-size:17px;line-height:1}
   #tabbar button.on{color:var(--cinnabar);font-weight:700}
   .histBar{left:8px;right:8px;bottom:8px;padding:6px 10px;gap:8px;flex-wrap:wrap}
   .histBar .hb-title{font-size:11px;letter-spacing:1px}
@@ -515,12 +565,20 @@ html.dark .catBar button{background:var(--cardbg)}
       <div class="sub" id="verTag" style="font-size:11px;opacity:.8;letter-spacing:1px">AIBIGPLAYER V2 · Alpha</div>
     </div>
     <nav>
-      <button data-v="home" class="on">研读</button>
-      <button data-v="cats">目录</button>
-      <button data-v="map">舆图</button>
-      <button data-v="tl">年谱</button>
-      <button data-v="graph">图谱</button>
-      <button onclick="location.href='research.html'" style="color:var(--gold,#a8842c);border-color:var(--gold,#a8842c)">AI研究室</button>
+      <button data-v="home" class="on">首页</button>
+      <button data-v="cats">经典研读</button>
+      <button data-v="topic">专题研读</button>
+      <a class="navLink" href="research.html">AI 研究室</a>
+      <button data-v="study">我的书房</button>
+      <span class="navGroup" id="navGroup">
+        <button id="navExplore" aria-expanded="false">探索 ▾</button>
+        <span class="navMenu" id="navMenu" role="menu">
+          <button data-v="map">舆图</button>
+          <button data-v="tl">年谱</button>
+          <button data-v="graph">图谱</button>
+          <button data-v="stats">语料统计</button>
+        </span>
+      </span>
       <button data-v="read" id="navRead" style="display:none">文章</button>
     </nav>
     <button id="themeBtn" title="夜读模式（快捷键 D）">☾</button>
@@ -604,6 +662,8 @@ html.dark .catBar button{background:var(--cardbg)}
 
 <div id="view-home" class="view on"></div>
 <div id="view-cats" class="view"></div>
+<div id="view-topic" class="view"></div>
+<div id="view-study" class="view"></div>
 <div id="view-read" class="view">
   <div id="readProg"></div>
 </div>
@@ -612,11 +672,11 @@ html.dark .catBar button{background:var(--cardbg)}
 
 <!-- mobile tabbar -->
 <div id="tabbar">
-  <button data-v="home" class="on"><span class="tbIc">读</span>研读</button>
-  <button data-v="cats"><span class="tbIc">目</span>目录</button>
-  <button data-v="map"><span class="tbIc">舆</span>舆图</button>
-  <button data-v="tl"><span class="tbIc">谱</span>年谱</button>
-  <button data-v="graph"><span class="tbIc">图</span>图谱</button>
+  <button data-v="home" class="on"><span class="tbIc">首</span>首页</button>
+  <button data-v="cats"><span class="tbIc">典</span>研读</button>
+  <button data-v="topic"><span class="tbIc">题</span>专题</button>
+  <a class="tbLink" href="research.html"><span class="tbIc">问</span>研究室</a>
+  <button data-v="study"><span class="tbIc">房</span>书房</button>
 </div>
 
 <!-- reader toc drawer -->

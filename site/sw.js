@@ -1,5 +1,5 @@
-/* MaoXuan Viz sw.js v6: de3d (P01.4) — bump cache name to evict pre-de3d shell */ 
-var CACHE = "mx-v6";
+/* MaoXuan Viz sw.js v7: P02 五项导航/专题/书房 — bump cache to evict v6 shell */
+var CACHE = "mx-v7";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",
