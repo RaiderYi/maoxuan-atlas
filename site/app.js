@@ -86,8 +86,7 @@ var ROUTE = [
  ["北平",1949.6,39.90,116.40]
 ];
 
-var state = {view:"map", eraFilter:null, selPlace:null, curArt:null, tlFit:false, histYear:null, tlYear:null,
-  mapMode:(function(){ try{ return localStorage.getItem("mx_mapmode")||"2d"; }catch(e){ return "2d"; } })()};
+var state = {view:"map", eraFilter:null, selPlace:null, curArt:null, tlFit:false, histYear:null, tlYear:null};
 var $ = function(s){return document.querySelector(s)};
 
 /* ---------- toast ---------- */
@@ -198,7 +197,7 @@ function renderHome(){
   h += "</div><p class='heroNote'>本站收录 217 篇；数量反映当前数据库。</p></div>";
   /* explore entries */
   h += "<div class='homeGrid'>";
-  h += "<a class='homeCard' href='#/view/map'><i>舆</i><b>从地点找文章</b><span>文章写作之地落于真实地形</span></a>";
+  h += "<a class='homeCard' href='#/view/map'><i>舆</i><b>从地点找文章</b><span>文章写作之地落于山川舆图</span></a>";
   h += "<a class='homeCard' href='#/view/tl'><i>谱</i><b>从年份看脉络</b><span>1925—1957 年谱纵览</span></a>";
   h += "<a class='homeCard' href='#/view/graph'><i>图</i><b>沿关系延伸阅读</b><span>文章与事件的关联图谱</span></a>";
   h += "<a class='homeCard' href='#/view/stats'><i>数</i><b>本站语料统计</b><span>篇幅与地点分布</span></a>";
@@ -220,8 +219,6 @@ function show(v){
     b.classList.toggle("on", b.getAttribute("data-v")===v);
   });
   if(v==="map" && mapObj) setTimeout(function(){ mapObj.invalidateSize(); }, 60);
-  if(v!=="map" && window.__MX3D_MODULE__){ try{ window.__MX3D_MODULE__.pause(); }catch(e){} }
-  if(v==="map" && state.mapMode==="3d") applyMapMode();
   if(v==="graph"){ ensureGraph(function(){ graphChart && graphChart.resize(); }); }
   if(v==="tl" && tlFirstShow){
     tlFirstShow = false;
@@ -272,91 +269,6 @@ placeList.forEach(function(p){
 
 /* ---------- MAP ---------- */
 var mapObj = null, markers = [], labelLayer = null, routeLayer = null;
-/* ---------- 3D map bridge (M1): lazy load + hooks ---------- */
-var mx3dLoading = false;
-function ensureMap3d(){
-  if(window.__MX3D_MODULE__) { window.__MX3D_MODULE__.build(); return; }
-  if(mx3dLoading) return;
-  mx3dLoading = true;
-  if(!window.maplibregl){
-    var css = document.createElement("link");
-    css.rel = "stylesheet"; css.href = "assets/maplibre-gl.css";
-    document.head.appendChild(css);
-    var s = document.createElement("script");
-    s.src = "assets/maplibre-gl.js";
-    s.onload = function(){ loadMap3dModule(); };
-    /* MAP06: maplibre is only the terrain FALLBACK now - AMap (loaded inside
-       map3d.js) is primary. A failed maplibre download must not kill 3D. */
-    s.onerror = function(){ loadMap3dModule(); };
-    document.head.appendChild(s);
-  } else { loadMap3dModule(); }
-}
-function loadMap3dModule(){
-  var m = document.createElement("script");
-  m.src = "assets/map3d.js";
-  m.onload = function(){
-    mx3dLoading = false;
-    if(window.__MX3D_MODULE__ && !window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.build();
-  };
-  m.onerror = function(){ mx3dFail("三维模块加载失败"); };
-  document.head.appendChild(m);
-}
-function mx3dFail(msg){
-  mx3dLoading = false;
-  state.mapMode = "2d";
-  try{ localStorage.setItem("mx_mapmode","2d"); }catch(e){}
-  applyMapMode();
-  toast(msg || "三维不可用，已切回二维");
-  track("map3d_fallback", {});
-}
-window.__MX3D__ = {
-  state: function(){ return state; },
-  route: function(){ return ROUTE; },
-  places: function(){ return placeList; },
-  visibleArts: function(){ return visibleArts(); },
-  selectPlace: function(pid){ selectPlace(pid); },
-  track: function(ev, p){ track(ev, p); },
-  playBtnUI: function(mode){
-    var b = document.getElementById("histPlay");
-    if(b) b.textContent = mode==="playing" ? "❚❚ 暂停" : "▶ 播放";
-  },
-  fail: function(msg){ mx3dFail(msg); }
-};
-function applyMapMode(){
-  var is3d = state.mapMode === "3d";
-  var el2 = document.getElementById("mapChart");
-  var el3 = document.getElementById("map3dChart");
-  if(el2) el2.style.display = is3d ? "none" : "";
-  if(el3) el3.style.display = is3d ? "block" : "none";
-  document.querySelectorAll("#mapModeBtns button").forEach(function(b){
-    b.classList.toggle("on", b.getAttribute("data-mm")===state.mapMode);
-  });
-  var st = document.getElementById("mx3dStatus");
-  if(st) st.style.display = is3d ? "block" : "none";
-  var fb = document.getElementById("mx3dFollow");
-  if(fb) fb.style.display = is3d ? "block" : "none";
-  if(!is3d && window.__MX3D_MODULE__){
-    try{ window.__MX3D_MODULE__.pause(); }catch(e){}
-  }
-  if(is3d){
-    if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()){
-      window.__MX3D_MODULE__.refresh();
-      if(window.__mx3dMap){
-        setTimeout(function(){ window.__mx3dMap.resize(); }, 90);
-        setTimeout(function(){ window.__mx3dMap.resize(); }, 600);
-      }
-    } else {
-      ensureMap3d();
-    }
-  }
-}
-function setMapMode(mm){
-  if(mm===state.mapMode) return;
-  state.mapMode = mm;
-  try{ localStorage.setItem("mx_mapmode", mm); }catch(e){}
-  track("map3d_mode_switch", {mode:mm});
-  applyMapMode();
-}
 function visibleArts(){
   return ARTS.filter(function(a){
     if(state.eraFilter && a.era!==state.eraFilter) return false;
@@ -414,7 +326,6 @@ function updateMarkers(){
     markers.push(m);
   });
   drawRoute();
-  if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.refresh();
 }
 function drawRoute(){
   if(!mapObj || !routeLayer) return;           /* N06: guard degraded mode */
@@ -521,9 +432,6 @@ document.getElementById("histReset").addEventListener("click", function(){
   stopPlay(); setHistYear(null);
 });
 document.getElementById("histPlay").addEventListener("click", function(){
-  if(state.mapMode==="3d" && window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()){
-    window.__MX3D_MODULE__.togglePlayer(); return;
-  }
   if(playTimer){ stopPlay(); return; }
   var y = state.histYear==null ? 1925 : state.histYear;
   if(y>=1957) y = 1925;
@@ -1026,7 +934,7 @@ function openArticle(id, fromRoute, anchorPara){
       "<span class='fsGrp'><button data-fs='0' class='"+(fs===0?"on":"")+"'>小</button><button data-fs='1' class='"+(fs===1?"on":"")+"'>中</button><button data-fs='2' class='"+(fs===2?"on":"")+"'>大</button></span>"+
       "<button id='rtMark' class='"+(isMarked?"on":"")+"'>"+(isMarked?"★ 已收藏":"☆ 收藏")+"</button>"+
       "<button id='rtToc'>目录</button><button id='rtShare'>复制链接</button>"+
-      (anchorPara ? "<button id='rtBackScene' style='color:#b03a2e;border-color:#b03a2e'>← 返回剧场</button>" : "")+
+      (anchorPara ? "<button id='rtBackScene' style='color:#b03a2e;border-color:#b03a2e'>← 返回</button>" : "")+
       "</div>"+
       "<div class='readWrap'><div class='readHead'><div class='vol'>《毛泽东选集》第"+["一","二","三","四","五"][a.vol-1]+"卷</div>"+
       "<h2>"+esc(a.title)+"</h2><div class='date'>"+esc(a.dateRaw.replace(/[（）()]/g,""))+"</div></div>"+
@@ -1096,16 +1004,16 @@ function openArticle(id, fromRoute, anchorPara){
         toast(url);
       }
     });
-    /* WP06: 返回剧场 — history.back() 保留 theatre 的幕次/相机/播放器状态;
-       刷新兜底: theatre 每次切幕写 sessionStorage.jgs_scene, 返回剧场页据此恢复幕次 */
+    /* P01.3: 来源感知返回 — 剧场已下线，不再引用 theatre.html/jgs_scene。
+       从研究室进入则返回研究室，否则返回目录；直接深链也提供目录入口。 */
     var rtBack = document.getElementById("rtBackScene");
     if(rtBack) rtBack.addEventListener("click", function(){
-      if(history.length > 1 && document.referrer.indexOf("theatre.html") >= 0){
+      if(history.length > 1 && document.referrer.indexOf("research.html") >= 0){
+        history.back();
+      }else if(history.length > 1){
         history.back();
       }else{
-        var sc = null;
-        try{ sc = sessionStorage.getItem("jgs_scene"); }catch(e){}
-        location.href = "theatre.html" + (sc ? "?scene=" + encodeURIComponent(sc) : "");
+        location.href = "index.html#/view/cats";
       }
     });
     /* restore reading position */
@@ -1235,10 +1143,7 @@ function flushTextCbs(){
    Never sends note text, search query, article body or any personal field.
    Status: UNWIRED - set window.MX_ANALYTICS_ENDPOINT to enable. */
 var MX_EVENTS = {page_view:["pageType"], article_open:["articleId"], article_error:["articleId","code"],
-  bookmark_toggle:["articleId","newState"], search_result_open:["resultType"],
-  map3d_mode_switch:["mode"], map3d_place_open:["place"], map3d_stop_click:["stop"],
-  map3d_tour_toggle:["mode"], map3d_tour_station:["stop","year"],
-  map3d_follow_toggle:["on"], map3d_fallback:["reason"]};
+  bookmark_toggle:["articleId","newState"], search_result_open:["resultType"]};
 var trackSeq = {};
 function track(ev, props){
   if(!MX_EVENTS[ev]) return;
@@ -1360,13 +1265,8 @@ try{
 }
 renderTimeline();
 renderStats();
-document.querySelectorAll("#mapModeBtns button").forEach(function(b){
-  b.addEventListener("click", function(){ setMapMode(b.getAttribute("data-mm")); });
-});
-document.getElementById("mx3dFollow").addEventListener("click", function(){
-  if(window.__MX3D_MODULE__ && window.__MX3D_MODULE__.isReady()) window.__MX3D_MODULE__.toggleFollow();
-});
-applyMapMode();          /* honor persisted 2d/3d choice */
+/* P01.4: 清理废弃 3D 状态（仅此废弃 key；mx_marks/mx_read/mx_recent/mx_research_cards 一律不动） */
+try{ localStorage.removeItem("mx_mapmode"); }catch(e){}
 show("home");
 applyRoute();
 track("page_view", {pageType:"first"});

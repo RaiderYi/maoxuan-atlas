@@ -17,7 +17,7 @@ jobs:
       - name: JS syntax check
         run: |
           set -e
-          for f in site/app.js site/assets/map3d.js site/sw.js site/assets/china.json.js; do
+          for f in site/app.js site/sw.js site/assets/china.json.js; do
             node --check "$f" && echo "OK $f"
           done
 

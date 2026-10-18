@@ -1,5 +1,5 @@
-/* MaoXuan Viz sw.js v5: offline-capable PWA (ASCII only) */
-var CACHE = "mx-v5";
+/* MaoXuan Viz sw.js v6: de3d (P01.4) — bump cache name to evict pre-de3d shell */ 
+var CACHE = "mx-v6";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",
