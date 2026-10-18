@@ -1,0 +1,15 @@
+{
+ "frozenAt": "2026-10-18T18:01:15",
+ "promptVersion": "wp07-r2",
+ "pipelineVersion": "wp07-r3",
+ "corpusFile": "site/data/sample-topic.json",
+ "corpusSha256_16": "2b6ab3753853bcd3",
+ "corpusVersionSha256": "7ffb02f16c799564abbc23860494ac388a63ef5ba89a297697466b4d33da56d6",
+ "retrieve": {
+  "top": 8,
+  "minScore": 2,
+  "expandNeighbors": true
+ },
+ "questionsFile": "pipeline/p05-questions.json",
+ "note": "此清单由 p05_eval.py 首次运行生成; 修改语料/提示词/检索参数后必须重新生成并记录原因"
+}

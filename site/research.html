@@ -60,6 +60,19 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .rcard .cbtns button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
 .rcard .aiTag{display:inline-block;font-size:10px;color:#fff;background:var(--gold);border-radius:8px;padding:1px 8px;margin-left:6px;letter-spacing:1px}
 .rcard textarea{width:100%;font-family:inherit;font-size:13px;line-height:1.9;border:1px solid var(--gold);border-radius:8px;padding:8px;background:#fffdf5;color:var(--ink);box-sizing:border-box}
+/* P05.2 / P05.5: 缺口说明 · 下一步 · 纠错 */
+.gapBox{font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px solid var(--gold);
+  padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;line-height:1.9}
+.nextStep{font-size:13px;color:var(--ink2);background:rgba(90,79,69,.06);border-radius:8px;padding:10px 12px;
+  margin-top:10px;line-height:1.95}
+.flagBox{margin:12px 0;padding:12px 14px;border:1px dashed var(--border);border-radius:10px}
+.fbHd{font-size:12.5px;color:var(--ink2);margin-bottom:8px}
+.fbRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.fbRow button{font-family:inherit;font-size:12px;padding:4px 12px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--gold);background:transparent;color:var(--gold)}
+.fbMeta{font-size:11px;color:var(--ink2)}
+.cit .flag{font-family:inherit;font-size:11px;margin-left:8px;padding:1px 8px;border-radius:10px;cursor:pointer;
+  border:1px solid rgba(176,58,46,.45);background:transparent;color:var(--cinnabar)}
 </style>
 </head>
 <body>
@@ -89,6 +102,7 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
     <div class="answer" id="answer"></div>
     <h4 id="citHead">引用段落（点击可查看原文）</h4>
     <div id="cits"></div>
+    <div id="flagBox" class="flagBox" style="display:none"></div>
     <div class="cardBtns">
       <button id="saveCard">保存为研究卡</button>
     </div>
@@ -178,55 +192,95 @@ function ask(){
   el("result").style.display = "none";
   el("answer").textContent = "思考中（模型通常需要 15~40 秒）……";
   el("result").style.display = "block";
+  var reqBody = { question: q };
+  if(scopeFrom && scopeFrom.indexOf("topic:") === 0){
+    reqBody.scope = { topicId: scopeFrom.slice(6) };      /* P05.1 专题范围契约 */
+  } else if(scopeArt.length){
+    reqBody.scope = { articleIds: scopeArt };             /* P05.1 文章范围契约 */
+  }
   fetch("api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(scopeArt.length ? { question: q, scope: { articleIds: scopeArt } } : { question: q }),
+    body: JSON.stringify(reqBody),
     signal: ac.signal
-  }).then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j }; }); })
+  }).then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j, rid: r.headers.get("X-Request-Id") }; }); })
   .then(function(o){
     if(myReq !== curReq) return;  // 旧请求迟到 → 丢弃
     var j = o.j;
     if(!j || !j.ok){
       el("result").style.display = "none";
-      el("err").textContent = "请求未成功：" + ((j && j.error && j.error.message) || ("HTTP " + o.status));
+      var msg = (j && j.error && j.error.message) || ("HTTP " + o.status);
+      var code = (j && j.error && j.error.code) || "";
+      el("err").textContent = "请求未成功：" + msg + (code ? "（" + code + "）" : "") +
+        " · 问题已保留在输入框，可修改后重试" + (o.rid ? " · 请求号 " + o.rid : "");
       el("err").style.display = "block";
-      return;
+      return;   /* 不自动清空问题：错误后仍可修改重试 */
     }
-    el("model").textContent = (j.model || "") + " · " + (j.ms/1000).toFixed(1) + "s · AI归纳，仅供参考";
+    var gov = j.governance || {};
+    var scopeTxt = j.scopeResolved
+      ? (j.scopeResolved.mode === "corpus" ? "全语料" :
+         (j.scopeResolved.paragraphIds && j.scopeResolved.paragraphIds.length
+            ? j.scopeResolved.paragraphIds.length + " 个段落"
+            : (j.scopeResolved.articleIds || []).length + " 篇文章" +
+              (j.scopeResolved.topicId ? "（专题 " + j.scopeResolved.topicId + "）" : "")))
+      : "";
+    el("model").textContent = (j.model || "") + " · " + (j.ms/1000).toFixed(1) + "s · AI归纳，仅供参考" +
+      (scopeTxt ? " · 范围：" + scopeTxt : "") +
+      (gov.rateLimitScope === "instance" ? " · 限流为单实例" : "");
     var st = j.status || (j.insufficient ? "insufficient" : "answered");
+    lastRequest = { requestId: j.requestId || o.rid || null, model: j.model, status: st,
+                    corpusVersion: j.corpusVersion, pipelineVersion: j.pipelineVersion,
+                    promptVersion: j.promptVersion, scope: j.scopeResolved || null,
+                    citations: j.citations || [], governance: gov, usage: j.usage || null };
     if(st === "insufficient"){
-      el("answer").innerHTML = "<span class='insuff'>样本语料中没有足够证据回答这个问题（不猜测、不编页码）。</span>";
+      el("answer").innerHTML = "<span class='insuff'>样本语料中没有足够证据回答这个问题（不猜测、不编页码）。</span>" +
+        "<div class='nextStep'>可以这样继续：①换一种更贴近原文的说法再问；②先在原文中检索关键词，找到相关段落后带着段落来问；" +
+        "③如果问题超出这两篇的范围，先把你的理解写成笔记保存下来。</div>";
       el("citHead").style.display = "none";
       el("cits").innerHTML = "";
+      if(el("flagBox")) el("flagBox").style.display = "none";
       lastAnswer = null;
       el("saveCard").parentNode.style.display = "none";
       return;
     }
     el("citHead").style.display = "";
+    var gap = "";
+    var mNote = /按语：([\s\S]+)$/.exec(j.answer || "");
+    if(st === "partial" && mNote) gap = mNote[1].trim();
     el("answer").textContent = (st === "partial" ? "【部分回答】" : "") + j.answer;
     lastAnswer = { question: q, answer: el("answer").textContent, status: st,
       model: j.model, citations: j.citations || [],
-      corpusVer: j.corpusVersion || CORPUS_VER_FALLBACK };
+      corpusVer: j.corpusVersion || CORPUS_VER_FALLBACK,
+      requestId: lastRequest.requestId, pipelineVer: j.pipelineVersion, promptVer: j.promptVersion,
+      scope: j.scopeResolved || null };
     el("saveCard").parentNode.style.display = "";
+    if(st === "partial" && gap){
+      var gp = document.createElement("div");
+      gp.className = "gapBox";
+      gp.textContent = "缺口说明：" + gap;
+      el("answer").parentNode.insertBefore(gp, el("citHead"));
+    }
     var box = el("cits");
     box.innerHTML = "";
     (j.citations || []).forEach(function(c){
       var d = document.createElement("div");
       d.className = "cit";
       /* WP08 联动: 引用直达段落级深链 #/art/<articleId>/<paraId> + 返回研究室 */
-      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "/" + c.id + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u5bf9\u5e94\u6bb5\u843d \u2192</a>";
+      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "/" + c.id + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u5bf9\u5e94\u6bb5\u843d \u2192</a>" +
+        "<button class='flag' data-cit='" + c.id + "'>引用不相关</button>";
       d.querySelector(".id").textContent = c.id;
       d.querySelector(".q").textContent = c.quote ? ("\u201c" + c.quote + "\u201d") : "";
       box.appendChild(d);
     });
+    renderFlagBox(st);
+    bindFlagButtons();
   })
   .catch(function(e){
     if(myReq !== curReq) return;
     el("result").style.display = "none";
     el("err").textContent = (e && e.name === "AbortError")
-      ? "已取消本次等待（后台模型调用可能仍在进行，结果不会展示）。"
-      : "网络错误：" + e;
+      ? "已取消本次等待。请注意：取消只停止本页等待，已发出的模型调用可能仍在服务端继续并计费，结果不会展示。"
+      : "网络错误：" + e + " · 问题仍保留在输入框，可稍后重试";
     el("err").style.display = "block";
   })
   .finally(function(){ if(myReq === curReq) setBusy(false); });
@@ -241,6 +295,59 @@ el("q").addEventListener("keydown", function(ev){ if(ev.key === "Enter" && !busy
 var CARDS_KEY = "mx_research_cards";
 var CORPUS_VER_FALLBACK = "sample-topic v1 (v1n03+v1n04, 832段, 2026-10) [前端回退值]";  // 服务端 corpusVersion 缺失时才用
 var lastAnswer = null;   // 最近一次成功回答 (供保存)
+var lastRequest = null;  // P05.5: 最近一次请求的版本追踪信息 (requestId/模型/语料/管线)
+
+/* ---------- P05.5: 回答纠错 (引用不相关 / 结论无依据) ---------- */
+function renderFlagBox(st){
+  var box = el("flagBox");
+  if(!box) return;
+  box.innerHTML = "";
+  if(!lastRequest || !lastRequest.requestId){ box.style.display = "none"; return; }
+  box.style.display = "block";
+  var h = document.createElement("div");
+  h.className = "fbHd";
+  h.textContent = "这条回答有问题吗？可以标出来（不会改动答案，只用于后续回归）";
+  box.appendChild(h);
+  var row = document.createElement("div");
+  row.className = "fbRow";
+  var b1 = document.createElement("button");
+  b1.textContent = "结论无依据";
+  b1.onclick = function(){ sendFlag("answer_unsupported", null); };
+  row.appendChild(b1);
+  var meta = document.createElement("span");
+  meta.className = "fbMeta";
+  meta.textContent = "请求号 " + lastRequest.requestId +
+    (lastRequest.pipelineVersion ? " · 管线 " + lastRequest.pipelineVersion : "") +
+    (lastRequest.corpusVersion ? " · 语料 " + String(lastRequest.corpusVersion).slice(0, 18) : "");
+  row.appendChild(meta);
+  box.appendChild(row);
+}
+function bindFlagButtons(){
+  document.querySelectorAll("#cits .flag").forEach(function(b){
+    b.onclick = function(){ sendFlag("citation_irrelevant", b.getAttribute("data-cit")); };
+  });
+}
+function sendFlag(kind, citationId){
+  if(!lastRequest || !lastRequest.requestId){ return; }
+  var reason = "";
+  try{ reason = (window.prompt("可以补充一句原因（可留空）：", "") || "").slice(0, 200); }catch(e){}
+  var payload = {
+    kind: kind, requestId: lastRequest.requestId, citationId: citationId || null, reason: reason,
+    model: lastRequest.model, corpusVersion: lastRequest.corpusVersion,
+    pipelineVersion: lastRequest.pipelineVersion, promptVersion: lastRequest.promptVersion,
+    scope: lastRequest.scope ? lastRequest.scope.mode : null,
+  };
+  fetch("api/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(j && j.ok){
+        alert("已记录，感谢反馈。" + (j.persisted ? "" : "（当前未配置持久化存储，反馈仅记录在服务日志中）"));
+      } else {
+        alert("反馈未记录：" + ((j && j.error && j.error.message) || "服务不可用"));
+      }
+    })
+    .catch(function(e){ alert("反馈发送失败：" + e); });
+}
 function loadCards(){
   try{ return JSON.parse(localStorage.getItem(CARDS_KEY) || "[]"); }catch(e){ return []; }
 }

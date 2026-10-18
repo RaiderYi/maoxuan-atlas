@@ -350,20 +350,26 @@ function topicHtml(cfg){
 function bindTopic(v, cfg){
   v.querySelectorAll("a[data-step]").forEach(function(a){
     a.addEventListener("click", function(){
-      setStepOpen(cfg.topicId, a.getAttribute("data-step"));
+      var sid = a.getAttribute("data-step");
+      setStepOpen(cfg.topicId, sid);
+      track("topic_read_open", { topicId: cfg.topicId, stepId: sid });
       setOrigin({ type: "topic" });
     });
   });
   v.querySelectorAll("[data-done]").forEach(function(b){
     b.addEventListener("click", function(){
-      setStepDone(cfg.topicId, b.getAttribute("data-done"), true);
+      var sid = b.getAttribute("data-done");
+      setStepDone(cfg.topicId, sid, true);
+      track("topic_step_done", { topicId: cfg.topicId, stepId: sid, state: "done" });
       renderTopic(); renderHome();
       toast("已标记完成（可撤销）");
     });
   });
   v.querySelectorAll("[data-undone]").forEach(function(b){
     b.addEventListener("click", function(){
-      setStepDone(cfg.topicId, b.getAttribute("data-undone"), false);
+      var sid = b.getAttribute("data-undone");
+      setStepDone(cfg.topicId, sid, false);
+      track("topic_step_done", { topicId: cfg.topicId, stepId: sid, state: "undone" });
       renderTopic(); renderHome();
     });
   });
@@ -390,6 +396,7 @@ function bindTopic(v, cfg){
       var notDone = (cfg.steps || []).filter(function(s){ return stepState(cfg.topicId, s.stepId) !== "done"; });
       if(gaps.length){
         if(msg) msg.textContent = "还不能保存：" + gaps.join("；");
+        track("topic_conclusion_blocked", { topicId: cfg.topicId, gapCount: gaps.length });
         toast("结论未保存：" + gaps[0]);
         return;
       }
@@ -407,6 +414,7 @@ function bindTopic(v, cfg){
         topicVersion: cfg.version || "1"
       };
       if(saveConcl(all)){
+        track("topic_conclusion_save", { topicId: cfg.topicId, chars: text.length, citations: cits.length });
         renderTopic(); renderHome();
         toast("结论已保存，已附带 " + cits.length + " 条摘录依据");
         if(notDone.length) toast("提示：还有 " + notDone.length + " 步未标记完成，专题尚未算完成");
@@ -428,61 +436,443 @@ function renderTopic(){
   bindTopic(v, TOPIC_CFG);
 }
 
-/* ---------- P02/P06: 我的书房（聚合本机已有成果，只读真实数据，不造进度） ---------- */
-function renderStudy(){
+/* ---------- P06: 我的书房（游客本地成果：聚合 · 分离 · 损坏保护 · 查找 · 备份） ----------
+   原则：
+   - 读取失败 ≠ 空库：任一 key 解析失败即标记 corrupt，界面明确提示，绝不覆盖原数据
+   - 原始 AI 回答与人工改写分开存：cards[].answerRaw 只写一次，人工改写写 editedAnswer
+   - 导入只做数据合并，不执行任何内容；渲染一律 textContent（不解析 HTML）
+   - 删除先进回收站（mx_trash），可恢复 */
+var LIB_SCHEMA = "mx-library@2";
+var LIB_KEYS = ["mx_notes", "mx_research_cards", "mx_marks", "mx_read", "mx_recent",
+                "mx_topic_progress", "mx_topic_conclusions", "mx_trash"];
+
+function libGet(key, dflt) {
+  try {
+    var raw = localStorage.getItem(key);
+    if (raw === null) return { ok: true, value: dflt, missing: true };
+    return { ok: true, value: JSON.parse(raw), raw: raw };
+  } catch (e) {
+    var raw2 = null;
+    try { raw2 = localStorage.getItem(key); } catch (e2) {}
+    return { ok: false, corrupt: true, raw: raw2, error: String(e && e.message || e) };
+  }
+}
+function libSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch (e) { toast("保存失败：本地存储不可用或空间不足（" + (e && e.name || e) + "）"); return false; }
+}
+/* P06.1: 首次进入书房先做一次快照，再做结构归一（不删任何旧字段） */
+function libMigrate() {
+  var ver = null;
+  try { ver = localStorage.getItem("mx_schema"); } catch (e) { return { ok: false, error: "storage_blocked" }; }
+  if (ver === LIB_SCHEMA) return { ok: true, migrated: false };
+  var snapshot = { schema: "mx-library@1-snapshot", at: Date.now(), data: {} };
+  LIB_KEYS.forEach(function (k) {
+    try { var raw = localStorage.getItem(k); if (raw !== null) snapshot.data[k] = raw; } catch (e) {}
+  });
+  try { localStorage.setItem("mx_backup_p06", JSON.stringify(snapshot)); } catch (e) {}
+  /* 研究卡补 answerRaw（原始 AI 回答），人工改写另存 editedAnswer */
+  var cards = libGet("mx_research_cards", []);
+  if (cards.ok && Array.isArray(cards.value) && cards.value.length) {
+    var changed = false;
+    cards.value.forEach(function (c) {
+      if (c && typeof c === "object" && c.answerRaw === undefined) {
+        c.answerRaw = (c.answerOriginal !== undefined ? c.answerOriginal : (c.answer || ""));
+        changed = true;
+      }
+      if (c && typeof c === "object" && c.editedAnswer === undefined) c.editedAnswer = null;
+    });
+    if (changed) libSet("mx_research_cards", cards.value);
+  }
+  try { localStorage.setItem("mx_schema", LIB_SCHEMA); } catch (e) { return { ok: false, error: "storage_blocked" }; }
+  return { ok: true, migrated: true };
+}
+function libCollection() {
+  var notes = libGet("mx_notes", []);
+  var cards = libGet("mx_research_cards", []);
+  var marks = libGet("mx_marks", {});
+  var reads = libGet("mx_read", {});
+  var recent = libGet("mx_recent", {});
+  var prog = libGet("mx_topic_progress", {});
+  var concl = libGet("mx_topic_conclusions", {});
+  var trash = libGet("mx_trash", []);
+  var health = [];
+  [["mx_notes", notes], ["mx_research_cards", cards], ["mx_marks", marks], ["mx_read", reads],
+   ["mx_recent", recent], ["mx_topic_progress", prog], ["mx_topic_conclusions", concl], ["mx_trash", trash]]
+    .forEach(function (pair) { if (!pair[1].ok) health.push({ key: pair[0], error: pair[1].error, raw: pair[1].raw }); });
+  return {
+    notes: notes.ok && Array.isArray(notes.value) ? notes.value : [],
+    cards: cards.ok && Array.isArray(cards.value) ? cards.value : [],
+    marks: marks.ok && marks.value && typeof marks.value === "object" ? marks.value : {},
+    reads: reads.ok && reads.value && typeof reads.value === "object" ? reads.value : {},
+    recent: recent.ok && recent.value && typeof recent.value === "object" ? recent.value : {},
+    progress: prog.ok && prog.value && typeof prog.value === "object" ? prog.value : {},
+    concl: concl.ok && concl.value && typeof concl.value === "object" ? concl.value : {},
+    trash: trash.ok && Array.isArray(trash.value) ? trash.value : [],
+    health: health,
+  };
+}
+function libItemTitle(id) {
+  var a = ARTS.filter(function (x) { return x.id === id; })[0];
+  return a ? a.title : id;
+}
+/* 汇总成统一条目列表（P06.1 聚合 + P06.2 类型分离） */
+function libItems(c) {
+  var items = [];
+  c.notes.forEach(function (n) {
+    if (!n || !n.id) return;
+    items.push({
+      kind: n.kind === "quote" ? "quote" : "note",
+      kindLabel: n.kind === "quote" ? "摘录" : "笔记",
+      id: n.id, articleId: n.articleId, paraId: n.paraId || null,
+      title: libItemTitle(n.articleId),
+      text: n.kind === "quote" ? (n.quote || "") : (n.note || ""),
+      quote: n.quote || "", source: n.source || null, ts: n.createdAt || 0,
+    });
+  });
+  c.cards.forEach(function (card) {
+    if (!card || !card.id) return;
+    items.push({
+      kind: "card", kindLabel: "研究卡",
+      id: card.id, articleId: (card.citations && card.citations[0] && card.citations[0].articleId) || null,
+      paraId: (card.citations && card.citations[0] && card.citations[0].id) || null,
+      title: card.question || "（未命名研究卡）",
+      text: card.editedAnswer || card.answer || "",
+      hasRaw: !!card.answerRaw, edited: !!card.editedAnswer,
+      citations: card.citations || [], source: null, ts: card.createdAt || 0,
+    });
+  });
+  return items.sort(function (a, b) { return b.ts - a.ts; });
+}
+function libExportJSON() {
+  var c = libCollection();
+  var doc = {
+    schema: LIB_SCHEMA, exportedAt: new Date().toISOString(), app: "aibigplayer",
+    stats: { notes: c.notes.length, cards: c.cards.length, marks: Object.keys(c.marks).length,
+             reads: Object.keys(c.reads).length, topics: Object.keys(c.progress).length },
+    data: { mx_notes: c.notes, mx_research_cards: c.cards, mx_marks: c.marks, mx_read: c.reads,
+            mx_recent: c.recent, mx_topic_progress: c.progress, mx_topic_conclusions: c.concl },
+  };
+  var blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "aibigplayer-书房备份-" + new Date().toISOString().slice(0, 10) + ".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  toast("已导出备份（含 " + (c.notes.length + c.cards.length) + " 条成果）");
+}
+function libExportMarkdown() {
+  var c = libCollection();
+  var lines = ["# 我的书房 · 导出", "", "导出时间：" + new Date().toLocaleString(), ""];
+  if (c.notes.length) {
+    lines.push("## 摘录与笔记（" + c.notes.length + "）", "");
+    c.notes.forEach(function (n) {
+      lines.push("### " + (n.kind === "quote" ? "摘录" : "笔记") + " · " + libItemTitle(n.articleId) + (n.paraId ? " · " + n.paraId : ""));
+      if (n.quote) lines.push("> " + String(n.quote).replace(/\n/g, " "));
+      if (n.note) lines.push("", n.note);
+      var s = n.source || {};
+      lines.push("", "_来源：" + (s.title || "") + (s.dateRaw ? "（" + String(s.dateRaw).replace(/[（）()]/g, "") + "）" : "") + "_", "");
+    });
+  }
+  if (c.cards.length) {
+    lines.push("## 研究卡（" + c.cards.length + "）", "");
+    c.cards.forEach(function (card) {
+      lines.push("### " + (card.question || "研究卡"));
+      if (card.editedAnswer) lines.push("", "**我的改写**：" + card.editedAnswer, "", "**AI 原始回答**：" + (card.answerRaw || card.answer || ""));
+      else lines.push("", card.answer || card.answerRaw || "");
+      (card.citations || []).forEach(function (ct) {
+        lines.push("- 引用 `" + (ct.id || "") + "`" + (ct.quote ? "：" + ct.quote : ""));
+      });
+      lines.push("");
+    });
+  }
+  var conclKeys = Object.keys(c.concl || {});
+  if (conclKeys.length) {
+    lines.push("## 专题结论", "");
+    conclKeys.forEach(function (k) {
+      var cc = c.concl[k] || {};
+      lines.push("### 专题 " + k, "", cc.text || "", "");
+      (cc.citations || []).forEach(function (ct) {
+        lines.push("- 依据 `" + (ct.paraId || "") + "`：" + (ct.quote || "") + "　（" + ((ct.source && ct.source.title) || "") + "）");
+      });
+      lines.push("");
+    });
+  }
+  if (lines.length <= 4) lines.push("（还没有可导出的成果）");
+  var blob = new Blob([lines.join("\n")], { type: "text/markdown" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "aibigplayer-书房-" + new Date().toISOString().slice(0, 10) + ".md";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  toast("已导出 Markdown");
+}
+/* P06.5: 导入 — 只合并不覆盖，冲突有规则，内容不执行 */
+function libImportJSON(text) {
+  var doc;
+  try { doc = JSON.parse(text); } catch (e) { return { ok: false, error: "不是合法 JSON：" + (e && e.message) }; }
+  if (!doc || typeof doc !== "object" || !doc.data || typeof doc.data !== "object") {
+    return { ok: false, error: "结构不符：缺少 data 字段（需要本应用导出的备份文件）" };
+  }
+  if (doc.schema && String(doc.schema).indexOf("mx-library@") !== 0) {
+    return { ok: false, error: "版本不识别：" + doc.schema };
+  }
+  var report = { added: 0, skippedSame: 0, replacedNewer: 0, keptLocalNewer: 0, badItems: 0 };
+  ["mx_notes", "mx_research_cards"].forEach(function (key) {
+    var incoming = doc.data[key];
+    if (!Array.isArray(incoming)) return;
+    var cur = libGet(key, []);
+    if (!cur.ok) return { ok: false, error: "本地 " + key + " 已损坏，已中止导入以免覆盖" };
+    var list = Array.isArray(cur.value) ? cur.value.slice() : [];
+    var byId = {};
+    list.forEach(function (x, i) { if (x && x.id) byId[x.id] = i; });
+    incoming.forEach(function (x) {
+      if (!x || typeof x !== "object" || !x.id) { report.badItems++; return; }
+      var clean = JSON.parse(JSON.stringify(x));   // 只保留数据，不保留任何可执行内容
+      var idx = byId[clean.id];
+      if (idx === undefined) { list.push(clean); byId[clean.id] = list.length - 1; report.added++; return; }
+      var old = list[idx] || {};
+      var oldT = old.updatedAt || old.createdAt || 0;
+      var newT = clean.updatedAt || clean.createdAt || 0;
+      if (JSON.stringify(old) === JSON.stringify(clean)) { report.skippedSame++; return; }
+      if (newT > oldT) { list[idx] = clean; report.replacedNewer++; }
+      else { report.keptLocalNewer++; }
+    });
+    libSet(key, list);
+  });
+  /* 进度/结论: 只补缺, 不覆盖已有更晚记录 */
+  ["mx_topic_progress", "mx_topic_conclusions"].forEach(function (key) {
+    var incoming = doc.data[key];
+    if (!incoming || typeof incoming !== "object") return;
+    var cur = libGet(key, {});
+    if (!cur.ok) return;
+    var mine = (cur.value && typeof cur.value === "object") ? cur.value : {};
+    Object.keys(incoming).forEach(function (tid) {
+      if (!mine[tid]) { mine[tid] = incoming[tid]; report.added++; }
+    });
+    libSet(key, mine);
+  });
+  return { ok: true, report: report };
+}
+function libTrash(kind, id, payload) {
+  var t = libGet("mx_trash", []);
+  var list = t.ok && Array.isArray(t.value) ? t.value : [];
+  list.unshift({ kind: kind, id: id, payload: payload, at: Date.now() });
+  if (list.length > 200) list = list.slice(0, 200);
+  libSet("mx_trash", list);
+}
+function libDeleteItem(it) {
+  if (!confirm("删除这条" + it.kindLabel + "？删除后可在下方「回收站」恢复。")) return false;
+  if (it.kind === "card") {
+    var cards = libGet("mx_research_cards", []);
+    var list = cards.ok && Array.isArray(cards.value) ? cards.value : [];
+    var target = list.filter(function (x) { return x && x.id === it.id; })[0];
+    if (target) libTrash("card", it.id, target);
+    libSet("mx_research_cards", list.filter(function (x) { return !(x && x.id === it.id); }));
+  } else {
+    var notes = libGet("mx_notes", []);
+    var nl = notes.ok && Array.isArray(notes.value) ? notes.value : [];
+    var t2 = nl.filter(function (x) { return x && x.id === it.id; })[0];
+    if (t2) libTrash("note", it.id, t2);
+    libSet("mx_notes", nl.filter(function (x) { return !(x && x.id === it.id); }));
+  }
+  return true;
+}
+function libRestore(index) {
+  var t = libGet("mx_trash", []);
+  var list = t.ok && Array.isArray(t.value) ? t.value : [];
+  var rec = list[index];
+  if (!rec) return false;
+  var key = rec.kind === "card" ? "mx_research_cards" : "mx_notes";
+  var cur = libGet(key, []);
+  var arr = cur.ok && Array.isArray(cur.value) ? cur.value : [];
+  if (!arr.some(function (x) { return x && x.id === rec.id; })) arr.push(rec.payload);
+  libSet(key, arr);
+  list.splice(index, 1);
+  libSet("mx_trash", list);
+  return true;
+}
+
+/* ---------- 书房界面 ---------- */
+var studyState = { q: "", kind: "all", art: "all" };
+function renderStudy() {
   var v = document.getElementById("view-study");
-  if(!v) return;
-  var marks = [], reads = [], recent = {}, cards = [];
-  try{ marks = Object.keys(JSON.parse(localStorage.getItem("mx_marks") || "{}")); }catch(e){}
-  try{ reads = Object.keys(JSON.parse(localStorage.getItem("mx_read") || "{}")); }catch(e){}
-  try{ recent = JSON.parse(localStorage.getItem("mx_recent") || "{}") || {}; }catch(e){}
-  try{ cards = JSON.parse(localStorage.getItem("mx_research_cards") || "[]") || []; }catch(e){}
-  if(!Array.isArray(cards)) cards = [];
-  var recentIds = Object.keys(recent).sort(function(a, b){ return (recent[b]||0) - (recent[a]||0); }).slice(0, 5);
+  if (!v) return;
+  libMigrate();
+  var c = libCollection();
+  var items = libItems(c);
+  var q = studyState.q.trim();
+  var filtered = items.filter(function (it) {
+    if (studyState.kind !== "all" && it.kind !== studyState.kind) return false;
+    if (studyState.art !== "all" && it.articleId !== studyState.art) return false;
+    if (!q) return true;
+    var hay = [it.title, it.text, it.quote, it.paraId || "", (it.citations || []).map(function (x) { return x.id + " " + (x.quote || ""); }).join(" ")].join(" ");
+    return hay.indexOf(q) >= 0;
+  });
+  var ts = TOPIC_CFG ? topicStatus(TOPIC_CFG) : null;
+  var concl = TOPIC_CFG ? (c.concl[TOPIC_CFG.topicId] || null) : null;
 
   var h = "<div class='topicWrap'>";
-  h += "<div class='topicHero'><h2>我的书房</h2>";
-  h += "<p class='meta'>这里的数字全部来自这台设备的本地记录：没有记录就显示 0，不预填、不估算。数据只存在当前浏览器，不上传。完整书房（按文章/专题查找、备份恢复、Markdown 导出集中管理）在建设中（P06）。</p></div>";
+  h += "<div class='topicHero'><h2>我的书房</h2><p class='meta'>这里汇总本机保存的阅读记录、收藏、摘录笔记、研究卡与专题结论。数据只存在这台设备，不上传；没有记录就显示 0，不预填。</p></div>";
+
+  /* P06.3: 存储健康状态 */
+  if (c.health.length) {
+    h += "<div class='libWarn'><b>有 " + c.health.length + " 处本地数据读取失败</b>（读取失败不等于数据为空，本站没有覆盖它们）。" +
+         "建议先复制原始内容再决定是否清理：<div class='libRaw' id='libRaw'>" +
+         esc(c.health.map(function (x) { return x.key + "：" + (x.raw || "").slice(0, 400); }).join("\n---\n")) + "</div>" +
+         "<button id='libCopyRaw'>复制原始内容</button></div>";
+  }
+
+  h += "<div class='libBar'>";
+  h += "<input id='libQ' placeholder='查找：标题 / 摘录 / 笔记 / 段落号…' value='" + esc(studyState.q) + "'>";
+  h += "<span class='libFilters'>";
+  [["all", "全部"], ["quote", "摘录"], ["note", "笔记"], ["card", "研究卡"]].forEach(function (p) {
+    h += "<button data-lk='" + p[0] + "' class='" + (studyState.kind === p[0] ? "on" : "") + "'>" + p[1] + "</button>";
+  });
+  h += "</span>";
+  h += "</div>";
+
   h += "<div class='studyGrid'>";
-  h += "<div class='studyCard'><div class='num'>" + reads.length + "</div><div class='lb'>已读篇目（有阅读位置记录）</div><a class='lk' href='#/view/cats'>去经典研读</a></div>";
-  h += "<div class='studyCard'><div class='num'>" + marks.length + "</div><div class='lb'>收藏篇目</div><a class='lk' href='#/view/cats'>在目录中查看带 ★ 的篇目</a></div>";
-  h += "<div class='studyCard'><div class='num'>" + cards.length + "</div><div class='lb'>研究卡</div><a class='lk' href='research.html'>去 AI 研究室查看 / 导出</a></div>";
-  var noteCnt = loadNotes().length;
-  h += "<div class='studyCard'><div class='num'>" + noteCnt + "</div><div class='lb'>摘录与笔记</div><a class='lk' href='#/view/cats'>在原文中选中文字即可摘录</a></div>";
-  if(TOPIC_CFG){
-    var tst = topicStatus(TOPIC_CFG);
-    h += "<div class='studyCard'><div class='num'>" + tst.done + "/" + tst.total + "</div>" +
-         "<div class='lb'>专题步骤 · " + esc(TOPIC_CFG.title) + (tst.complete ? "（已完成）" : "") + "</div>" +
-         "<a class='lk' href='#/view/topic'>" + (tst.nextStep ? "继续第 " + tst.nextStep.seq + " 步：" + esc(tst.nextStep.title) : "查看专题") + "</a></div>";
-    var tc = loadConcl()[TOPIC_CFG.topicId];
-    if(tc && tc.text){
-      h += "<div class='studyCard'><div class='num'>" + (tc.citations ? tc.citations.length : 0) + "</div>" +
-           "<div class='lb'>我的专题结论依据条数</div><a class='lk' href='#/view/topic'>查看结论与依据</a></div>";
-    }
+  h += "<div class='studyCard'><div class='num'>" + Object.keys(c.reads).length + "</div><div class='lb'>已读篇目</div><a class='lk' href='#/view/cats'>去经典研读</a></div>";
+  h += "<div class='studyCard'><div class='num'>" + Object.keys(c.marks).length + "</div><div class='lb'>收藏篇目</div><a class='lk' href='#/view/cats'>目录中带 ★ 的篇目</a></div>";
+  h += "<div class='studyCard'><div class='num'>" + c.notes.length + "</div><div class='lb'>摘录与笔记</div><a class='lk' href='#/view/cats'>在原文中选中文字即可摘录</a></div>";
+  h += "<div class='studyCard'><div class='num'>" + c.cards.length + "</div><div class='lb'>研究卡</div><a class='lk' href='research.html'>去 AI 研究室</a></div>";
+  if (ts) {
+    h += "<div class='studyCard'><div class='num'>" + ts.done + "/" + ts.total + "</div><div class='lb'>专题步骤" + (ts.complete ? " · 已完成" : "") + "</div>" +
+         "<a class='lk' href='#/view/topic'>" + (ts.nextStep ? "继续第 " + ts.nextStep.seq + " 步" : "查看专题") + "</a></div>";
   }
   h += "</div>";
 
-  if(recentIds.length){
-    h += "<ul class='stepList' style='margin-top:18px'>";
-    recentIds.forEach(function(id){
-      var a = ARTS.filter(function(x){ return x.id === id; })[0];
-      if(!a) return;
-      var d = "";
-      try{ d = new Date(recent[id]).toLocaleString(); }catch(e){}
-      h += "<li class='stepItem'><div class='st'>最近阅读" + (d ? " · " + esc(d) : "") + "</div>";
-      h += "<div class='tt'>" + esc(a.title) + "</div>";
-      h += "<a class='go' href='#/art/" + esc(id) + "'>回到这篇 →</a></li>";
+  /* 专题结论 */
+  if (concl && concl.text) {
+    h += "<div class='libConcl'><div class='libCh'>我的专题结论" + (ts && ts.complete ? " · 已完成" : " · 尚未完成全部步骤") + "</div>";
+    h += "<div class='libCt'>" + esc(concl.text) + "</div>";
+    if (concl.citations && concl.citations.length) {
+      h += "<div class='libCits'>依据：" + concl.citations.slice(0, 8).map(function (ct) {
+        return "<a href='#/art/" + esc(ct.articleId || "") + "/" + esc(ct.paraId || "") + "'>" + esc(ct.paraId || "") + "</a>";
+      }).join("、") + (concl.citations.length > 8 ? " 等 " + concl.citations.length + " 条" : "") + "</div>";
+    }
+    h += "<div class='libActs'><a class='lk' href='#/view/topic'>回到专题</a></div></div>";
+  }
+
+  /* 成果列表 */
+  h += "<div class='libListHead'>成果 <span>" + filtered.length + " 条" +
+       (q || studyState.kind !== "all" ? "（已筛选）" : "") + "</span></div>";
+  if (!items.length) {
+    h += "<div class='statePanel' style='margin:18px auto'><h2>书房还是空的</h2>" +
+         "<p>阅读过的文章会自动记录；在原文中选中文字可以摘录或写笔记；在 AI 研究室可以把回答保存为研究卡；专题完成后会保存结论。</p>" +
+         "<div class='acts'><a href='#/view/topic'>从一份专题开始</a><a class='ghost' href='#/view/cats'>浏览全部篇目</a></div></div>";
+  } else if (!filtered.length) {
+    h += "<div class='statePanel' style='margin:18px auto'><h2>没有匹配的成果</h2><p>换个关键词，或切回「全部」类型。</p>" +
+         "<div class='acts'><button class='ghost' id='libReset'>清除筛选</button></div></div>";
+  } else {
+    h += "<ul class='libList'>";
+    filtered.forEach(function (it, idx) {
+      h += "<li class='libItem' data-idx='" + idx + "'>";
+      h += "<div class='liTop'><span class='liKind " + it.kind + "'>" + it.kindLabel + "</span>" +
+           "<span class='liTime'>" + (it.ts ? new Date(it.ts).toLocaleString() : "") + "</span></div>";
+      h += "<div class='liTitle'>" + esc(it.title) + (it.articleId ? " · <span class='liArt'>" + esc(it.articleId) + "</span>" : "") + "</div>";
+      if (it.kind === "quote" && it.quote) h += "<div class='liQuote'>「" + esc(it.quote.slice(0, 160)) + "」</div>";
+      if (it.text && it.kind !== "quote") h += "<div class='liText'>" + esc(it.text.slice(0, 220)) + (it.text.length > 220 ? "…" : "") + "</div>";
+      if (it.kind === "card" && it.edited) h += "<div class='liTag'>含人工改写（原始 AI 回答另存）</div>";
+      if (it.source && it.source.title) {
+        h += "<div class='liSrc'>来源：" + esc(it.source.title) + (it.source.dateRaw ? "（" + esc(String(it.source.dateRaw).replace(/[（）()]/g, "")) + "）" : "") + "</div>";
+      }
+      h += "<div class='liActs'>";
+      if (it.articleId) h += "<a class='lk' href='#/art/" + esc(it.articleId) + (it.paraId ? "/" + esc(it.paraId) : "") + "'>回到原段</a>";
+      if (it.kind === "card") h += "<a class='lk' href='research.html'>在研究室查看</a>";
+      h += "<button class='liDel' data-del='" + esc(it.id) + "'>删除</button>";
+      h += "</div></li>";
     });
     h += "</ul>";
-  } else {
-    h += "<div class='statePanel' style='margin-top:22px'><h2>还没有阅读记录</h2>";
-    h += "<p>读过的篇目和阅读位置会自动保存在这台设备上，下次打开可以直接接着读。</p>";
-    h += "<div class='acts'><a href='#/view/cats'>浏览全部篇目</a><a class='ghost' href='#/view/topic'>从一份专题开始</a></div></div>";
   }
-  h += "<div class='homeNote'>收藏、阅读位置、研究卡都可以在各自页面导出或删除；本页只做汇总，不会修改你的数据。</div>";
+
+  /* 回收站 */
+  if (c.trash.length) {
+    h += "<div class='libTrash'><div class='libCh'>回收站（" + c.trash.length + "）</div><ul>";
+    c.trash.slice(0, 10).forEach(function (t2, i) {
+      h += "<li>" + esc(t2.kind === "card" ? "研究卡" : "笔记") + " · " + esc(String(t2.id).slice(0, 14)) +
+           " · " + esc(new Date(t2.at).toLocaleString()) + " <button data-restore='" + i + "'>恢复</button></li>";
+    });
+    h += "</ul></div>";
+  }
+
+  /* 备份与导出 */
+  h += "<div class='libTools'>";
+  h += "<button id='libExportJson'>导出 JSON 备份</button>";
+  h += "<button id='libExportMd'>导出 Markdown</button>";
+  h += "<label class='libImport'>导入备份<input type='file' id='libImportFile' accept='.json,application/json' style='display:none'></label>";
+  h += "<span class='libHint'>导入只合并、不覆盖；同一条目保留较新版本。备份文件不包含密码或账号。</span>";
+  h += "</div>";
+  if (c.health.length === 0) {
+    h += "<div class='homeNote'>你的成果全部保存在本机浏览器。换设备或清理浏览器数据前，请先导出备份。</div>";
+  }
   h += "</div>";
   v.innerHTML = h;
-  track("page_view", {pageType:"study"});
+  bindStudy(v, filtered, c);
+  track("page_view", { pageType: "study" });
+}
+function bindStudy(v, filtered, c) {
+  var qi = v.querySelector("#libQ");
+  if (qi) {
+    qi.addEventListener("input", function () {
+      studyState.q = qi.value;
+      var pos = qi.selectionStart;
+      renderStudy();
+      var q2 = document.getElementById("libQ");
+      if (q2) { q2.focus(); try { q2.setSelectionRange(pos, pos); } catch (e) {} }
+    });
+  }
+  v.querySelectorAll("[data-lk]").forEach(function (b) {
+    b.addEventListener("click", function () { studyState.kind = b.getAttribute("data-lk"); renderStudy(); });
+  });
+  var reset = v.querySelector("#libReset");
+  if (reset) reset.addEventListener("click", function () { studyState = { q: "", kind: "all", art: "all" }; renderStudy(); });
+
+  v.querySelectorAll("[data-del]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var id = b.getAttribute("data-del");
+      var it = filtered.filter(function (x) { return x.id === id; })[0];
+      if (!it) return;
+      if (libDeleteItem(it)) { toast("已移到回收站，可恢复"); renderStudy(); }
+    });
+  });
+  v.querySelectorAll("[data-restore]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (libRestore(parseInt(b.getAttribute("data-restore"), 10))) { toast("已恢复"); renderStudy(); }
+    });
+  });
+  var ej = v.querySelector("#libExportJson");
+  if (ej) ej.addEventListener("click", libExportJSON);
+  var em = v.querySelector("#libExportMd");
+  if (em) em.addEventListener("click", libExportMarkdown);
+  var fi = v.querySelector("#libImportFile");
+  if (fi) {
+    fi.addEventListener("change", function () {
+      var f = fi.files && fi.files[0];
+      if (!f) return;
+      var rd = new FileReader();
+      rd.onload = function () {
+        var out = libImportJSON(String(rd.result || ""));
+        if (!out.ok) { alert("导入失败：" + out.error); return; }
+        var r = out.report;
+        alert("导入完成：新增 " + r.added + " 条，跳过相同 " + r.skippedSame + " 条，更新较新 " + r.replacedNewer +
+              " 条，保留本地较新 " + r.keptLocalNewer + " 条" + (r.badItems ? "，忽略无效 " + r.badItems + " 条" : "") + "。");
+        renderStudy();
+      };
+      rd.readAsText(f);
+    });
+  }
+  var cr = v.querySelector("#libCopyRaw");
+  if (cr) {
+    cr.addEventListener("click", function () {
+      var el = v.querySelector("#libRaw");
+      var t = el ? el.textContent : "";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () { toast("原始内容已复制"); }, function () { toast("复制失败，请手动选择文本"); });
+      } else { toast("请手动选择文本复制"); }
+    });
+  }
 }
 
 function renderHome(){
@@ -1570,7 +1960,11 @@ function flushTextCbs(){
    Never sends note text, search query, article body or any personal field.
    Status: UNWIRED - set window.MX_ANALYTICS_ENDPOINT to enable. */
 var MX_EVENTS = {page_view:["pageType"], article_open:["articleId"], article_error:["articleId","code"],
-  bookmark_toggle:["articleId","newState"], search_result_open:["resultType"]};
+  bookmark_toggle:["articleId","newState"], search_result_open:["resultType"],
+  /* P07.3: 有据研读与成果事件 (只上报 id 与长度, 不上报问题/笔记正文) */
+  note_save:["kind","articleId","len"], topic_read_open:["topicId","stepId"],
+  topic_step_done:["topicId","stepId","state"], topic_conclusion_save:["topicId","chars","citations"],
+  topic_conclusion_blocked:["topicId","gapCount"]};
 var trackSeq = {};
 function track(ev, props){
   if(!MX_EVENTS[ev]) return;
@@ -1748,6 +2142,7 @@ function initNoteTools(view, a, anchorPara){
         panel.style.display = "none";
         renderPanel();
         updateCount();
+        track("note_save", { kind: "note", articleId: a.id, len: v2.length });
       }
     });
     cancel.addEventListener("click", function(){ panel.style.display = "none"; });
@@ -1860,6 +2255,7 @@ function initNoteTools(view, a, anchorPara){
           source: { title: a.title, vol: a.vol, dateRaw: a.dateRaw, place: a.place }
         })){
           markPara(pEl); updateCount(); renderPanel();
+          track("note_save", { kind: "quote", articleId: a.id, len: cur.text.length });
         }
         hideBar(); try{ window.getSelection().removeAllRanges(); }catch(e2){}
       } else if(act === "note"){

@@ -1,32 +1,35 @@
-// WP07: /api/ask — 带真实段落引用的 AI 问答
-// 管线: 段落关键词检索 → 真实模型 → 结构化回答 → 引用ID 100% 校验 (虚构即拦截重试/剔除)
-// 语料: data/sample-topic.json (随函数打包为静态资源, 由 fetch 相对路径读取 — Vercel 上从站点根)
+// P05: /api/ask — 带真实段落引用的 AI 问答 (范围契约 + 跨实例限流 + 台账 + 版本追踪)
+// 管线: 范围契约校验 → 段落关键词检索 → 真实模型 → 结构化回答 → 引用ID/引文逐字校验
+// 语料: data/sample-topic.json (v1n03+v1n04, 879 段)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.js';
-import { loadCorpus, askPipeline } from './_ask.js';
+import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.js';
+import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured } from './_govern.js';
 
 export const config = { runtime: 'nodejs' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// 开发: repo_stage/site/data/sample-topic.json; 生产: 站点根 data/
 const CANDIDATES = [
   path.join(__dirname, '..', 'site', 'data', 'sample-topic.json'),
   path.join(__dirname, '..', 'data', 'sample-topic.json'),
   '/var/task/data/sample-topic.json',
 ];
+const TOPIC_CANDIDATES = [
+  path.join(__dirname, '..', 'site', 'data', 'topic-jgs.json'),
+  path.join(__dirname, '..', 'data', 'topic-jgs.json'),
+  '/var/task/data/topic-jgs.json',
+];
 
-let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null;
+let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null, TOPICS = {};
 function corpus() {
   if (CORPUS) return CORPUS;
   for (const p of CANDIDATES) {
     try {
       const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
       CORPUS = loadCorpus(raw);
-      // 语料版本: 对参与检索的全部文章 (title+段落 id+段落内容, 按稳定顺序) 做确定性 hash
-      // — 修改任一篇内容/段落/ID 都会改变 hash; 相同内容重复构建不变 (验收标准)
       CORPUS_VERSION = buildCorpusVersion(raw);
       ARTICLE_META = {};
       for (const [aid, a] of Object.entries(raw.articles)) {
@@ -38,6 +41,16 @@ function corpus() {
   }
   throw new Error('sample-topic.json not found');
 }
+function topics() {
+  if (Object.keys(TOPICS).length) return TOPICS;
+  for (const p of TOPIC_CANDIDATES) {
+    try {
+      const t = JSON.parse(fs.readFileSync(p, 'utf8'));
+      if (t && t.topicId) TOPICS[t.topicId] = { articles: (t.corpus?.articles ?? []), title: t.title ?? '' };
+    } catch { /* try next */ }
+  }
+  return TOPICS;
+}
 function buildCorpusVersion(raw) {
   const hash = crypto.createHash('sha256');
   const aids = Object.keys(raw.articles ?? {}).sort();
@@ -45,80 +58,110 @@ function buildCorpusVersion(raw) {
     const a = raw.articles[aid];
     hash.update(aid).update('\u0000');
     hash.update(String(a.title ?? '')).update('\u0000');
-    // 段落按 seq 稳定顺序 (id 含 seq, 直接 sort 亦稳定)
     const paras = [...(a.paragraphs ?? [])].sort((x, y) => (x.seq ?? 0) - (y.seq ?? 0));
     for (const para of paras) {
       hash.update(String(para.id ?? '')).update('\u0000');
       hash.update(String(para.text ?? '')).update('\u0000');
     }
-    hash.update('\u0001'); // 文章分隔符
+    hash.update('\u0001');
   }
   return 'corpus-' + hash.digest('hex').slice(0, 20) + ':articles=' + aids.length + ':paras=' + CORPUS.length;
 }
 
 const RL_MAX = parseInt(process.env.ASK_RL_MAX_PER_MIN ?? '5', 10);
-const rlBuckets = new Map();
-function rateLimited(key) {
-  const now = Date.now(), W = 60_000;
-  let b = rlBuckets.get(key);
-  if (!b || now - b.windowStart >= W) b = { windowStart: now, count: 0 };
-  b.count += 1;
-  rlBuckets.set(key, b);   // P0 修复: 此前创建/更新桶后未 set 回 Map → 计数永远丢失, 限流失效
-  if (rlBuckets.size > 10_000) for (const [k, v] of rlBuckets) if (now - v.windowStart >= W) rlBuckets.delete(k);
-  return b.count > RL_MAX;
-}
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return jsonError(res, 405, 'method_not_allowed', 'Use POST');
+  const requestId = newRequestId();
+  const startedAt = Date.now();
+  const fail = (status, code, message, extra) => {
+    res.setHeader('X-Request-Id', requestId);
+    recordUsage({ requestId, status: 'error', code, calls: 0, costKnown: false, scope: null });
+    return jsonError(res, status, code, message, extra);
+  };
+
+  if (req.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST');
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOW_ORIGIN ?? 'https://aibigplayer.top');
   res.setHeader('Vary', 'Origin');
-
-  const budget = Budget.load();
-  if (!budget.configured) return jsonError(res, 503, 'budget_not_configured', 'AI 问答未配置预算, 已阻断。阅读与剧场不受影响。');
-  if (budget.exhausted()) return jsonError(res, 402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。阅读与剧场不受影响。');
+  res.setHeader('X-Request-Id', requestId);
 
   let body;
-  try { body = req.body ?? JSON.parse(req); } catch { return jsonError(res, 400, 'bad_json', 'body must be JSON'); }
+  try { body = req.body ?? JSON.parse(req); } catch { return fail(400, 'bad_json', 'body must be JSON'); }
   const q = (body?.question ?? '').toString().trim();
-  if (!q) return jsonError(res, 400, 'empty_question', 'question is required');
-  if (q.length > 300) return jsonError(res, 400, 'question_too_long', 'question max 300 chars');
-  // 研究范围 (WP08 联动): articleIds 数组, 限制检索语料范围; 段落/场景级范围由前端转成 articleIds+可选 scopeNote
-  const scope = Array.isArray(body?.scope?.articleIds)
-    ? body.scope.articleIds.filter(x => /^[v]\d+n\d+$/.test(x)).slice(0, 5)
-    : [];
+  if (!q) return fail(400, 'empty_question', 'question is required');
+  if (q.length > 300) return fail(400, 'question_too_long', 'question max 300 chars');
+
+  let c;
+  try { c = corpus(); } catch {
+    return fail(500, 'corpus_missing', '语料数据包未部署');
+  }
+
+  // P05.1 范围契约: 非法范围显式拒绝, 绝不静默扩大到全部语料
+  // (先校验范围再做供应商检查: 范围错误属于请求错误, 不该被 503 掩盖)
+  let scope;
+  try {
+    scope = resolveScope(body, {
+      corpusParagraphs: c,
+      articleMeta: ARTICLE_META,
+      topics: topics(),
+    });
+  } catch (e) {
+    if (e instanceof ScopeError) return fail(400, e.code, e.message, { scopeError: e.detail });
+    throw e;
+  }
+
+  let provider;
+  try { provider = loadProviderConfig(); } catch (e) {
+    return fail(503, 'provider_not_configured', e.message);
+  }
+
+  /* P05.1: 请求校验(400)优先于服务状态(402/503) */
+  const budget = Budget.load();
+  if (!budget.configured) return fail(503, 'budget_not_configured', 'AI 问答未配置预算, 已阻断。阅读与笔记不受影响。');
+  if (budget.exhausted()) return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。阅读与笔记不受影响。');
+
 
   const ip = getClientIp(req);
   const { sid } = sessionOf(req, res);
-  if (rateLimited(sid + '|' + ip)) {
-    res.setHeader('Retry-After', '60');
-    return jsonError(res, 429, 'rate_limited', '提问过于频繁, 请稍后再试。');
+  const rl = await rateLimit(sid + '|' + ip, RL_MAX);
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(Math.ceil(rl.resetInMs / 1000)));
+    return fail(429, 'rate_limited', '提问过于频繁, 请稍后再试。');
   }
 
-  let provider, c;
-  try { provider = loadProviderConfig(); } catch (e) {
-    return jsonError(res, 503, 'provider_not_configured', e.message);
-  }
-  try { c = corpus(); } catch {
-    return jsonError(res, 500, 'corpus_missing', '语料数据包未部署');
+  const scopedCorpus = scopeParagraphs(scope, c);
+  if (!scopedCorpus.length) {
+    // 范围合法但没有可用段落 → 明确说明不足, 不扩大到全库
+    return fail(400, 'scope_empty', '所选范围内没有可检索的原文段落。');
   }
 
   try {
     const out = await askPipeline(q, {
-      provider, corpus: (scope.length ? c.filter(p => scope.includes(p.articleId)) : c),
+      provider, corpus: scopedCorpus,
       timeoutMs: provider.timeoutMs, maxRetries: 1,
-      budget,   // 预占: 每次模型调用前 reserve, 耗尽抛 402 (P0-r4)
-    }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, ...e })));
+      budget,
+    }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, requestId, ...e })));
 
-    // 额度已由 askPipeline 在每次调用前预占 (reserve), 此处不再重复记账
     const calls = (out.attemptsLog ?? []).length || (out.attempts ?? 1);
-    logCall({ ts: Date.now(), sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
+    const costs = (out.attemptsLog ?? []).map(a => a.cost).filter(x => typeof x === 'number');
+    const costKnown = costs.length > 0 && costs.length === (out.attemptsLog ?? []).length;
+    const cost = costKnown ? costs.reduce((a, b) => a + b, 0) : null;
+
+    logCall({ ts: Date.now(), requestId, sid, qLen: q.length, qHead: q.slice(0, 24), model: out.model,
       calls, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
       fabricatedIntercepted: (out.fabricatedIntercepted ?? []).length + (out.badQuotesIntercepted ?? []).length,
-      scope: scope.join(',') || null });
+      scope: scope.mode + ':' + scope.articleIds.join('|'),
+      promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION, corpusVersion: CORPUS_VERSION });
+
+    const ledger = await recordUsage({
+      requestId, model: out.model, status: out.status, calls, cost, costKnown,
+      scope: scope.mode,
+    });
 
     return res.status(200).json({
-      schemaVersion: '0.3', ok: true, model: out.model, promptVersion: out.promptVersion,
-      corpusVersion: CORPUS_VERSION, status: out.status,
+      schemaVersion: '0.4', ok: true, requestId,
+      model: out.model,
+      promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION, corpusVersion: CORPUS_VERSION,
+      status: out.status,
       answer: out.answer,
       citations: out.citations.map(c2 => ({
         id: c2.id, quote: c2.quote,
@@ -127,14 +170,32 @@ export default async function handler(req, res) {
       })),
       evidenceIds: out.evidenceIds, hitIds: out.hitIds ?? [], ms: out.ms,
       attempts: out.attempts ?? 1,
-      usage: { calls, budgetUnit: 'upstream_calls', budgetLeft: budget.left() },
+      scopeResolved: scope,                       // 前后端范围可逐字段核对
+      usage: {
+        calls, budgetUnit: 'upstream_calls', budgetLeft: budget.left(),
+        cost: cost, costKnown,                    // 未知金额时 cost=null, 不是 0
+        ledgerPersisted: !!ledger.persisted,
+      },
+      governance: {
+        rateLimitScope: rl.scope,                 // global=跨实例; instance=仅本实例
+        rateLimitRemaining: Math.max(0, RL_MAX - rl.count),
+        kvConfigured: kvConfigured(),
+        elapsedMs: Date.now() - startedAt,
+      },
     });
   } catch (e) {
-    if (e.code === 'BUDGET_EXHAUSTED') return jsonError(res, 402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。');
-    if (e.status === 402) { budget.markExhausted(); return jsonError(res, 402, 'upstream_insufficient', '上游余额不足, 已熔断。'); }
-    if (e.code === 'TIMEOUT') return jsonError(res, 504, 'upstream_timeout', '模型调用超时, 本次提问已阻断。');
-    if (e.status === 429) { res.setHeader('Retry-After', '30'); return jsonError(res, 429, 'upstream_rate_limited', '上游限流, 请稍后再试。'); }
-    if (e.code === 'citation_invalid') return jsonError(res, 502, 'citation_validation_failed', '模型输出未通过引用校验, 已拦截。');
-    return jsonError(res, 502, 'upstream_error', String(e.message ?? e).slice(0, 160));
+    const calls = (e.attemptsLog ?? []).length || 0;
+    const costs = (e.attemptsLog ?? []).map(a => a.cost).filter(x => typeof x === 'number');
+    await recordUsage({
+      requestId, model: provider.model, status: 'error', code: e.code ?? e.status ?? 'upstream_error',
+      calls, cost: costs.length ? costs.reduce((a, b) => a + b, 0) : null,
+      costKnown: costs.length > 0 && costs.length === calls, scope: scope.mode,
+    });
+    if (e.code === 'BUDGET_EXHAUSTED') return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。');
+    if (e.status === 402) { budget.markExhausted(); return fail(402, 'upstream_insufficient', '上游余额不足, 已熔断。'); }
+    if (e.code === 'TIMEOUT' || e.status === 504) return fail(504, 'upstream_timeout', '模型调用超时, 本次提问未产生结果; 已发出的调用仍可能计费。');
+    if (e.status === 429) { res.setHeader('Retry-After', '30'); return fail(429, 'upstream_rate_limited', '上游限流, 请稍后再试。'); }
+    if (e.code === 'citation_invalid') return fail(502, 'citation_validation_failed', '模型输出未通过引用校验, 已拦截; 未返回任何未经核验的答案。');
+    return fail(502, 'upstream_error', String(e.message ?? e).slice(0, 160));
   }
 }

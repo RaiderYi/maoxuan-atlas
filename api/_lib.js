@@ -1,8 +1,10 @@
 // WP05 共用库: 错误码 / IP / 会话 / 供应商适配 / 预算
 import crypto from 'node:crypto';
 
-export function jsonError(res, status, code, message) {
-  return res.status(status).json({ schemaVersion: '0.1', ok: false, error: { code, message } });
+export function jsonError(res, status, code, message, extra) {
+  const body = { schemaVersion: '0.4', ok: false, error: { code, message } };
+  if (extra && typeof extra === 'object') body.error.detail = extra;
+  return res.status(status).json(body);
 }
 
 export function getClientIp(req) {

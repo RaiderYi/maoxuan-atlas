@@ -1,0 +1,102 @@
+[
+ {
+  "no": 1,
+  "question": "中国的红色政权为什么能够存在？其发生和存在的原因是什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 2,
+  "question": "毛泽东认为一小块或若干小块红色区域能够存在的前提条件是什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 3,
+  "question": "井冈山根据地位于什么山脉的什么位置？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 4,
+  "question": "八月失败的原因和教训是什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 5,
+  "question": "湘赣边界的割据局面在湘鄂赣三省的地位如何？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 6,
+  "question": "边界党的组织存在什么问题？土籍客籍问题怎么造成的？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 7,
+  "question": "割据地区现势部分，边界各县城的情况如何？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 8,
+  "question": "军事问题上红军面临的困难有哪些？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 9,
+  "question": "土地问题上的分配标准是什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 10,
+  "question": "政权问题的核心矛盾是什么？如何解决？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 11,
+  "question": "革命性质问题的争论焦点是什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 12,
+  "question": "割据地区问题中，中段、北段、南段哪个最利于割据？为什么？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 13,
+  "question": "红色政权存在的五个条件分别是什么？（综合归纳）",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 14,
+  "question": "边界割据一年多的经验教训，毛泽东是如何总结的？（综合）",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 15,
+  "question": "文中提到的红军医院的条件如何？缺医少药到什么程度？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 16,
+  "question": "罗霄山脉中段作为根据地的地形优势有哪些具体描述？",
+  "expect": "ANSWERABLE"
+ },
+ {
+  "no": 17,
+  "question": "井冈山时期红军使用的坦克型号是什么？",
+  "expect": "IRRELEVANT"
+ },
+ {
+  "no": 18,
+  "question": "这篇文章的作者晚年在哪座城市逝世的？",
+  "expect": "IRRELEVANT"
+ },
+ {
+  "no": 19,
+  "question": "薛定谔方程在井冈山斗争中的应用是什么？",
+  "expect": "IRRELEVANT"
+ },
+ {
+  "no": 20,
+  "question": "1929年红军长征的路线是怎样的？",
+  "expect": "IRRELEVANT"
+ }
+]
