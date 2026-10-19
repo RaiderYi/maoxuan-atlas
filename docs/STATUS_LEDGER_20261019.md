@@ -33,7 +33,7 @@
 | R01 恢复受控正文供应 | CODE-ONLY | `node tests/api/test-text.mjs` 9 例；217 篇逐篇解密 + 明文哈希对齐 manifest。线上生效需 `TEXT_PACK_KEY`（见 `CONTENT_PACK_20261019.md`） |
 | R02 部署资产清单 | DONE | `site/data/content-manifest.json`（逐篇明文/密文 SHA256、字数、缺失与短篇清单）；`node pipeline/verify-deploy-assets.mjs` 0 错误 |
 | R03 发布前门槛 | DONE | 同一脚本进 CI（`.github/workflows/ci-minimal.yml` "Deploy asset gate"）；正文缺失 = 非零退出 = 不得接管生产 |
-| R04 上线后关键路径探测 | DONE(脚本) / 未执行 | `node pipeline/probe-production.mjs`：版本、状态、正文自检、抽样 8 篇、旧地址、首页/画廊。首次执行待部署后 |
+| R04 上线后关键路径探测 | DONE（已执行，结果 5/15） | 部署 `dpl_FjYAdgiq…`（提交 `a9fc776`）后实跑：版本/状态/首页/画廊 ✓；正文自检 `packFound=true, keyConfigured=false`；8 篇与旧地址全部 503 `text_unavailable`。**探测准确指出唯一缺失项是密钥，不是内容包** |
 | R05 缓存自然升级 | DONE | `sw.js` v9 → v10：缓存版本整体作废；`/api/text?check=1` 不入缓存；正文走"缓存优先 + 后台刷新"，断网可读已读篇目。手机真机/弱网验收仍属 R24 |
 | R06 统一状态与事故记录 | DONE | 本文件 + 事故表；旧 `N01_STATUS` 转历史 |
 
@@ -84,7 +84,24 @@ R31—R48 全部 OPEN。其中 R37（事件收集）仍是 `NOT WIRED`，R44 已
 
 ---
 
-## 本批次真实执行结果
+## 线上实测（2026-10-19 23:2x，部署 dpl_FjYAdgiq… / 提交 a9fc776）
+
+```
+node pipeline/probe-production.mjs --expect-commit a9fc776
+✓ /api/version      R1.6.0-content-and-tasks · a9fc776
+✓ /api/status       AI enabled · 预算 0.10/50 CNY
+✗ /api/text?check=1 packFound=true  keyConfigured=false        ← 内容包已进部署，只缺密钥
+✗ /api/text?id=v1n03 … v5n01 (8 篇)   HTTP 503 text_unavailable
+✗ /data/texts/v1n07.txt（旧地址重写） HTTP 503
+✓ /  ✓ /quiz.html
+5/15 通过
+```
+
+结论：R01 的产线本身在线上成立（`packFound=true`，说明内容包随部署走通、rewrite 生效、函数能读到包），
+**唯一未完成的是 Vercel 环境变量 `TEXT_PACK_KEY`**。该动作需要项目权限，本机无 Vercel CLI 登录态
+（`deploy_nexior/.env.local` 里的 OIDC token 经 Vercel API 验证返回 `invalidToken`），故交由产品负责人完成。
+
+## 本批次本地真实执行结果
 
 ```
 node tests/run-all.mjs                    → 8 个套件全通过（34 + 28 + 9 + 6 + 9 + 5 + 离线 + 退役）
