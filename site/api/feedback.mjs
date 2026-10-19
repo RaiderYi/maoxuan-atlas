@@ -1,7 +1,7 @@
 // P05.5: /api/feedback — 回答纠错 (引用不相关 / 结论无依据 / 其他)
 // 只记录指向具体回答的元数据与用户填写的理由, 不保存完整问题与笔记正文 (P07.3)
-import { jsonError, getClientIp, sessionOf } from './_lib.js';
-import { recordFeedback, kvConfigured } from './_govern.js';
+import { jsonError, getClientIp, sessionOf } from './_lib.mjs';
+import { recordFeedback, kvConfigured } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
 

@@ -79,7 +79,7 @@ console.log('MXStore · 删除/恢复事务顺序');
 
 // ---------- 2. 范围契约 ----------
 console.log('resolveScope · 反例矩阵');
-const govern = await import('../site/api/_govern.js');
+const govern = await import('../site/api/_govern.mjs');
 const ctx = {
   corpusParagraphs: [
     { id: 'pv1n03-001', articleId: 'v1n03' },
@@ -124,7 +124,7 @@ await new Promise((r) => srv.listen(0, '127.0.0.1', r));
 const port = srv.address().port;
 process.env.KV_REST_API_URL = `http://127.0.0.1:${port}`;
 process.env.KV_REST_API_TOKEN = 'test-token';
-const govern2 = await import('../site/api/_govern.js?v=2');
+const govern2 = await import('../site/api/_govern.mjs?v=2');
 const ledger = await govern2.recordUsage({ requestId: 'req_test', attemptId: 'final', calls: 1, costKnown: false, cost: null, status: 'answered' });
 ok('KV 返回 error → persisted=false 且带原因', ledger.persisted === false && !!ledger.error, ledger);
 srv.close();
@@ -160,7 +160,7 @@ console.log('makeBudget · 跨实例与故障策略');
   process.env.KV_REST_API_TOKEN = 'k';
   process.env.BUDGET_LIMIT_CREDIT = '1';
   process.env.BUDGET_PERIOD = 'test-period';
-  const g = await import('../site/api/_govern.js?v=budget');
+  const g = await import('../site/api/_govern.mjs?v=budget');
   const b1 = await g.makeBudget();
   const b2 = await g.makeBudget();          // 模拟两个独立服务进程
   ok('预算 scope=global（有 KV）', b1.scope === 'global', b1.scope);
@@ -209,7 +209,7 @@ console.log('rateLimit · 键命名空间与三级桶互不干扰');
   process.env.KV_REST_API_TOKEN = 'k';
   process.env.BUDGET_LIMIT_CREDIT = '1';
   process.env.BUDGET_PERIOD = 'ns-period';
-  const g = await import('../site/api/_govern.js?v=ns');
+  const g = await import('../site/api/_govern.mjs?v=ns');
   const b = await g.makeBudget();
   await b.reserve(1);
   const a1 = await g.rateLimit('sid:A|1.2.3.4', 5);

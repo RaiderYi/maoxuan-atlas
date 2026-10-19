@@ -18,7 +18,7 @@ async function freshLoad(env) {
   const saved = { ...process.env };
   Object.assign(process.env, env);
   for (const k of Object.keys(saved)) if (!(k in process.env)) delete process.env[k];
-  const mod = await import(`./research.js?cb=${crypto.randomUUID()}`);
+  const mod = await import(`./research.mjs?cb=${crypto.randomUUID()}`);
   // 恢复 env: research.js 顶层不读 env, 只在请求时读 → 只需保证测试注入窗口正确
   return mod;
 }
@@ -34,7 +34,7 @@ async function T(name, fn) {
 await T('budget not configured → 503 block', async () => {
   delete process.env.BUDGET_LIMIT_CREDIT;
   delete process.env.PROVIDER_URL; delete process.env.PROVIDER_KEY; delete process.env.MODEL_ID;
-  const { default: handler } = await import('./research.js?cb=b1' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b1' + crypto.randomUUID());
   const res = mockRes();
   await handler(mockReq({ question: 'x' }), res);
   assert.strictEqual(res.statusCode, 503);
@@ -45,7 +45,7 @@ await T('budget not configured → 503 block', async () => {
 await T('provider not configured → 503', async () => {
   process.env.BUDGET_LIMIT_CREDIT = '10';
   delete process.env.PROVIDER_URL;
-  const { default: handler } = await import('./research.js?cb=b2' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b2' + crypto.randomUUID());
   const res = mockRes();
   await handler(mockReq({ question: 'x' }), res);
   assert.strictEqual(res.statusCode, 503);
@@ -57,7 +57,7 @@ await T('empty question → 400', async () => {
   process.env.PROVIDER_URL = 'http://127.00.0.1:9/v1'; // 不可达, 但不应走到调用
   process.env.PROVIDER_KEY = 'test-key-not-real';
   process.env.MODEL_ID = 'test-model';
-  const { default: handler } = await import('./research.js?cb=b3' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b3' + crypto.randomUUID());
   const res = mockRes();
   await handler(mockReq({ question: '   ' }), res);
   assert.strictEqual(res.statusCode, 400);
@@ -69,7 +69,7 @@ await T('upstream hang → 504 timeout block', async () => {
   process.env.MAX_RETRIES = '0';
   const srv = await httpServerHang(); // 挂起不响应的服务器
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b4' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b4' + crypto.randomUUID());
   const res = mockRes();
   const t0 = Date.now();
   await handler(mockReq({ question: '井冈山在哪里' }), res);
@@ -84,7 +84,7 @@ await T('upstream 429 → 429 rate limited', async () => {
   process.env.MAX_RETRIES = '1';
   const srv = await httpServerStatus(429, { retry_after: '30' });
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b5' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b5' + crypto.randomUUID());
   const res = mockRes();
   await handler(mockReq({ question: 'x' }), res);
   srv.server.close();
@@ -97,7 +97,7 @@ await T('upstream 429 → 429 rate limited', async () => {
 await T('upstream 402 → circuit-break exhausted', async () => {
   const srv = await httpServerStatus(402, {}, '{"error":{"message":"insufficient balance"}}');
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b6' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b6' + crypto.randomUUID());
   let res = mockRes();
   await handler(mockReq({ question: 'x' }), res);
   srv.server.close();
@@ -111,7 +111,7 @@ await T('upstream 402 → circuit-break exhausted', async () => {
 
 // —— 重置预算累计 (_lib 模块级状态; research 与 _lib 共享同一缓存实例) ——
 {
-  const lib = await import('./_lib.js'); // 无 query = research.js 实际引用的同一缓存实例
+  const lib = await import('./_lib.mjs'); // 无 query = research.js 实际引用的同一缓存实例
   if (lib.Budget && lib.Budget._spent !== undefined) lib.Budget._spent = 0;
 }
 
@@ -123,7 +123,7 @@ await T('real success path → 200 + budget accounting', async () => {
     usage: { cost: { amount: 0.42, currency: 'credit' } },
   }));
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b7' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b7' + crypto.randomUUID());
   const res = mockRes();
   await handler(mockReq({ question: '井冈山在哪里', scope: ['v1n03', 'v1n04'] }), res);
   srv.server.close();
@@ -140,7 +140,7 @@ await T('budget exhausted → 402 block', async () => {
     model: 'm', choices: [{ message: { content: 'ok' } }], usage: { cost: { amount: 5 } },
   }));
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b8' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b8' + crypto.randomUUID());
   let res = mockRes();
   await handler(mockReq({ question: 'a' }), res); // cost 5 → spent 5+0.42(prev? no, module reloaded)
   res = mockRes();
@@ -159,7 +159,7 @@ await T('local rate limit → 429 after RL_MAX', async () => {
   const srv = await httpServerStatus(200, {}, JSON.stringify({
     model: 'm', choices: [{ message: { content: 'ok' } }], usage: {} }));
   process.env.PROVIDER_URL = `http://127.0.0.1:${srv.port}/v1`;
-  const { default: handler } = await import('./research.js?cb=b9' + crypto.randomUUID());
+  const { default: handler } = await import('./research.mjs?cb=b9' + crypto.randomUUID());
   const codes = [];
   for (let i = 0; i < 3; i++) {
     const res = mockRes();

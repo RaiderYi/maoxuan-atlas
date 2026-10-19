@@ -33,9 +33,9 @@ def deepseek_key():
 
 
 RUNNER = r'''
-import { loadProviderConfig } from '../site/api/_lib.js';
-import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../site/api/_ask.js';
-import { costOfUsage } from '../site/api/_govern.js';
+import { loadProviderConfig } from '../site/api/_lib.mjs';
+import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../site/api/_ask.mjs';
+import { costOfUsage } from '../site/api/_govern.mjs';
 import fs from 'node:fs';
 const data = JSON.parse(fs.readFileSync('site/data/sample-topic.json','utf8'));
 const corpus = loadCorpus(data);

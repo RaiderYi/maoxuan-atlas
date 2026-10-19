@@ -1,7 +1,7 @@
 // A07: /api/status — 读者可见的服务状态（不含任何配置细节/密钥）
 // 前端在提问前读取本接口：ai.enabled=false 时禁用提问并说明原因与替代路径。
-import { Budget, loadProviderConfig } from './_lib.js';
-import { kvConfigured, makeCnyBudget } from './_govern.js';
+import { Budget, loadProviderConfig } from './_lib.mjs';
+import { kvConfigured, makeCnyBudget } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
 

@@ -97,7 +97,7 @@ Object.assign(process.env, {
   BUDGET_LIMIT_CNY: '50',
   BUDGET_PERIOD: 'cny-base',
 });
-const { default: handler } = await import(`./ask.js?cny=${crypto.randomUUID()}`);
+const { default: handler } = await import(`./ask.mjs?cny=${crypto.randomUUID()}`);
 
 let ipSeq = 0;
 async function call(period, { limit = '50', ip } = {}) {
@@ -160,7 +160,7 @@ await T('超时：保留预留不释放，返回可恢复的 504', async () => {
 
 /* ---------- 5. 重复结算幂等 ---------- */
 await T('重复 settle 同一 request/attempt：只生效一次', async () => {
-  const g = await import(`./_govern.js?dup=${crypto.randomUUID()}`);
+  const g = await import(`./_govern.mjs?dup=${crypto.randomUUID()}`);
   process.env.BUDGET_PERIOD = 'cny-dup';
   process.env.BUDGET_LIMIT_CNY = '50';
   const b = await g.makeCnyBudget();

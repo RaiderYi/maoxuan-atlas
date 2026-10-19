@@ -3,7 +3,7 @@
 // 版本: PROMPT_VERSION=提示词版本(改了才 bump); PIPELINE_VERSION=管线/校验版本(r3=P0修复+正序拼接+整份重试)
 export const PROMPT_VERSION = 'wp07-r2';
 export const PIPELINE_VERSION = 'wp07-r3';
-import { loadProviderConfig, callChat } from './_lib.js';
+import { loadProviderConfig, callChat } from './_lib.mjs';
 
 // ---------- 关键词检索 (字符 bigram 重叠, 无分词依赖) ----------
 export function bigrams(s) {

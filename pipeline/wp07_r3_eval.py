@@ -12,8 +12,8 @@ HIST = f'pipeline/wp07-20q-history-{RUN}.jsonl'
 MANIFEST = f'pipeline/wp07-{RUN}-manifest.json'
 
 RUNNER = r'''
-import { loadProviderConfig } from '../site/api/_lib.js';
-import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../site/api/_ask.js';
+import { loadProviderConfig } from '../site/api/_lib.mjs';
+import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../site/api/_ask.mjs';
 import fs from 'node:fs';
 const KEY = fs.readFileSync('D:/工作/maoxuan_viz/data/.key','utf8').trim();
 process.env.PROVIDER_URL='https://open.bigmodel.cn/api/coding/paas/v4';

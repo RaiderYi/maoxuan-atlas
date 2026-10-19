@@ -66,11 +66,11 @@ jobs:
 
       # 6b. B03: 限流分级 / 被限流不消耗预算 / KV 命名空间
       - name: Rate-limit and budget-leak assertions (B03)
-        run: node site/api/test-b03.js
+        run: node site/api/test-b03.mjs
 
       # 6c. QA02: CNY 费用治理反例（mock 供应商 + 内存 KV）
       - name: CNY governance assertions (QA02)
-        run: node site/api/test-cny.js
+        run: node site/api/test-cny.mjs
 
       # 7. A09: 跨平台冻结校验（LF 归一后 hash）
       - uses: actions/setup-python@v5

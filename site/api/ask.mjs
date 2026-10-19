@@ -5,9 +5,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.js';
-import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.js';
-import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny } from './_govern.js';
+import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.mjs';
+import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.mjs';
+import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
 

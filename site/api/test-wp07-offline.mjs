@@ -1,7 +1,7 @@
 // WP07-r3 offline tests: P0-r3 回归 (真断言: 失败 → 非零退出)
 // 反例来源: 2026-10-15 第二轮代码审查 (并发预算/未知费用/失败记账/真假混合整份重试/逆序拼接拒绝)
-import { loadCorpus, retrieve, validateCitations, buildMessages, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.js';
-import { Budget } from './_lib.js';
+import { loadCorpus, retrieve, validateCitations, buildMessages, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.mjs';
+import { Budget } from './_lib.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
