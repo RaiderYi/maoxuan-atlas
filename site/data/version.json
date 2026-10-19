@@ -1,8 +1,8 @@
 {
  "product": "AIBIGPLAYER V2",
- "releaseTag": "R1.4.0-n21-paragraph-tasks",
- "builtAt": "2026-10-19T11:05:45",
- "sourceCommit": "7bf442d",
+ "releaseTag": "R1.5.0-task-loop",
+ "builtAt": "2026-10-19T13:09:04",
+ "sourceCommit": "d80d36a",
  "note": "sourceCommit 为打包时的仓库提交；线上另可用 /api/version 读取 Vercel 注入的提交号",
  "features": {
   "reading": "经典研读 + 段落锚点 + 摘录笔记",
