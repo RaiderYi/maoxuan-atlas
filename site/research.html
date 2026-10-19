@@ -282,7 +282,7 @@ function ask(){
       corpusVer: j.corpusVersion || CORPUS_VER_FALLBACK,
       requestId: lastRequest.requestId, pipelineVer: j.pipelineVersion, promptVer: j.promptVersion,
       scope: j.scopeResolved || null };
-    el("saveCard").parentNode.style.display = "";
+    el("saveCard").parentNode.style.display = "block";   /* FIX01: CSS 默认 .cardBtns{display:none}，置 "" 会回落到 none → 按钮永不可见 */
     if(st === "partial" && gap){
       var gp = document.createElement("div");
       gp.className = "gapBox";

@@ -249,6 +249,12 @@ export async function askPipeline(question, opts, log) {
       u.prompt_cache_miss_tokens != null ? u.prompt_cache_miss_tokens
         : Math.max(0, Number(u.prompt_tokens || 0) - Number(u.prompt_cache_hit_tokens || 0)));
     ret.attemptsLog.push({ attempt, ms: Date.now() - tCall,
+      promptTokens: Number(u.prompt_tokens || 0),
+      completionTokens: Number(u.completion_tokens || 0),
+      cacheHitTokens: Number(u.prompt_cache_hit_tokens || 0),
+      cacheMissTokens: Number(u.prompt_cache_miss_tokens != null
+        ? u.prompt_cache_miss_tokens
+        : Math.max(0, Number(u.prompt_tokens || 0) - Number(u.prompt_cache_hit_tokens || 0))),
       cost: r.usage?.cost?.amount ?? r.usage?.total_cost ?? null,
       tokens: r.usage?.total_tokens ?? null });
     const parsed = parseAnswer(r.content);

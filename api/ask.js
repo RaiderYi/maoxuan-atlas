@@ -7,7 +7,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.js';
 import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.js';
-import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage } from './_govern.js';
+import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny } from './_govern.js';
 
 export const config = { runtime: 'nodejs' };
 
@@ -141,10 +141,15 @@ export default async function handler(req, res) {
     return fail(429, 'rate_limited', '提问过于频繁, 请稍后再试。', { limitScope: hitLimit });
   }
 
-  /* 单次请求费用上限（含最多 3 次上游尝试），保守取 0.06 元 */
-  const RESERVE_CNY = 0.06;
+  /* FIX03: 预留上界改为按实际输入规模与输出上限计算, 不再固定 0.06 元。
+     上界 = 尝试次数 × (输入字符数(作 token 上界) × 未命中价 + 输出上限 tokens × 输出价) */
+  const MAX_OUTPUT_TOKENS = parseInt(process.env.ASK_MAX_OUTPUT_TOKENS ?? '4096', 10);
+  const MAX_ATTEMPTS = 1 + parseInt(process.env.ASK_MAX_RETRIES ?? '1', 10);   // askPipeline maxRetries:1 → ≤2
+  const inputChars = scopedCorpus.reduce((n, p) => n + String(p.text ?? '').length, 0) + q.length + 1200;
+  const RESERVE_CNY = estimateReserveCny({ inputChars, maxOutputTokens: MAX_OUTPUT_TOKENS, attempts: MAX_ATTEMPTS });
   if (!(await budget.reserve(RESERVE_CNY))) {
-    return fail(402, 'budget_exhausted', '本轮试用额度不足以完成本次提问，已停止调用。阅读与笔记不受影响。');
+    return fail(402, 'budget_exhausted', '本轮试用额度不足以完成本次提问，已停止调用。阅读与笔记不受影响。',
+      { reserveCny: RESERVE_CNY });
   }
 
   try {
@@ -155,11 +160,25 @@ export default async function handler(req, res) {
     }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, requestId, ...e })));
 
     const calls = (out.attemptsLog ?? []).length || (out.attempts ?? 1);
-    /* 50 元预算: 用真实 token 用量按官方高峰价结算, 并把预留额度调整为实际费用 */
+    /* FIX02: 上游没回 usage 时不得按 0 元结算 — 记为未知并保留预留 */
     const usageCost = costOfUsage(out.usage || {});
-    const settle = await budget.settle(RESERVE_CNY, usageCost.cny);
-    const cost = usageCost.cny;
-    const costKnown = true;
+    const usageKnown = (Number(out.usage?.prompt_tokens || 0) + Number(out.usage?.completion_tokens || 0)) > 0;
+    const idemKey = `${requestId}:final`;
+    let settle;
+    let cost;
+    let costKnown;
+    let settlementKind;
+    if (usageKnown) {
+      settle = await budget.settle(RESERVE_CNY, usageCost.cny, { idemKey, mode: 'settle' });
+      cost = usageCost.cny;
+      costKnown = true;
+      settlementKind = 'settled_actual';
+    } else {
+      settle = await budget.hold('usage_missing');
+      cost = null;
+      costKnown = false;
+      settlementKind = 'held';
+    }
 
     logCall({ ts: Date.now(), requestId, sid, qLen: q.length, model: out.model,
       calls, status: out.status, attempts: out.attempts ?? 1, nCitations: out.citations.length,
@@ -192,6 +211,8 @@ export default async function handler(req, res) {
         budgetLimit: budget.limit, costCny: usageCost.cny, costBasis: usageCost.priceBasis,
         tokens: usageCost.totalTokens, outTokens: usageCost.outTokens,
         settle: settle.ok ? 'ok' : 'failed',
+        settlement: settlementKind,               // settled_actual | held | released
+        reserveCny: RESERVE_CNY,
         cost: cost, costKnown,                    // 未知金额时 cost=null, 不是 0
         ledgerPersisted: !!ledger.persisted,
       },
@@ -208,20 +229,61 @@ export default async function handler(req, res) {
       },
     });
   } catch (e) {
-    /* 调用失败: 退回预留额度 (上游若已计费由供应商侧账单体现) */
-    await budget.release(RESERVE_CNY).catch(() => {});
-    const calls = (e.attemptsLog ?? []).length || 0;
-    const costs = (e.attemptsLog ?? []).map(a => a.cost).filter(x => typeof x === 'number');
+    /* FIX02: 失败不等于上游未计费。
+       - 三次尝试的用量都已知 → 按真实费用结算 (预留换实际, 不做全额退回)
+       - 上游明确拒绝生成 (402/429)  → 确认未计费, 释放预留
+       - 其余 (超时/引用校验失败/缺 usage/5xx) → 保留预留不结算, 台账记 cost=null */
+    const attemptsLog = e.attemptsLog ?? [];
+    const calls = attemptsLog.length;
+    /* 每次尝试的费用: 上游直接给金额就用金额; 只给 token 时按官方价目表换算;
+       两者都没有 → 记为未知 (不按零元处理) */
+    const perAttempt = attemptsLog.map(a => {
+      if (typeof a.cost === 'number') return a.cost;
+      if (a.promptTokens != null || a.completionTokens != null) {
+        if (!a.promptTokens && !a.completionTokens) return null;   // 上游没回 usage
+        return costOfUsage({ prompt_tokens: a.promptTokens, completion_tokens: a.completionTokens,
+          prompt_cache_hit_tokens: a.cacheHitTokens || 0 }).cny;
+      }
+      return null;
+    });
+    const costs = perAttempt.filter(x => typeof x === 'number');
+    const usageKnown = attemptsLog.some(a => (a.promptTokens || a.completionTokens));
+    const allCostsKnown = calls > 0 && costs.length === calls;
+    const upstreamRefused = e.status === 402 || e.status === 429;
+    const definitelyFree = e.code === 'BUDGET_EXHAUSTED' || upstreamRefused || calls === 0;
+    const idemKey = `${requestId}:final`;
+
+    let settlement;
+    let ledgerCost = null;
+    let ledgerCostKnown = false;
+    let settlementKind;
+    if (allCostsKnown) {
+      ledgerCost = Math.round(costs.reduce((a, b) => a + b, 0) * 1e6) / 1e6;
+      ledgerCostKnown = true;
+      settlement = await budget.settle(RESERVE_CNY, ledgerCost, { idemKey, mode: 'settle' });
+      settlementKind = 'settled_actual';
+    } else if (definitelyFree) {
+      settlement = await budget.release(RESERVE_CNY, { idemKey });
+      settlementKind = 'released';
+    } else {
+      settlement = await budget.hold(usageKnown ? 'cost_unknown_but_charged' : 'usage_missing');
+      settlementKind = 'held';
+    }
+
     await recordUsage({
       requestId, attemptId: 'final', model: provider.model, status: 'error', code: e.code ?? e.status ?? 'upstream_error',
-      calls, cost: costs.length ? costs.reduce((a, b) => a + b, 0) : null,
-      costKnown: costs.length > 0 && costs.length === calls, scope: scope.mode,
+      calls, cost: ledgerCost, costKnown: ledgerCostKnown, scope: scope.mode,
+      settlement: settlementKind, settlementOk: !!settlement.ok,
     });
-    if (e.code === 'BUDGET_EXHAUSTED') return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。');
-    if (e.status === 402) { budget.markExhausted(); return fail(402, 'upstream_insufficient', '上游余额不足, 已熔断。'); }
-    if (e.code === 'TIMEOUT' || e.status === 504) return fail(504, 'upstream_timeout', '模型调用超时, 本次提问未产生结果; 已发出的调用仍可能计费。');
-    if (e.status === 429) { res.setHeader('Retry-After', '30'); return fail(429, 'upstream_rate_limited', '上游限流, 请稍后再试。'); }
-    if (e.code === 'citation_invalid') return fail(502, 'citation_validation_failed', '模型输出未通过引用校验, 已拦截; 未返回任何未经核验的答案。');
-    return fail(502, 'upstream_error', String(e.message ?? e).slice(0, 160));
+    const settleInfo = { settlement: settlementKind, reserveCny: RESERVE_CNY };
+    if (e.code === 'BUDGET_EXHAUSTED') return fail(402, 'budget_exhausted', 'AI 问答预算已耗尽, 已阻断。', settleInfo);
+    if (e.status === 402) {
+      await budget.markExhausted();
+      return fail(402, 'upstream_insufficient', '上游余额不足, 已熔断。', settleInfo);
+    }
+    if (e.code === 'TIMEOUT' || e.status === 504) return fail(504, 'upstream_timeout', '模型调用超时, 本次提问未产生结果; 已发出的调用仍可能计费。', settleInfo);
+    if (e.status === 429) { res.setHeader('Retry-After', '30'); return fail(429, 'upstream_rate_limited', '上游限流, 请稍后再试。', settleInfo); }
+    if (e.code === 'citation_invalid') return fail(502, 'citation_validation_failed', '模型输出未通过引用校验, 已拦截; 未返回任何未经核验的答案。', settleInfo);
+    return fail(502, 'upstream_error', String(e.message ?? e).slice(0, 160), settleInfo);
   }
 }

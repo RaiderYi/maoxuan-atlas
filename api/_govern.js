@@ -365,6 +365,20 @@ export function costOfUsage(usage) {
   };
 }
 
+/* FIX03: 可证明的预留上界。
+   旧实现固定预留 0.06 元, 但 3 次尝试 × (输入 + 4096 输出上限) 的最坏情况可达
+   0.12 元以上 —— 极端情况下单次请求的真实花费会超过预留, 于是结算“超额”发生
+   在额度已经放行之后, 不能再称为硬上限。
+   这里按【字符数 = token 上界】(中文 1 字 ≥ 1 token 不成立, 但 1 字 ≤ 1 token 保守成立)
+   与输出上限计算单次上界, 再乘尝试次数, 向上取整到 0.000001 元。 */
+export function estimateReserveCny({ inputChars = 0, maxOutputTokens = 4096, attempts = 1 } = {}) {
+  const inTok = Math.max(0, Number(inputChars) || 0);
+  const outTok = Math.max(0, Number(maxOutputTokens) || 0);
+  const n = Math.max(1, Number(attempts) || 1);
+  const perAttempt = (inTok * PRICE_CNY_PER_M.in_miss + outTok * PRICE_CNY_PER_M.out) / 1e6;
+  return Math.ceil(perAttempt * n * 1e6) / 1e6;
+}
+
 export async function makeCnyBudget() {
   const raw = process.env.BUDGET_LIMIT_CNY;
   const limit = (raw && /^\d+(\.\d+)?$/.test(String(raw))) ? parseFloat(raw) : null;
@@ -416,18 +430,41 @@ export async function makeCnyBudget() {
       instanceSpent += amt;
       return true;
     },
-    /** 用实际费用替换预留 (差额可为负) */
-    async settle(reserved, actual) {
+    /** 用实际费用替换预留 (差额可为负)。opts.idemKey 提供时同一 (request,attempt) 只结算一次 */
+    async settle(reserved, actual, opts = {}) {
       const delta = (Number(actual) || 0) - (Number(reserved) || 0);
       const d = Math.round(delta * 1e6) / 1e6;
+      const mode = opts.mode || 'settle';
+      if (kv && opts.idemKey) {
+        try {
+          const guard = `${KEY_NS}budget:idem:${opts.idemKey}:${mode}`;
+          const ok = await kvCmd(['SET', guard, '1', 'NX', 'EX', '86400']);
+          if (ok && ok.result === null) return { ok: true, deduped: true, delta: 0, mode };
+        } catch (e) {
+          // 去重守卫失败 → 不做金额变更 (宁可不结算, 也不重复结算)
+          return { ok: false, delta: 0, error: String(e && e.message), mode };
+        }
+      }
       if (kv) {
-        try { await kvCmd(['INCRBYFLOAT', key, String(d)]); return { ok: true, delta: d }; }
-        catch (e) { return { ok: false, delta: d, error: String(e && e.message) }; }
+        try { await kvCmd(['INCRBYFLOAT', key, String(d)]); return { ok: true, delta: d, mode }; }
+        catch (e) { return { ok: false, delta: d, error: String(e && e.message), mode }; }
       }
       instanceSpent = Math.max(0, instanceSpent + d);
-      return { ok: true, delta: d };
+      return { ok: true, delta: d, mode };
     },
-    async release(reserved) { return api.settle(reserved, 0); },
+    /** FIX02: 上游可能已计费但用量未知 → 保留预留不结算 (不按零元已知费用处理) */
+    async hold(reason) { return { ok: true, held: true, delta: 0, reason: reason || 'usage_unknown' }; },
+    async release(reserved, opts = {}) { return api.settle(reserved, 0, { ...opts, mode: 'release' }); },
+    /** FIX04: 上游明确余额不足 → 把本周期额度标记为已耗尽 (旧实现缺此方法, 命中即 TypeError) */
+    async markExhausted() {
+      if (limit === null) return false;
+      if (kv) {
+        try { await kvCmd(['SET', key, String(limit)]); return true; }
+        catch (e) { console.log(JSON.stringify({ t: 'kv_error', where: 'mark_exhausted', msg: String(e && e.message) })); return false; }
+      }
+      instanceSpent = limit;
+      return true;
+    },
   };
   return api;
 }
