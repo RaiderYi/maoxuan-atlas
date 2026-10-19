@@ -68,7 +68,9 @@ function buildCorpusVersion(raw) {
   return 'corpus-' + hash.digest('hex').slice(0, 20) + ':articles=' + aids.length + ':paras=' + CORPUS.length;
 }
 
-const RL_MAX = parseInt(process.env.ASK_RL_MAX_PER_MIN ?? '5', 10);
+const RL_MAX = parseInt(process.env.ASK_RL_MAX_PER_MIN ?? '5', 10);        // 会话+IP
+const RL_IP_MAX = parseInt(process.env.ASK_RL_IP_PER_MIN ?? '12', 10);     // 仅 IP: 丢 Cookie 也不重置
+const RL_GLOBAL_MAX = parseInt(process.env.ASK_RL_GLOBAL_PER_MIN ?? '60', 10); // 全站保护
 
 export default async function handler(req, res) {
   const requestId = newRequestId();
@@ -115,28 +117,34 @@ export default async function handler(req, res) {
   }
 
   /* P05.1: 请求校验(400)优先于服务状态(402/503) */
-  const budget = await makeCnyBudget();
-  if (!budget.configured) return fail(503, 'budget_not_configured', 'AI 问答未配置预算, 已阻断。阅读与笔记不受影响。');
-  if (await budget.exhausted()) return fail(402, 'budget_exhausted', '本轮试用额度已用完，AI 问答暂时关闭。阅读与笔记不受影响。');
-  /* 单次请求费用上限（含最多 3 次上游尝试），保守取 0.06 元 */
-  const RESERVE_CNY = 0.06;
-  if (!(await budget.reserve(RESERVE_CNY))) {
-    return fail(402, 'budget_exhausted', '本轮试用额度不足以完成本次提问，已停止调用。阅读与笔记不受影响。');
-  }
-
-
-  const ip = getClientIp(req);
-  const { sid } = sessionOf(req, res);
-  const rl = await rateLimit(sid + '|' + ip, RL_MAX);
-  if (rl.limited) {
-    res.setHeader('Retry-After', String(Math.ceil(rl.resetInMs / 1000)));
-    return fail(429, 'rate_limited', '提问过于频繁, 请稍后再试。');
-  }
-
   const scopedCorpus = scopeParagraphs(scope, c);
   if (!scopedCorpus.length) {
     // 范围合法但没有可用段落 → 明确说明不足, 不扩大到全库
     return fail(400, 'scope_empty', '所选范围内没有可检索的原文段落。');
+  }
+
+  const budget = await makeCnyBudget();
+  if (!budget.configured) return fail(503, 'budget_not_configured', 'AI 问答未配置预算, 已阻断。阅读与笔记不受影响。');
+  if (await budget.exhausted()) return fail(402, 'budget_exhausted', '本轮试用额度已用完，AI 问答暂时关闭。阅读与笔记不受影响。');
+
+  /* B03: 三级限流 (会话+IP / 纯IP / 全站) 一律放在预留预算之前 —
+     被限流的请求不得消耗额度 (旧顺序先 reserve 后 429, 每次被限流都漏 0.06 元) */
+  const ip = getClientIp(req);
+  const { sid } = sessionOf(req, res);
+  const rl = await rateLimit('sid:' + sid + '|' + ip, RL_MAX);
+  const rlIp = await rateLimit('ip:' + ip, RL_IP_MAX);
+  const rlAll = await rateLimit('global', RL_GLOBAL_MAX);
+  const hitLimit = rl.limited ? 'session' : rlIp.limited ? 'ip' : rlAll.limited ? 'global' : null;
+  if (hitLimit) {
+    const r = hitLimit === 'session' ? rl : hitLimit === 'ip' ? rlIp : rlAll;
+    res.setHeader('Retry-After', String(Math.ceil(r.resetInMs / 1000)));
+    return fail(429, 'rate_limited', '提问过于频繁, 请稍后再试。', { limitScope: hitLimit });
+  }
+
+  /* 单次请求费用上限（含最多 3 次上游尝试），保守取 0.06 元 */
+  const RESERVE_CNY = 0.06;
+  if (!(await budget.reserve(RESERVE_CNY))) {
+    return fail(402, 'budget_exhausted', '本轮试用额度不足以完成本次提问，已停止调用。阅读与笔记不受影响。');
   }
 
   try {
@@ -190,6 +198,11 @@ export default async function handler(req, res) {
       governance: {
         rateLimitScope: rl.scope,                 // global=跨实例; instance=仅本实例
         rateLimitRemaining: Math.max(0, RL_MAX - rl.count),
+        rateLimits: {                             // B03: 三级限流可逐项核对
+          session: { used: rl.count, max: RL_MAX, remaining: Math.max(0, RL_MAX - rl.count), scope: rl.scope },
+          ip: { used: rlIp.count, max: RL_IP_MAX, remaining: Math.max(0, RL_IP_MAX - rlIp.count), scope: rlIp.scope },
+          global: { used: rlAll.count, max: RL_GLOBAL_MAX, remaining: Math.max(0, RL_GLOBAL_MAX - rlAll.count), scope: rlAll.scope },
+        },
         kvConfigured: kvConfigured(),
         elapsedMs: Date.now() - startedAt,
       },

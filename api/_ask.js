@@ -179,7 +179,7 @@ export async function askPipeline(question, opts, log) {
   ret.evidenceIds = evidence.map(e => e.id);
   ret.hitIds = hits;
   ret.bestScore = bestScore;
-  log && log({ t: 'retrieve', q: question.slice(0, 24), n: evidence.length, bestScore,
+  log && log({ t: 'retrieve', qLen: question.length, n: evidence.length, bestScore,
     ids: ret.evidenceIds });
 
   // 2) 无证据 → 资料不足状态, 不调模型 (杜绝无依据编造)

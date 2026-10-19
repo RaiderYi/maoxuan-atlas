@@ -176,6 +176,56 @@ console.log('makeBudget · 跨实例与故障策略');
   ok('KV 故障时拒绝新增调用', r3 === false, r3);
 }
 
+// ---------- 5. B02/B03: KV 键命名空间 + 三级限流互不复用 ----------
+console.log('rateLimit · 键命名空间与三级桶互不干扰');
+{
+  const seen = [];
+  const store = new Map();
+  const kv = http.createServer((req, res) => {
+    let body = '';
+    req.on('data', (d) => (body += d));
+    req.on('end', () => {
+      const args = JSON.parse(body || '[]');
+      const cmd = String(args[0] || '').toUpperCase();
+      const key = args[1];
+      seen.push(key);
+      let result = null;
+      try {
+        if (cmd === 'INCRBY') { const v = (Number(store.get(key)) || 0) + Number(args[2]); store.set(key, v); result = v; }
+        else if (cmd === 'DECRBY') { const v = (Number(store.get(key)) || 0) - Number(args[2]); store.set(key, v); result = v; }
+        else if (cmd === 'INCR') { const v = (Number(store.get(key)) || 0) + 1; store.set(key, v); result = v; }
+        else if (cmd === 'PEXPIRE' || cmd === 'EXPIRE') { result = 1; }
+        else if (cmd === 'GET') { result = store.has(key) ? String(store.get(key)) : null; }
+        else if (cmd === 'SET') { if (args.includes('NX') && store.has(key)) result = null; else { store.set(key, args[2]); result = 'OK'; } }
+        else if (cmd === 'HINCRBY') { result = Number(args[3]); }
+        else if (cmd === 'HINCRBYFLOAT') { result = Number(args[3]); }
+      } catch (e) { res.end(JSON.stringify({ error: String(e.message) })); return; }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ result }));
+    });
+  });
+  await new Promise((r) => kv.listen(0, '127.0.0.1', r));
+  process.env.KV_REST_API_URL = `http://127.0.0.1:${kv.address().port}`;
+  process.env.KV_REST_API_TOKEN = 'k';
+  process.env.BUDGET_LIMIT_CREDIT = '1';
+  process.env.BUDGET_PERIOD = 'ns-period';
+  const g = await import('../api/_govern.js?v=ns');
+  const b = await g.makeBudget();
+  await b.reserve(1);
+  const a1 = await g.rateLimit('sid:A|1.2.3.4', 5);
+  const a2 = await g.rateLimit('ip:1.2.3.4', 2);
+  const a3 = await g.rateLimit('ip:1.2.3.4', 2);
+  const a4 = await g.rateLimit('ip:1.2.3.4', 2);
+  ok('所有 KV 键都带 mx: 命名空间（可与其它应用共用 Redis）',
+     seen.length > 0 && seen.every((k) => typeof k === 'string' && k.startsWith('mx:')), seen);
+  ok('换会话即新会话桶（会话桶按 sid+ip 计）', a1.count === 1 && a1.limited === false, a1);
+  ok('纯 IP 桶独立累计：第 3 次被限流（丢 Cookie 不再获得无限额度）',
+     a2.limited === false && a3.limited === false && a4.limited === true && a4.count === 3,
+     { a2, a3, a4 });
+  ok('限流 scope 有 KV 时为 global', a1.scope === 'global', a1.scope);
+  kv.close();
+}
+
 console.log('');
 console.log(`结果: ${pass} 通过 / ${fail} 失败`);
 process.exit(fail ? 1 : 0);

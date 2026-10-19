@@ -164,7 +164,7 @@ const memBuckets = new Map();
  */
 export async function rateLimit(key, maxPerWindow, windowMs = 60_000) {
   const bucket = Math.floor(Date.now() / windowMs);
-  const k = `rl:${key}:${bucket}`;
+  const k = `${KEY_NS}rl:${key}:${bucket}`;
   if (kvConfigured()) {
     try {
       const out = await kvCmd(['INCR', k]);
@@ -186,7 +186,9 @@ export async function rateLimit(key, maxPerWindow, windowMs = 60_000) {
 }
 
 // ---------- P05.4 台账: 次数与金额分开, 未知金额不伪装为零 ----------
-const LEDGER_KEY = 'ledger:ai';
+// 所有 KV 键统一 mx: 前缀: 允许与其它应用共用同一个 Redis 而不串账
+const KEY_NS = 'mx:';
+const LEDGER_KEY = KEY_NS + 'ledger:ai';
 
 export async function recordUsage(entry, { dayKey } = {}) {
   // entry: { calls, costKnown, cost, requestId, attemptId, model, status, code }
@@ -209,7 +211,7 @@ export async function recordUsage(entry, { dayKey } = {}) {
   if (kvConfigured()) {
     try {
       // 幂等: 同一 (requestId|attemptId) 只结算一次; 重试/重复回调不会重复计费
-      const idemKey = `ledger:idem:${entry.requestId ?? 'noreq'}:${entry.attemptId ?? 'final'}`;
+      const idemKey = `${KEY_NS}ledger:idem:${entry.requestId ?? 'noreq'}:${entry.attemptId ?? 'final'}`;
       const idem = await kvCmd(['SET', idemKey, '1', 'NX', 'EX', '86400']);
       if (idem && idem.result === null) {
         return { persisted: true, deduped: true, ...line };
@@ -286,7 +288,7 @@ export async function makeBudget() {
   const rawLimit = process.env.BUDGET_LIMIT_CREDIT;
   const limit = (rawLimit && /^\d+(\.\d+)?$/.test(String(rawLimit))) ? parseFloat(rawLimit) : null;
   const period = process.env.BUDGET_PERIOD || new Date().toISOString().slice(0, 10);
-  const key = `budget:used:${period}`;
+  const key = `${KEY_NS}budget:used:${period}`;
   const kv = kvConfigured();
   let instanceUsed = 0;
   const api = {
@@ -367,7 +369,7 @@ export async function makeCnyBudget() {
   const raw = process.env.BUDGET_LIMIT_CNY;
   const limit = (raw && /^\d+(\.\d+)?$/.test(String(raw))) ? parseFloat(raw) : null;
   const period = process.env.BUDGET_PERIOD || new Date().toISOString().slice(0, 7);
-  const key = `budget:cny:${period}`;
+  const key = `${KEY_NS}budget:cny:${period}`;
   const kv = kvConfigured();
   let instanceSpent = 0;
   const api = {

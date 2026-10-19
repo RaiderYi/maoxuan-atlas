@@ -1,0 +1,18 @@
+{
+ "run": "b07",
+ "purpose": "B07 — 经批准的 50 元预算下，用生产所用模型（DeepSeek deepseek-flash）重跑冻结 20 题",
+ "model": "deepseek-flash",
+ "providerUrl": "https://api.deepseek.com",
+ "promptVersion": "wp07-r2",
+ "pipelineVersion": "wp07-r3",
+ "retrieve": {
+  "top": 8,
+  "minScore": 2,
+  "expandNeighbors": true
+ },
+ "maxRetries": 2,
+ "corpusSha256_16": "d038279340bdbb57",
+ "questionsSha256_16": "73d9813949934964",
+ "questionCount": 20,
+ "startedAt": "2026-10-19T08:53:14"
+}
