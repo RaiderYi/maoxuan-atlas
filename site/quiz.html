@@ -176,20 +176,16 @@ function renderQuestion(){
     var t = document.createElement("span"); t.textContent = o.text;
     b.appendChild(k); b.appendChild(t);
     b.onclick = function(){
+      /* N16: 只记录选择并重绘本页，不自动跳题；前进只能通过「下一题」 */
       state.answers[q.questionId] = o.optionId;
       saveDraft();
       renderQuestion();
-      if(state.idx < QUIZ.questions.length - 1){
-        state.idx++;
-        renderQuestion();
-      } else {
-        finish();
-      }
     };
     box.appendChild(b);
   });
   el("backBtn").disabled = state.idx === 0;
   el("nextBtn").disabled = !state.answers[q.questionId];
+  el("nextBtn").textContent = (state.idx === QUIZ.questions.length - 1) ? "查看我的研读搭档" : "下一题";
 }
 function saveDraft(){
   if(!window.MXStore) return;
