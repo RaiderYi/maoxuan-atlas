@@ -24,7 +24,7 @@
     "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://newsroom.ap.org/editorial-photos-videos/detail?itemid=dfab0b3b1ce5da11af9f0014c2589dfb&amp;mediatype=photo\">https://newsroom.ap.org/editorial-phot"
    },
    "rightsStatus": "public_domain_verified_via_commons_api",
-   "reviewStatus": "pending_editorial_review",
+   "reviewStatus": "approved",
    "assetVersion": "v1-duotone",
    "processing": {
     "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
@@ -32,7 +32,16 @@
     "webpBytes": 134554,
     "sha256_16": "780c6f2ddb1d83e3"
    },
-   "notes": ""
+   "notes": "",
+   "approval": {
+    "approvedBy": "产品负责人（ShiJie Fang）",
+    "role": "product_owner",
+    "approvedAt": "2026-10-19T11:10:30+08:00",
+    "channel": "对话确认：人物素材全部通过",
+    "scope": "五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明",
+    "conclusion": "通过；可用于卡面展示",
+    "notCovered": "内容编辑对人物史料逐条文字核对未单独出报告；刘少奇素材仍缺失"
+   }
   },
   "zhou": {
    "assetId": "portrait-zhou-v1",
@@ -55,7 +64,7 @@
     "credit": "This file was contributed to Wikimedia Commons by <a href=\"https://en.wikipedia.org/wiki/en:National_Archives_and_Records_Administration\" class=\"extiw\" title=\"w:en:National Archives and Records Admini"
    },
    "rightsStatus": "public_domain_verified_via_commons_api",
-   "reviewStatus": "pending_editorial_review",
+   "reviewStatus": "approved",
    "assetVersion": "v1-duotone",
    "processing": {
     "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
@@ -63,7 +72,16 @@
     "webpBytes": 82132,
     "sha256_16": "2de28770b733425e"
    },
-   "notes": "1972 年时期，晚于其他卡的 1950s；编辑需决定是否统一时期"
+   "notes": "1972 年时期，晚于其他卡的 1950s；编辑需决定是否统一时期",
+   "approval": {
+    "approvedBy": "产品负责人（ShiJie Fang）",
+    "role": "product_owner",
+    "approvedAt": "2026-10-19T11:10:30+08:00",
+    "channel": "对话确认：人物素材全部通过",
+    "scope": "五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明",
+    "conclusion": "通过；可用于卡面展示",
+    "notCovered": "内容编辑对人物史料逐条文字核对未单独出报告；刘少奇素材仍缺失"
+   }
   },
   "zhu": {
    "assetId": "portrait-zhu-v1",
@@ -86,7 +104,7 @@
     "credit": "From old photos"
    },
    "rightsStatus": "public_domain_verified_via_commons_api",
-   "reviewStatus": "pending_editorial_review",
+   "reviewStatus": "approved",
    "assetVersion": "v1-duotone",
    "processing": {
     "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
@@ -94,7 +112,16 @@
     "webpBytes": 57450,
     "sha256_16": "0079284a106cb536"
    },
-   "notes": ""
+   "notes": "",
+   "approval": {
+    "approvedBy": "产品负责人（ShiJie Fang）",
+    "role": "product_owner",
+    "approvedAt": "2026-10-19T11:10:30+08:00",
+    "channel": "对话确认：人物素材全部通过",
+    "scope": "五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明",
+    "conclusion": "通过；可用于卡面展示",
+    "notCovered": "内容编辑对人物史料逐条文字核对未单独出报告；刘少奇素材仍缺失"
+   }
   },
   "chen": {
    "assetId": "portrait-chen-v1",
@@ -117,7 +144,7 @@
     "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://k.sinaimg.cn/n/sinacn/w500h688/20180118/ae43-fyqtwzu4632663.jpg/w700d1q75cms.jpg\">https://k.sinaimg.cn/n/sinacn/w500h688/20180118/ae43-fyqtwzu4632"
    },
    "rightsStatus": "public_domain_verified_via_commons_api",
-   "reviewStatus": "pending_editorial_review",
+   "reviewStatus": "approved",
    "assetVersion": "v1-duotone",
    "processing": {
     "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
@@ -125,7 +152,16 @@
     "webpBytes": 57902,
     "sha256_16": "8133e09db6f0fce2"
    },
-   "notes": ""
+   "notes": "",
+   "approval": {
+    "approvedBy": "产品负责人（ShiJie Fang）",
+    "role": "product_owner",
+    "approvedAt": "2026-10-19T11:10:30+08:00",
+    "channel": "对话确认：人物素材全部通过",
+    "scope": "五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明",
+    "conclusion": "通过；可用于卡面展示",
+    "notCovered": "内容编辑对人物史料逐条文字核对未单独出报告；刘少奇素材仍缺失"
+   }
   },
   "deng": {
    "assetId": "portrait-deng-v1",
@@ -148,7 +184,7 @@
     "credit": "This tag does not indicate the copyright status of the attached work. <span style=\"white-space:nowrap\">A normal <a href=\"//commons.wikimedia.org/wiki/Special:MyLanguage/Commons:Copyright_tags\" title=\""
    },
    "rightsStatus": "public_domain_verified_via_commons_api",
-   "reviewStatus": "pending_editorial_review",
+   "reviewStatus": "approved",
    "assetVersion": "v1-duotone",
    "processing": {
     "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
@@ -156,7 +192,16 @@
     "webpBytes": 119380,
     "sha256_16": "bcbfc0a5c7ecbe87"
    },
-   "notes": "1979 年前后（arrival ceremony），属晚年形象"
+   "notes": "1979 年前后（arrival ceremony），属晚年形象",
+   "approval": {
+    "approvedBy": "产品负责人（ShiJie Fang）",
+    "role": "product_owner",
+    "approvedAt": "2026-10-19T11:10:30+08:00",
+    "channel": "对话确认：人物素材全部通过",
+    "scope": "五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明",
+    "conclusion": "通过；可用于卡面展示",
+    "notCovered": "内容编辑对人物史料逐条文字核对未单独出报告；刘少奇素材仍缺失"
+   }
   },
   "liu": {
    "assetId": "portrait-liu-placeholder",
@@ -176,5 +221,6 @@
    "processing": {},
    "notes": "Commons 未找到可核实的 PD 正式肖像（候选为合影/会场/低分辨率或非 PD）。按 VIS02 不得标记 approved；正式交付前必须替换。"
   }
- }
+ },
+ "approvedAt": "2026-10-19"
 }

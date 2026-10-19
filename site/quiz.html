@@ -30,6 +30,11 @@ header .sub{font-size:13.5px;color:var(--ink2)}
   font-size:12px;display:flex;align-items:center;justify-content:center}
 .opt.on .k{background:var(--cinnabar);border-color:var(--cinnabar);color:#fff}
 .acts{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.pimg{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--border);border-radius:10px;background:#F5EFE3}
+.pimg.ph{display:flex;align-items:center;justify-content:center;font-size:30px;letter-spacing:.12em;color:var(--ink2,#4A443B)}
+.pwrap{margin:12px 0 14px}
+.mini .pthumb{float:left;width:48px;height:64px;object-fit:cover;border:1px solid var(--border);border-radius:6px;margin-right:10px;background:#F5EFE3}
+.mini .pthumb.ph{display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink2,#4A443B)}
 .card{background:#fffdf5;border:1px solid var(--border);border-radius:14px;padding:24px 22px;margin-top:18px}
 .card .rd{font-size:12px;color:var(--gold);letter-spacing:2px}
 .card h2{font-size:22px;letter-spacing:2px;margin:6px 0 4px}
@@ -208,6 +213,39 @@ function finish(){
   renderResult();
 }
 
+/* N11/N13: 已批准肖像（product_owner 签核）。数据只取一次；缺图或加载失败回落姓名占位。 */
+var PORTRAITS = null;
+function loadPortraits(cb){
+  if(PORTRAITS){ cb && cb(); return; }
+  fetch("data/portraits.json").then(function(r){ return r.json(); })
+    .then(function(j){ PORTRAITS = (j && j.assets) || {}; cb && cb(); })
+    .catch(function(){ PORTRAITS = {}; cb && cb(); });
+}
+function portraitNode(themeId, opts){
+  var a = PORTRAITS && PORTRAITS[themeId];
+  if(a && a.src && a.reviewStatus === "approved"){
+    var im = document.createElement("img");
+    im.className = opts && opts.thumb ? "pthumb" : "pimg";
+    im.src = a.src; im.alt = a.alt || (a.personName + "肖像");
+    im.width = opts && opts.thumb ? 48 : 750;
+    im.height = opts && opts.thumb ? 64 : 1000;
+    im.loading = opts && opts.thumb ? "lazy" : "eager";
+    im.onerror = function(){
+      var ph = document.createElement("div");
+      ph.className = (opts && opts.thumb ? "pthumb ph" : "pimg ph");
+      ph.textContent = (a.personName || "").slice(0, 3);
+      im.parentNode.replaceChild(ph, im);
+    };
+    return im;
+  }
+  var ph = document.createElement("div");
+  ph.className = (opts && opts.thumb ? "pthumb ph" : "pimg ph");
+  var c = QUIZ.cards[themeId] || {};
+  ph.textContent = (c.personName || "").slice(0, 3);
+  ph.title = "肖像素材待补：当前以姓名占位（六肖像交付为部分完成）";
+  return ph;
+}
+
 function cardBlock(themeId, primary){
   var c = QUIZ.cards[themeId];
   var d = document.createElement("div");
@@ -216,7 +254,11 @@ function cardBlock(themeId, primary){
   var h2 = document.createElement("h2"); h2.textContent = c.personName;
   var th = document.createElement("div"); th.className = "th"; th.textContent = "· " + c.themeTitle + " ·";
   var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = c.description;
-  d.appendChild(rd); d.appendChild(h2); d.appendChild(th); d.appendChild(desc);
+  d.appendChild(rd);
+  var pw = document.createElement("div"); pw.className = "pwrap";
+  pw.appendChild(portraitNode(themeId, { thumb: false }));
+  d.appendChild(pw);
+  d.appendChild(h2); d.appendChild(th); d.appendChild(desc);
 
   /* 解释只能来自用户实际选择的选项 */
   var expl = (state.result.explanations || []).filter(function(x){ return x.themeId === themeId; }).slice(0, 2);
@@ -309,6 +351,7 @@ function renderAllCards(){
   Object.keys(QUIZ.cards).forEach(function(t){
     var c = QUIZ.cards[t];
     var m = document.createElement("div"); m.className = "mini";
+    m.appendChild(portraitNode(t, { thumb: true }));
     var b = document.createElement("b"); b.textContent = c.personName + " · " + c.themeTitle;
     var s = document.createElement("span"); s.textContent = " " + c.description;
     m.appendChild(b); m.appendChild(s);
@@ -414,6 +457,10 @@ el("startBtn").onclick = function(){
   track("quiz_start", { qv: QUIZ ? QUIZ.quizVersion : null });
   renderQuestion();
 };
+loadPortraits(function(){
+  if(!el("result").classList.contains("hidden")) renderResult();
+  else if(!el("allCards").classList.contains("hidden")) renderAllCards();
+});
 el("browseBtn").onclick = function(){ if(QUIZ) renderAllCards(); };
 el("backBtn").onclick = function(){ if(state.idx > 0){ state.idx--; renderQuestion(); } };
 el("nextBtn").onclick = function(){
