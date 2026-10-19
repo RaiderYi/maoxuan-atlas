@@ -2009,6 +2009,8 @@ function openArticle(id, fromRoute, anchorPara){
     });
     /* P03.4: 摘录 / 写笔记 / 复制段链接 / 解释此段（全部不需要 AI 也能完成） */
     initNoteTools(v, a, anchorPara);
+    /* N22/N23: 来自人物卡的研读任务栏（只在本文确有任务时出现） */
+    attachTaskBar(v, a, anchorPara);
     /* restore reading position */
     var saved = restoreScroll(id);
     v.scrollTop = saved;
@@ -2233,6 +2235,84 @@ function doSearch(q){
   });
 }
 /* ---------- P03.4 / A01: 本地摘录与笔记 —— 统一走 MXStore（损坏绝不覆盖） ---------- */
+
+/* ---------------- N22/N23: 人物卡研读任务 ---------------- */
+var ACTIVE_TASK_KEY = "mx_active_task";
+function readActiveTask(){
+  try{
+    var t = JSON.parse(localStorage.getItem(ACTIVE_TASK_KEY) || "null");
+    return (t && t.articleId) ? t : null;
+  }catch(e){ return null; }
+}
+function writeActiveTask(t){
+  try{
+    if(t) localStorage.setItem(ACTIVE_TASK_KEY, JSON.stringify(t));
+    else localStorage.removeItem(ACTIVE_TASK_KEY);
+    return true;
+  }catch(e){ return false; }
+}
+function taskStateText(s){
+  return s === "completed" ? "已完成" : (s === "reading" ? "进行中" : "待完成");
+}
+function attachTaskBar(view, a, anchorPara){
+  var t = readActiveTask();
+  if(!t || t.articleId !== a.id) return;
+  if(document.getElementById("taskBar")) return;
+  var bar = document.createElement("div");
+  bar.id = "taskBar"; bar.className = "taskBar";
+  var head = document.createElement("div"); head.className = "tbHead";
+  var b = document.createElement("b");
+  b.textContent = (t.personName ? "来自人物卡：" + t.personName + " · " + (t.themeTitle || "") : "研读任务");
+  var st = document.createElement("span"); st.className = "tbState"; st.textContent = taskStateText(t.state);
+  head.appendChild(b); head.appendChild(st);
+  var pr = document.createElement("div"); pr.className = "tbPrompt"; pr.textContent = "本段任务：" + (t.prompt || "");
+  var box = document.createElement("div"); box.className = "tbNote";
+  var ta = document.createElement("textarea");
+  ta.maxLength = 300; ta.placeholder = "写一句你的理解（非空并保存后才会标记完成）";
+  var acts = document.createElement("div"); acts.className = "tbActs";
+  var save = document.createElement("button"); save.className = "tbSave"; save.textContent = "保存这一句";
+  var hint = document.createElement("span"); hint.className = "tbHint";
+  var back = document.createElement("a"); back.className = "tbBack"; back.textContent = "返回人物卡";
+  back.href = "quiz.html";
+  acts.appendChild(save); acts.appendChild(hint); acts.appendChild(back);
+  box.appendChild(ta); box.appendChild(acts);
+  bar.appendChild(head); bar.appendChild(pr); bar.appendChild(box);
+  view.insertBefore(bar, view.firstChild.nextSibling || view.firstChild);
+
+  /* 已保存过：回填原文并标为已完成（打开不算完成，只有笔记落库才算） */
+  if(t.noteId){
+    var mine = loadNotes().filter(function(n){ return n.id === t.noteId; })[0];
+    if(mine){ ta.value = mine.text || ""; st.textContent = "已完成"; }
+  }
+  save.addEventListener("click", function(){
+    var text = (ta.value || "").trim();
+    if(!text){ hint.textContent = "写一句再保存（空白不算完成）"; hint.className = "tbHint warn"; return; }
+    var rec = null;
+    if(t.noteId){
+      var list = loadNotes();
+      var idx = -1;
+      list.forEach(function(n, i){ if(n.id === t.noteId) idx = i; });
+      if(idx >= 0){
+        list[idx].text = text; list[idx].updatedAt = Date.now();
+        var w = MXStore.write(NOTES_KEY, list);
+        rec = w.ok ? list[idx] : null;
+        if(!w.ok) toast("笔记保存失败：" + (w.error || "本地存储不可用"));
+      }
+    }
+    if(!rec){
+      rec = addNote({ articleId: a.id, paraId: t.paragraphId || null, quote: "",
+        text: text, kind: "note", source: "persona_card_task",
+        taskId: t.taskId || null, resultId: t.resultId || null });
+    }
+    if(!rec){ hint.textContent = "保存失败，状态未改变"; hint.className = "tbHint warn"; return; }
+    t.state = "completed"; t.noteId = rec.id; t.completedAt = Date.now(); t.updatedAt = Date.now();
+    writeActiveTask(t);
+    st.textContent = "已完成";
+    hint.textContent = "已保存，可在书房找回";
+    hint.className = "tbHint ok";
+  });
+}
+
 var NOTES_KEY = "mx_notes";
 function loadNotes(){
   var r = MXStore.read(NOTES_KEY, "array");

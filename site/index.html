@@ -705,6 +705,17 @@ html.dark .catBar button{background:var(--cardbg)}
   footer{display:none}
   #readToc{width:min(78vw,300px)}
 }
+  .taskBar{background:#fffdf5;border:1px solid var(--border);border-left:3px solid var(--cinnabar);border-radius:10px;padding:14px 16px;margin:10px 0 18px}
+  .taskBar .tbHead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--ink2)}
+  .taskBar .tbState{font-size:12px;color:var(--cinnabar);border:1px solid var(--cinnabar);border-radius:999px;padding:1px 8px}
+  .taskBar .tbPrompt{font-size:14.5px;line-height:1.7;margin:8px 0 10px;color:var(--ink)}
+  .taskBar textarea{width:100%;min-height:64px;font-family:inherit;font-size:14px;line-height:1.7;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;resize:vertical}
+  .taskBar .tbActs{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+  .taskBar .tbSave{font-family:inherit;font-size:13px;padding:7px 16px;border-radius:10px;border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff;cursor:pointer}
+  .taskBar .tbHint{font-size:12.5px;color:var(--ink2)}
+  .taskBar .tbHint.ok{color:#4F7D78}
+  .taskBar .tbHint.warn{color:var(--cinnabar)}
+  .taskBar .tbBack{font-size:12.5px;color:var(--ink2);margin-left:auto;text-decoration:none;border-bottom:1px dashed var(--border)}
 </style>
 </head>
 <body>

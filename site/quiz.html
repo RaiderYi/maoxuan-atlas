@@ -204,6 +204,7 @@ function finish(){
   if(missing.length){ toast("还有 " + missing.length + " 题没有作答"); return; }
   var sc = score(state.answers);
   state.result = {
+    resultId: "r" + Date.now() + "_" + Math.floor(Math.random() * 1000),
     quizVersion: QUIZ.quizVersion, scoringVersion: QUIZ.scoringVersion,
     top: sc.top, norm: sc.norm, raw: sc.raw,
     explanations: explanations(state.answers),
@@ -282,7 +283,21 @@ function cardBlock(themeId, primary){
   read.href = "index.html#/art/" + c.readingTask.articleId +
     (c.readingTask.paragraphId ? "/" + c.readingTask.paragraphId : "");
   read.textContent = "读这一段 ·《" + c.readingTask.articleTitle + "》";
-  read.onclick = function(){ track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId }); };
+  read.onclick = function(){
+    track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId });
+    /* N22/N23: 把任务交给阅读页（只存本机，不写进 URL，不夹带笔记正文） */
+    try{
+      localStorage.setItem("mx_active_task", JSON.stringify({
+        resultId: (state.result && state.result.resultId) || null,
+        taskId: c.cardId + "-v1",
+        cardId: c.cardId, personName: c.personName, themeTitle: c.themeTitle,
+        articleId: c.readingTask.articleId,
+        paragraphId: c.readingTask.paragraphId || null,
+        prompt: c.readingTask.prompt || "",
+        state: "reading", startedAt: Date.now(), updatedAt: Date.now()
+      }));
+    }catch(e){}
+  };
   var save = document.createElement("button"); save.className = "btn ghost"; save.textContent = "保存这张卡";
   save.onclick = function(){ saveCard(themeId); };
   var share = document.createElement("button"); share.className = "btn ghost"; share.textContent = "下载卡片文字";
