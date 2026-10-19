@@ -34,7 +34,7 @@ const server = http.createServer(async (req, res) => {
       if (!globalThis.__apiMods) globalThis.__apiMods = new Map();
       let entry = globalThis.__apiMods.get(name);
       if (!entry || entry.mtime !== mtime) {
-        entry = { mtime, mod: await import(`../api/${name}.js?cb=${mtime}`) };
+        entry = { mtime, mod: await import(`../site/api/${name}.js?cb=${mtime}`) };
         globalThis.__apiMods.set(name, entry);
       }
       const mod = entry.mod;

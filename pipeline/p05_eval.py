@@ -70,7 +70,7 @@ def corpus_version(path):
 
 
 def build_frozen(root):
-    ask_js = (root / "api/_ask.js").read_text(encoding="utf-8")
+    ask_js = (root / "site/api/_ask.js").read_text(encoding="utf-8")
     m1 = re.search(r"PROMPT_VERSION\s*=\s*'([^']+)'", ask_js)
     m2 = re.search(r"PIPELINE_VERSION\s*=\s*'([^']+)'", ask_js)
     qf = root / DEFAULT_QUESTIONS
@@ -82,7 +82,7 @@ def build_frozen(root):
         "corpusFile": "site/data/sample-topic.json",
         "corpusSha256_16": sha16(root / "site/data/sample-topic.json"),
         "corpusVersionSha256": corpus_version(root / "site/data/sample-topic.json"),
-        "askJsSha256_16": sha16(root / "api/_ask.js"),
+        "askJsSha256_16": sha16(root / "site/api/_ask.js"),
         "promptSha256_16": sha16_text(prompt_block(ask_js)),
         "retrieveSha256_16": sha16_text(retrieve_block(ask_js)),
         "retrieve": {"top": 8, "minScore": 2, "expandNeighbors": True},
@@ -119,7 +119,7 @@ def ensure_questions(root, frozen):
 
 def check_freeze(root, frozen):
     ok = True
-    ask_js = (root / "api/_ask.js").read_text(encoding="utf-8")
+    ask_js = (root / "site/api/_ask.js").read_text(encoding="utf-8")
 
     cur = sha16(root / frozen["corpusFile"])
     if cur != frozen["corpusSha256_16"]:
@@ -155,8 +155,8 @@ def check_freeze(root, frozen):
 RUNNER = r"""
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadProviderConfig } from '../api/_lib.js';
-import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../api/_ask.js';
+import { loadProviderConfig } from '../site/api/_lib.js';
+import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from '../site/api/_ask.js';
 const root = process.argv[2];
 process.chdir(root);
 const data = JSON.parse(fs.readFileSync(path.join(root,'site/data/sample-topic.json'),'utf8'));

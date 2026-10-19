@@ -1,7 +1,7 @@
 // WP07: 20 题真实记录 — 本地运行, 真实 GLM 调用, 产出 20q 记录 JSON
 // 运行: node pipeline/wp07_20q.js  (在 repo_stage 目录; key 从 D:/工作/maoxuan_viz/data/.key)
-import { loadProviderConfig } from '../api/_lib.js';
-import { loadCorpus, askPipeline } from '../api/_ask.js';
+import { loadProviderConfig } from '../site/api/_lib.js';
+import { loadCorpus, askPipeline } from '../site/api/_ask.js';
 import fs from 'node:fs';
 import path from 'node:path';
 
