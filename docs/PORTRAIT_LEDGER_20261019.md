@@ -9,11 +9,11 @@
 
 | cardId | 人物 | 状态 | 许可 | 原始年代 | 母版尺寸 | 输出 | 审校 |
 |---|---|---|---|---|---|---|---|
-| mao | 毛泽东 | ✅ 已制作 | Public domain | 1950-11-10 | 673×908 | `mao.webp` 131KB | 待编辑审校 |
-| zhou | 周恩来 | ✅ 已制作 | Public domain | 1972-02-21 | 717×961 | `zhou.webp` 80KB | 待编辑审校 |
-| zhu | 朱德 | ✅ 已制作 | Public domain | 1955（元帅服） | 830×1097 | `zhu.webp` 56KB | 待编辑审校 |
-| chen | 陈云 | ✅ 已制作 | Public domain | 早于 1960 | 500×688 | `chen.webp` 56KB | 待编辑审校 |
-| deng | 邓小平 | ✅ 已制作 | Public domain | 1970s 末 | 799×1065 | `deng.webp` 116KB | 待编辑审校 |
+| mao | 毛泽东 | ✅ 已制作 | Public domain | 1950-11-10 | 673×908 | `mao.webp` 131KB | **已签收** |
+| zhou | 周恩来 | ✅ 已制作 | Public domain | 1972-02-21 | 717×961 | `zhou.webp` 80KB | **已签收** |
+| zhu | 朱德 | ✅ 已制作 | Public domain | 1955（元帅服） | 830×1097 | `zhu.webp` 56KB | **已签收** |
+| chen | 陈云 | ✅ 已制作 | Public domain | 早于 1960 | 500×688 | `chen.webp` 56KB | **已签收** |
+| deng | 邓小平 | ✅ 已制作 | Public domain | 1970s 末 | 799×1065 | `deng.webp` 116KB | **已签收** |
 | liu | 刘少奇 | ⛔ 素材待补 | — | — | — | 姓名占位 | **blocked** |
 
 **5/6 已具备正式肖像，1/6 缺失。** 按 VIS02「未核实素材不得标记 approved」，全部记录为
@@ -71,3 +71,22 @@ grayscale → autocontrast(cutoff=1) → UnsharpMask(1.7, 120%, 3)
 
 资产是纯静态文件，删除 `site/assets/portraits/*.webp` 与 `site/data/portraits.json` 即回到无肖像状态；
 不影响任何用户数据。
+
+## 7. 审校签收（2026-10-19）
+
+产品负责人对外观与素材范围给出确认（对话原话：「人物素材全部通过 我已确认」）。按 VIS02 要求，签收记录写入 `site/data/portraits.json` 的每条资产：
+
+| 字段 | 值 |
+|---|---|
+| approvedBy | 产品负责人（ShiJie Fang） |
+| role | product_owner |
+| approvedAt | 2026-10-19T11:10:30+08:00 |
+| channel | 对话确认 |
+| scope | 五张已交付肖像（毛/周/朱/陈/邓）的外观、来源与加工说明 |
+| conclusion | 通过；可用于卡面展示 |
+| **notCovered** | ①内容编辑对人物史料的逐条**文字**核对未单独出报告；②刘少奇仍无素材 |
+
+**因此**：
+- 五张资产 `reviewStatus = approved`，卡面已开始展示（N13 部分完成）。
+- 刘少奇保持 `blocked_missing_material`；"六肖像交付"仍是 **5/6 部分完成**，不因本次确认改为 6/6。
+- 这是**视觉与素材使用的签收**，不等于人物史料文字的编辑审核已完成。
