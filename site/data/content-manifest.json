@@ -1,0 +1,2001 @@
+{
+ "schema": "content-manifest@1",
+ "builtAt": "2026-10-19T14:38:09.857Z",
+ "keyId": "textpack-1",
+ "algo": "aes-256-gcm+gzip",
+ "keySource": "file:data/.textpack.key",
+ "declaredArticles": 217,
+ "packedArticles": 217,
+ "missingArticles": [],
+ "shortArticles": [
+  {
+   "id": "v5n03",
+   "chars": 184,
+   "title": "人民英雄们永垂不朽"
+  },
+  {
+   "id": "v5n04",
+   "chars": 266,
+   "title": "永远保持艰苦奋斗的作风"
+  },
+  {
+   "id": "v5n11",
+   "chars": 213,
+   "title": "中国人民志愿军要爱护朝鲜的一山一水一草一木"
+  },
+  {
+   "id": "v5n21",
+   "chars": 255,
+   "title": "工人阶级与资产阶级的矛盾是国内的主要矛盾"
+  },
+  {
+   "id": "v5n27",
+   "chars": 253,
+   "title": "对刘少奇、杨尚昆破坏纪律擅自以中央名义发出文件的批评"
+  },
+  {
+   "id": "v5n52",
+   "chars": 246,
+   "title": "中国共产党是全中国人民的领导核心"
+  }
+ ],
+ "plainBytes": 3174886,
+ "packBytes": 1838240,
+ "plainChars": 1115856,
+ "packFile": "site/data/texts.pack.json",
+ "files": {
+  "v1n01": {
+   "plainSha256": "f1adadbcd514a37950083e99b27c700fe2f1ea91375122ad284744f0c2973211",
+   "cipherSha256": "625368d5c2cfe991ee8c61eff851c37f07d5ecf99aa2b375f467888046a5baa4",
+   "plainBytes": 19912,
+   "plainChars": 6988,
+   "packBytes": 12288,
+   "title": "中国社会各阶级的分析",
+   "vol": 1
+  },
+  "v1n02": {
+   "plainSha256": "46013b162354d74e304aa1efaf3cdfcdae8d80cd9961ed3a321fff9074ccbb3c",
+   "cipherSha256": "13fb867bb74fee4b29cd717e2f7639c0e9d6276a697bc41c5d4b4e31d7ab7d43",
+   "plainBytes": 61914,
+   "plainChars": 21734,
+   "packBytes": 36680,
+   "title": "湖南农民运动考察报告",
+   "vol": 1
+  },
+  "v1n03": {
+   "plainSha256": "c416ecb0bc8f53b177d073220248b6a25abdbf3e0938d0997845d83c3540f67a",
+   "cipherSha256": "adb6a4d4c443b0404ff4a1814ecbaac38795adbe866aca077e592249823bbb1f",
+   "plainBytes": 19740,
+   "plainChars": 6926,
+   "packBytes": 11664,
+   "title": "中国的红色政权为什么能够存在？",
+   "vol": 1
+  },
+  "v1n04": {
+   "plainSha256": "e7c5630e519ebf5ed65edb46d394078a68fd8d0c9adb85f84b37f0e93c440528",
+   "cipherSha256": "828070de4e0f3e9fb6f6c0f9bdb29a556114267d51c9815837192d01f1a18733",
+   "plainBytes": 54896,
+   "plainChars": 19250,
+   "packBytes": 32468,
+   "title": "井冈山的斗争",
+   "vol": 1
+  },
+  "v1n05": {
+   "plainSha256": "7baec3c0a0dbd4333bdcda77ed77133c6fbf8517860df5723fdb260e1c2d7b0f",
+   "cipherSha256": "805591c65063a0fe606e0dc98721f5de01beaede56dc4359fa104bdc759ed308",
+   "plainBytes": 19639,
+   "plainChars": 6925,
+   "packBytes": 11616,
+   "title": "关于纠正党内的错误思想",
+   "vol": 1
+  },
+  "v1n06": {
+   "plainSha256": "c87db53c5916ba15693b8e153c114bf6697c18a145d6261b4a684a7d780357d0",
+   "cipherSha256": "5c44b45f86ea089e78475044630978dc5bea9abbda5729d4b70df259ecd5ab0d",
+   "plainBytes": 24488,
+   "plainChars": 8598,
+   "packBytes": 14768,
+   "title": "星星之火，可以燎原",
+   "vol": 1
+  },
+  "v1n07": {
+   "plainSha256": "ba9ccd21acab2e0742b05230c45f652e3bfb13d1e89d75640dedabd92bdd0d31",
+   "cipherSha256": "e2fdd8c9b140152f2fa33fcc82b13c9d59b52d35e2de9a8e7326587c9642f722",
+   "plainBytes": 15118,
+   "plainChars": 5345,
+   "packBytes": 9328,
+   "title": "反对本本主义",
+   "vol": 1
+  },
+  "v1n08": {
+   "plainSha256": "189278ea69edf6995d0fe31a63a0639e3ff05b8c9ff5a6c93ce57b2bfc47cd29",
+   "cipherSha256": "6318792570e4ca20159e340f8dc79cce9e59356f1238c045ed6f9f9e12412f84",
+   "plainBytes": 15668,
+   "plainChars": 5484,
+   "packBytes": 9324,
+   "title": "必须注意经济工作",
+   "vol": 1
+  },
+  "v1n09": {
+   "plainSha256": "7870e701643acd98d2da6f0812e8bede7c844aefa5b84853098e50854b09edc7",
+   "cipherSha256": "c1713656db59e776b54abc334332751cc28b264136bd81108424540d041f283d",
+   "plainBytes": 3697,
+   "plainChars": 1315,
+   "packBytes": 2304,
+   "title": "怎样分析农村阶级",
+   "vol": 1
+  },
+  "v1n10": {
+   "plainSha256": "a5d9d3ef71a3de924331ce69e09bfcd7bdf1546119b1a958f3590c427f8606cc",
+   "cipherSha256": "46da4ed8c1ddaee4aff662abb7266ceff232dfea3eed167f48daaa166a4481e2",
+   "plainBytes": 9903,
+   "plainChars": 3475,
+   "packBytes": 6284,
+   "title": "我们的经济政策",
+   "vol": 1
+  },
+  "v1n11": {
+   "plainSha256": "50b97863482bcd6f5bd51d22713c5344b981ad927d933e67bd0915a436fcebe8",
+   "cipherSha256": "afb8b9c7eae11e305be91f9c732252f47e60ca9ac28c79a164950271e27c0466",
+   "plainBytes": 11054,
+   "plainChars": 3884,
+   "packBytes": 6756,
+   "title": "关心群众生活，注意工作方法",
+   "vol": 1
+  },
+  "v1n12": {
+   "plainSha256": "81707807693f778510e1374483d150863e012f4fe7bd8ca4815e74e5ac02444a",
+   "cipherSha256": "6d414d99e59ef8ae21dea8d93a4623998c705c0d4f2c36cea304a9464eb7fe15",
+   "plainBytes": 62587,
+   "plainChars": 21974,
+   "packBytes": 33576,
+   "title": "论反对日本帝国主义的策略",
+   "vol": 1
+  },
+  "v1n13": {
+   "plainSha256": "ac215385694d65284e9a05467496a01ce1dec57459ac9c1c6ed1abefd77a5b9b",
+   "cipherSha256": "5d74d89ff2ed7d705bd7592a4793d6de85afb2a01f43916d46ced187f510e470",
+   "plainBytes": 145941,
+   "plainChars": 51231,
+   "packBytes": 76032,
+   "title": "中国革命战争的战略问题",
+   "vol": 1
+  },
+  "v1n14": {
+   "plainSha256": "52435328b32d22611bf8a6889164a9f92ff145675e3defcbf355ebf9996bfd42",
+   "cipherSha256": "c82f6da851941698b7c0b65c72be61fdd73be3d06822a5d77f6de2621362e151",
+   "plainBytes": 15705,
+   "plainChars": 5502,
+   "packBytes": 9668,
+   "title": "关于蒋介石声明的声明",
+   "vol": 1
+  },
+  "v1n15": {
+   "plainSha256": "6b4272904ecfee6e6596a46e6e6ec63df0265135b71128a2b04d42e4d1678867",
+   "cipherSha256": "8b9d104bb3e6b0204d347378a0a6279adb98a864ea0bfd22bdb7ee1d1916b8f1",
+   "plainBytes": 44065,
+   "plainChars": 15435,
+   "packBytes": 23712,
+   "title": "中国共产党在抗日时期的任务",
+   "vol": 1
+  },
+  "v1n16": {
+   "plainSha256": "953841724377d5b2ae3ef7ac0b84adf2483fc09493e6df1bd3f1834993a7dbf3",
+   "cipherSha256": "7b48a243ae6fc858fbea20a987bf5274199bb025abb6ba7ad682dd048dcd6aa3",
+   "plainBytes": 19375,
+   "plainChars": 6857,
+   "packBytes": 11668,
+   "title": "为争取千百万群众进入抗日民族统一战线而斗争",
+   "vol": 1
+  },
+  "v1n17": {
+   "plainSha256": "9e7fe75e557df88292ed7ccf73d89eb93ea7bcc722996f2f8825f4e47914c158",
+   "cipherSha256": "4d0c46edd2c22d37a19e744f558d3b1836e54a7db89ec27c5d912a6954ebcaff",
+   "plainBytes": 33247,
+   "plainChars": 11689,
+   "packBytes": 17544,
+   "title": "实践论",
+   "vol": 1
+  },
+  "v1n18": {
+   "plainSha256": "77c8cb2ad68233dd43702545549be1438a1c9344eff7a153eae245180133a597",
+   "cipherSha256": "9dc8f1b8d445d2b789531dd371faf975ab4fe4f4ec382cc182bc987250e3ae5f",
+   "plainBytes": 81496,
+   "plainChars": 28697,
+   "packBytes": 39420,
+   "title": "矛盾论",
+   "vol": 1
+  },
+  "v2n01": {
+   "plainSha256": "52a78be2741c08629b4ea81aaef7e194ee2f7094c84a015220c7e7b4e304ae1c",
+   "cipherSha256": "4ee37e6903347ce32f849acd5c1e80b8fec9bf64f02f49dce120c80f13a57e6e",
+   "plainBytes": 15034,
+   "plainChars": 5304,
+   "packBytes": 9164,
+   "title": "反对日本进攻的方针、办法和前途",
+   "vol": 2
+  },
+  "v2n02": {
+   "plainSha256": "3c919851f2727959cea37d1a6f4b843e153961a940df668846b9ebaa45227938",
+   "cipherSha256": "bf962a86220376dc7f58af036d2fe7e61db9052113aaaf6149235dcaa9a1ce5c",
+   "plainBytes": 9894,
+   "plainChars": 3520,
+   "packBytes": 6216,
+   "title": "为动员一切力量争取抗战胜利而斗争",
+   "vol": 2
+  },
+  "v2n03": {
+   "plainSha256": "d9d03b5008ce4b2cd310236184742fa81bac80593ad68a86ecf04cf2f559d4ea",
+   "cipherSha256": "4e47d03927db551b7fda40c2201c1bd07da56e9a880a6d25f0ea56f695d6e4a5",
+   "plainBytes": 4317,
+   "plainChars": 1523,
+   "packBytes": 2984,
+   "title": "反对自由主义",
+   "vol": 2
+  },
+  "v2n04": {
+   "plainSha256": "9680f965397c90c63bdabf5b3f274f81659bc349772e90e1729e7fac646c7122",
+   "cipherSha256": "0804be873728494ca68b1c8cd6f91879983fa2953289025dae7e58d7f28c5202",
+   "plainBytes": 20770,
+   "plainChars": 7280,
+   "packBytes": 11496,
+   "title": "国共合作成立后的迫切任务",
+   "vol": 2
+  },
+  "v2n05": {
+   "plainSha256": "101ef92c3bfec74dc45dddee889b2948fef906c952d74be1d356661d22570c88",
+   "cipherSha256": "5a0404a9955d5fa89f5116a427a0cff78c13b190711ea3b5c143a5acd24476ae",
+   "plainBytes": 23835,
+   "plainChars": 8358,
+   "packBytes": 14000,
+   "title": "和英国记者贝特兰的谈话",
+   "vol": 2
+  },
+  "v2n06": {
+   "plainSha256": "5d956732ca5a354e1bb3e50e9680125666935509d12e8325ce71208da6fe16e6",
+   "cipherSha256": "e19e82444a99d74e149d67cb81549fc865ab511c8420be72150abaf3f3a9a505",
+   "plainBytes": 29366,
+   "plainChars": 10326,
+   "packBytes": 15900,
+   "title": "上海太原失陷以后抗日战争的形势和任务",
+   "vol": 2
+  },
+  "v2n07": {
+   "plainSha256": "ed59d9b1faa06a74c72f5ec1b3e60886daa2d2d0488336098fdfbf89e3c5813d",
+   "cipherSha256": "58f61f32da32729af1a03cf9609ee9fee30855f18cac334da88c93778158e46a",
+   "plainBytes": 5237,
+   "plainChars": 1847,
+   "packBytes": 3756,
+   "title": "陕甘宁边区政府第八路军后方留守处布告",
+   "vol": 2
+  },
+  "v2n08": {
+   "plainSha256": "01311776b97f22ca3a57b145302e7fb2daacf38f7c7eab88d513fbde45083499",
+   "cipherSha256": "e74483065582f14fa4d1ab1ba5f6ebe9fb4bb0e87f6914e3008294ac8344a473",
+   "plainBytes": 63467,
+   "plainChars": 22209,
+   "packBytes": 32712,
+   "title": "抗日游击战争的战略问题",
+   "vol": 2
+  },
+  "v2n09": {
+   "plainSha256": "c867e7b73b49aab20cff0c70352419730fa877ce6afa82438d3db609cafdfe25",
+   "cipherSha256": "b60a9ccacac95aa4536f80d2618b59fe6c53b821a857b93a036147e785c2c769",
+   "plainBytes": 156786,
+   "plainChars": 54913,
+   "packBytes": 81372,
+   "title": "论持久战",
+   "vol": 2
+  },
+  "v2n10": {
+   "plainSha256": "a5a6f7fa37893b57cd3e4a4edc4b3d35e10940a4ce17947db309f6b5b0457028",
+   "cipherSha256": "466f78f884e6ade82f75e77387c8536c873b3d78b98072cccf03ec49bfb566ec",
+   "plainBytes": 31875,
+   "plainChars": 11181,
+   "packBytes": 17352,
+   "title": "中国共产党在民族战争中的地位",
+   "vol": 2
+  },
+  "v2n11": {
+   "plainSha256": "c4c27a429d4715fda50a7abca7c7212d507e251da62de167dfac420ce582d306",
+   "cipherSha256": "1e36dbdbf8b3a50cb6130088e4f631d46bc7c7b5afaa355b4ac1c25dc1b6eba4",
+   "plainBytes": 7342,
+   "plainChars": 2595,
+   "packBytes": 4868,
+   "title": "统一战线中的独立自主问题",
+   "vol": 2
+  },
+  "v2n12": {
+   "plainSha256": "c1f39805401cb5b12daade718249f95e1d98b3fdef0ab70a28842a9359b1fee5",
+   "cipherSha256": "fb6d1010d6af3ec4c426bd4eb942d5c872c0c5abce2ace7670b1d47b50a3e212",
+   "plainBytes": 33684,
+   "plainChars": 11888,
+   "packBytes": 18588,
+   "title": "战争和战略问题",
+   "vol": 2
+  },
+  "v2n13": {
+   "plainSha256": "72eda59f9cd79925d53e9f7e9e817fdc4f54999f3416bda10ac54dc93b869ef2",
+   "cipherSha256": "6d4a8050ba677d1dbf4934ce645081db132c1512e97c3ec62bfb13ad70e5662e",
+   "plainBytes": 4424,
+   "plainChars": 1578,
+   "packBytes": 2792,
+   "title": "五四运动",
+   "vol": 2
+  },
+  "v2n14": {
+   "plainSha256": "b1b2771e84b21daea60332166b0c389c5b3f5fa099f3d5110e60368d2d1e81aa",
+   "cipherSha256": "c4059e254c2aedab298cdd1d8157912a32c20181838970cd980034f4c2c01736",
+   "plainBytes": 17862,
+   "plainChars": 6271,
+   "packBytes": 9700,
+   "title": "青年运动的方向",
+   "vol": 2
+  },
+  "v2n15": {
+   "plainSha256": "8d58b33ec77d90504dc322b0b1211da97de46492603cbf668a4b1138e1fa6460",
+   "cipherSha256": "d08e5d9ce763bac6d65cf95441aa4c6930c6bc2b19fffda5c402711fba4cd17f",
+   "plainBytes": 9753,
+   "plainChars": 3443,
+   "packBytes": 5992,
+   "title": "反对投降活动",
+   "vol": 2
+  },
+  "v2n16": {
+   "plainSha256": "3c1e3605608d2f9e224d4e2b13c724b9ee7406e06521eecee855a561aca94c7f",
+   "cipherSha256": "e27328477bccd5a1e8d04041d7f0941c65b503224988630650340e0f79dc641f",
+   "plainBytes": 8739,
+   "plainChars": 3067,
+   "packBytes": 5224,
+   "title": "必须制裁反动派",
+   "vol": 2
+  },
+  "v2n17": {
+   "plainSha256": "7389ee35682d2dbd940199024bfc457b967b42c13121940d9889da3316fd615e",
+   "cipherSha256": "e67510f5d83a68c63345babae5db7cadd6265bb2383a9adbfb527e64a0e1c635",
+   "plainBytes": 12863,
+   "plainChars": 4523,
+   "packBytes": 7932,
+   "title": "关于国际新形势对新华日报⑴记者的谈话",
+   "vol": 2
+  },
+  "v2n18": {
+   "plainSha256": "fb6f4b4a3000c92eb41a6d375b3b0de9c3d960b77fccc2e023386c18b3bccefb",
+   "cipherSha256": "ba643062556310246dc59e003e6456c016ef2a17874b04e7feca240e4829241a",
+   "plainBytes": 10628,
+   "plainChars": 3746,
+   "packBytes": 6756,
+   "title": "和中央社、扫荡报、新民报⑴三记者的谈话",
+   "vol": 2
+  },
+  "v2n19": {
+   "plainSha256": "d3fe813a3ead327d381201ee87968a362f1210567c767b46453370d6b62d5a0f",
+   "cipherSha256": "c2eaaab33e165715314ddfa5b7e9f283b5e356d237e3b2d01b7c66a38c8a8b3c",
+   "plainBytes": 18213,
+   "plainChars": 6389,
+   "packBytes": 10248,
+   "title": "苏联利益和人类利益的一致",
+   "vol": 2
+  },
+  "v2n20": {
+   "plainSha256": "51d651c7117dc8180ba099a8bb5148fac9261db914486e3d6e3e1e8294af28e0",
+   "cipherSha256": "b89195aa373cf35fe1e7e2ac59f5acd9170b15641adc2ae866a942adf75a705b",
+   "plainBytes": 25846,
+   "plainChars": 9048,
+   "packBytes": 12256,
+   "title": "《共产党人》发刊词",
+   "vol": 2
+  },
+  "v2n21": {
+   "plainSha256": "1cac57e41748c68ff8682880331540baf18900b07199074578c19b66a422d0f1",
+   "cipherSha256": "ea58b17dd980cc363c9d9ff7e2e80055857a5c1d85736b9746ae8df79fa4d7f9",
+   "plainBytes": 4011,
+   "plainChars": 1401,
+   "packBytes": 2936,
+   "title": "目前形势和党的任务",
+   "vol": 2
+  },
+  "v2n22": {
+   "plainSha256": "02c7a92542047a0a2c81d6e383887adf915a50b1b0d53dd334d354b15075a679",
+   "cipherSha256": "3b1b95302dc268143fc2f412cc32384bd6b40f4295e090dc53cdd5e8d5b8bb9e",
+   "plainBytes": 4183,
+   "plainChars": 1463,
+   "packBytes": 2748,
+   "title": "大量吸收知识分子",
+   "vol": 2
+  },
+  "v2n23": {
+   "plainSha256": "c729d35cae20d67bb027c6034ec11345b5db55f2abc9e7b2aad8981abff539f6",
+   "cipherSha256": "9999a0c6a66046caa833e0b0f3f09906c12ed5def7ec85b7c4779b15f7574247",
+   "plainBytes": 66257,
+   "plainChars": 23327,
+   "packBytes": 33412,
+   "title": "中国革命和中国共产党",
+   "vol": 2
+  },
+  "v2n24": {
+   "plainSha256": "df9ec13a40e17af9e16f093b328661ca0043d89ff0b3476c15e62b7cc8fac16c",
+   "cipherSha256": "eae72b5f1bb769ca65643c59bb1c48362e423a829115bdc1906327eb80cc7053",
+   "plainBytes": 2705,
+   "plainChars": 967,
+   "packBytes": 1932,
+   "title": "斯大林是中国人民的朋友",
+   "vol": 2
+  },
+  "v2n25": {
+   "plainSha256": "be82794bd7a81e66c8036dc2e8e82ad29028c445f64df7fa3fa660bb71438f5c",
+   "cipherSha256": "3377857c8ef94e72f68476a1854961d21d051a6b8d6afea227854bc03f7bbe1b",
+   "plainBytes": 3979,
+   "plainChars": 1418,
+   "packBytes": 2792,
+   "title": "纪念白求恩",
+   "vol": 2
+  },
+  "v2n26": {
+   "plainSha256": "72a502fd252fe28361cf09ccec503eee9366ef2748b943b4d650635e4dbd7d86",
+   "cipherSha256": "1fcf96c68c2ce45e1a6d05d709f95260962f17094ed8d429cf8f3336242da9d7",
+   "plainBytes": 95876,
+   "plainChars": 33683,
+   "packBytes": 46260,
+   "title": "新民主主义论",
+   "vol": 2
+  },
+  "v2n27": {
+   "plainSha256": "51e7b0603a0886ba4e1402147b59478ae11e9636b2b7b2938f46bb3b1a677659",
+   "cipherSha256": "d920fc024131afc7f0adc3e21e52609225ebf07d5763f6f55e602c457b7e84a2",
+   "plainBytes": 5617,
+   "plainChars": 1975,
+   "packBytes": 4000,
+   "title": "克服投降危险，力争时局好转",
+   "vol": 2
+  },
+  "v2n28": {
+   "plainSha256": "309a5cdb66051a36b183e4520a7b2224ce4e561f1b073c34e95896f11c5f4433",
+   "cipherSha256": "cf9584140007dfd3473784ba1857aee1bc866c2df18c384dc9634f082ac575c3",
+   "plainBytes": 12258,
+   "plainChars": 4312,
+   "packBytes": 7392,
+   "title": "团结一切抗日力量，反对反共顽固派",
+   "vol": 2
+  },
+  "v2n29": {
+   "plainSha256": "e59814c0a85683c32c81da068ad6c0bc93e1dc70cc873ed7d0db07718210a6fd",
+   "cipherSha256": "f696b7fbfd5ebed413d35453e18e9f25effea369c5473bb107a48e7728a7b35b",
+   "plainBytes": 10802,
+   "plainChars": 3802,
+   "packBytes": 7368,
+   "title": "向国民党的十点要求",
+   "vol": 2
+  },
+  "v2n30": {
+   "plainSha256": "c222f01fe5c92c110d4d211bd7463f6485d0e5139afe1f6a8f72088802b74ade",
+   "cipherSha256": "2c3b3c1bcfda55997d83efa1e0fa67f1a3ad5466a03eb42004d7a0a7ff3ad239",
+   "plainBytes": 2670,
+   "plainChars": 946,
+   "packBytes": 1848,
+   "title": "《中国工人》发刊词",
+   "vol": 2
+  },
+  "v2n31": {
+   "plainSha256": "3d2df7a53f012aaf41ccc56fed87ee5f20f7cbb9bd7e5ec19c715498069ffbcf",
+   "cipherSha256": "b0281db4cbf8af1873aaa6bfade8f0902c4433515b8cb28dd5122f380be0d2d5",
+   "plainBytes": 3176,
+   "plainChars": 1132,
+   "packBytes": 2444,
+   "title": "必须强调团结和进步",
+   "vol": 2
+  },
+  "v2n32": {
+   "plainSha256": "caf22546897965efcf1402dca558ea842646586fbe2ca283494bd72055e96489",
+   "cipherSha256": "14c9966298a79508207b42b8cd68412853966559b0c3e35b7308abab1a08af40",
+   "plainBytes": 19035,
+   "plainChars": 6679,
+   "packBytes": 11144,
+   "title": "新民主主义的宪政",
+   "vol": 2
+  },
+  "v2n33": {
+   "plainSha256": "2ccb2b2ace7d30a29fc1bda8f69d4238f5f350438c1b509ecc9d3d151fa719c7",
+   "cipherSha256": "9f07d2b5567218f7001791415fc36694218205e96979e218d5c03b92fb6eaebc",
+   "plainBytes": 4752,
+   "plainChars": 1664,
+   "packBytes": 3276,
+   "title": "抗日根据地的政权问题",
+   "vol": 2
+  },
+  "v2n34": {
+   "plainSha256": "e8c6a62d61292a2b4ea0c9aed799e531d592bb03fdea59b1c543f50c50993a1d",
+   "cipherSha256": "f5896e1564905fad20adb85bd615304458ec11e5db65c107cead5db5819f8a7d",
+   "plainBytes": 17041,
+   "plainChars": 5973,
+   "packBytes": 9496,
+   "title": "目前抗日统一战线中的策略问题",
+   "vol": 2
+  },
+  "v2n35": {
+   "plainSha256": "1fe3e4c25f1459a64b67796d8487af10a17dffa92d6f976980012189fddaecfb",
+   "cipherSha256": "2c44b2e236ad96f02da414fcb9a426750b1339009936ebd2b81248a14ec60721",
+   "plainBytes": 11921,
+   "plainChars": 4191,
+   "packBytes": 7300,
+   "title": "放手发展抗日力量，抵抗反共顽固派的进攻",
+   "vol": 2
+  },
+  "v2n36": {
+   "plainSha256": "df2890c2175776a766ba8dfcbdb635091a98063d3e02d5e4fabf1e48880b31e4",
+   "cipherSha256": "73ff35e3519770fbda55dd4b07dd58ca40c4ec233f018de3f106dcca948a15c8",
+   "plainBytes": 5213,
+   "plainChars": 1819,
+   "packBytes": 3348,
+   "title": "团结到底",
+   "vol": 2
+  },
+  "v2n37": {
+   "plainSha256": "94db702ecf84c7f541e8008fde6dc609d7fca120ae6fb942c57984e9ffec1635",
+   "cipherSha256": "93b9d2b8407b09e6243223e414f687ece66a6ab5309eefd5457183268b941b93",
+   "plainBytes": 15941,
+   "plainChars": 5599,
+   "packBytes": 9680,
+   "title": "论政策",
+   "vol": 2
+  },
+  "v2n38": {
+   "plainSha256": "f44be0b01d06e1ca079b611db389812eebb8302a3b2a5774c2be69f7cefae887",
+   "cipherSha256": "1e408e5791196017350cbac9845955e60f4c2d4cee777f91bdb2d474b9ef81d1",
+   "plainBytes": 11677,
+   "plainChars": 4118,
+   "packBytes": 7928,
+   "title": "为皖南事变发表的命令和谈话",
+   "vol": 2
+  },
+  "v2n39": {
+   "plainSha256": "79f71609cbd78e5c6d81a099941aa376081d8a8c0faf33c73b99b5b75615b56c",
+   "cipherSha256": "65e35e954c963e7223bcd699235a7220870be547539b653f4026393e5c687624",
+   "plainBytes": 5454,
+   "plainChars": 1936,
+   "packBytes": 3904,
+   "title": "打退第二次反共高潮后的时局",
+   "vol": 2
+  },
+  "v2n40": {
+   "plainSha256": "95621c6a232a020c642dab9bbdf29ae97b0ded65d1e38ad47f2b282ad4a0f680",
+   "cipherSha256": "2cde8cc91149c683fb97c41e550ac18a644dee3e2c9aa614fcc65e510e5e6617",
+   "plainBytes": 10708,
+   "plainChars": 3770,
+   "packBytes": 6732,
+   "title": "关于打退第二次反共高潮的总结",
+   "vol": 2
+  },
+  "v3n01": {
+   "plainSha256": "b7fcd6aa937034ce3fbfbde1edca0c9fcbd1a5afb68f04f2e9de2607ef2266a5",
+   "cipherSha256": "9bc32ab5b3ba7e361cefddd52f0c4c09eafebdc8f534e4fd1b483818112e8360",
+   "plainBytes": 10123,
+   "plainChars": 3559,
+   "packBytes": 6576,
+   "title": "《农村调查》的序言和跋",
+   "vol": 3
+  },
+  "v3n02": {
+   "plainSha256": "5563fe77b071b737ce5bfbefd13a3adf37fee02a71840cfb01a2d14c33306844",
+   "cipherSha256": "41241450824229134d88d8e172b4cfc9d3003e54d6f6a6ad77e86bd1030ba15d",
+   "plainBytes": 15970,
+   "plainChars": 5606,
+   "packBytes": 9160,
+   "title": "改造我们的学习",
+   "vol": 3
+  },
+  "v3n03": {
+   "plainSha256": "f627a84b937dca5d98e2d0f6a22fc3cee958324b2ce6d1de95839c501150ed1e",
+   "cipherSha256": "c56d6b8341e2f78fea82746e6901e1c9a88072df0c7cec5bf1b1eabda85820eb",
+   "plainBytes": 2209,
+   "plainChars": 773,
+   "packBytes": 1788,
+   "title": "揭破远东慕尼黑的阴谋",
+   "vol": 3
+  },
+  "v3n04": {
+   "plainSha256": "a55dd3968015621b013828b3b6fcd8aee894e7d854f32ea5d17077426da4214d",
+   "cipherSha256": "04e1e53ed0cb4d54f54b14c537160fac02bfe16c32439325db0c793ca98594e9",
+   "plainBytes": 1183,
+   "plainChars": 417,
+   "packBytes": 952,
+   "title": "关于反法西斯的国际统一战线",
+   "vol": 3
+  },
+  "v3n05": {
+   "plainSha256": "a96e2582603fabf213b3af9c419f14e56252eca8d78d0f6063cff41e45bf573e",
+   "cipherSha256": "77beb6f08cb7842d7e378db3be6cdd04e41f63ff24166d16d300414ce48633eb",
+   "plainBytes": 6712,
+   "plainChars": 2340,
+   "packBytes": 4072,
+   "title": "在陕甘宁边区参议会的演说",
+   "vol": 3
+  },
+  "v3n06": {
+   "plainSha256": "4cb0b962ff34b612f96fa348c3c3d257ecea641c137fb52360a18ae66727ae0a",
+   "cipherSha256": "844b686e3ebd632ae1c3ad37960051aab785f43127f2e20b79c82d283804d83d",
+   "plainBytes": 35317,
+   "plainChars": 12367,
+   "packBytes": 19096,
+   "title": "整顿党的作风",
+   "vol": 3
+  },
+  "v3n07": {
+   "plainSha256": "bb1612ff8241864c0ee416bcf461c39780c4deb3c02da4a3f43b94d61ea1e1b9",
+   "cipherSha256": "ecc98e4f2ed3ed3cdddbac5b94665ba9c8b681b7cb402e8610875eb94a2595b5",
+   "plainBytes": 33398,
+   "plainChars": 11746,
+   "packBytes": 19632,
+   "title": "反对党八股",
+   "vol": 3
+  },
+  "v3n08": {
+   "plainSha256": "3a52edd47ce5949fee21bbf9259404538a506d63be68e6b9cf46370b55bdc6ca",
+   "cipherSha256": "416de5c762c7407e1c1216d489004227b20c0c7e2d8bd8faba5846d970b04412",
+   "plainBytes": 62445,
+   "plainChars": 21876,
+   "packBytes": 32324,
+   "title": "在延安文艺座谈会上的讲话",
+   "vol": 3
+  },
+  "v3n09": {
+   "plainSha256": "76672d3eab3154c699745b54c4e2df5c6bca4d50b6a5413f7ab599f77c42ee45",
+   "cipherSha256": "7be5875a326cc92e8e619386163e5080d05cd5ceeddfa113c6fb76a5133adc47",
+   "plainBytes": 7253,
+   "plainChars": 2541,
+   "packBytes": 5036,
+   "title": "一个极其重要的政策",
+   "vol": 3
+  },
+  "v3n10": {
+   "plainSha256": "be2ad4ccb53dd15faea81b9047185b2fc73775788b2716f32554bfc0c147ff0c",
+   "cipherSha256": "1d836db92ebf65811c714766c58ccb08533b9f95c259047cae0721b4ece3d40b",
+   "plainBytes": 9662,
+   "plainChars": 3372,
+   "packBytes": 6396,
+   "title": "第二次世界大战的转折点",
+   "vol": 3
+  },
+  "v3n11": {
+   "plainSha256": "d731c700b58c3f20321dd6ee7a23ee56826f535ddc9919a43e847a659c5cccfc",
+   "cipherSha256": "eeff704ce9e3f53c2ef0f31c3e62ffa3282f2472101784dd9ee94876dc34ff5a",
+   "plainBytes": 1225,
+   "plainChars": 431,
+   "packBytes": 1012,
+   "title": "祝十月革命二十五周年",
+   "vol": 3
+  },
+  "v3n12": {
+   "plainSha256": "da9cb4249f13f1cec51450dc25e8032d0d380a74ca27273d8a8bbeafd20f75c0",
+   "cipherSha256": "6cf86a9adfc09220d0b08a0cb7dda5c114d6412bbbfe451effa61c902de40706",
+   "plainBytes": 10882,
+   "plainChars": 3802,
+   "packBytes": 6680,
+   "title": "抗日时期的经济问题和财政问题",
+   "vol": 3
+  },
+  "v3n13": {
+   "plainSha256": "593c8cf35a322720c0512aaf1b4ebaf41d7e83a766f140af7e06b149bb880b1e",
+   "cipherSha256": "12618962f7ce28ebdce7fa52ffcdab69ac42b269277662029292ab0d39b4dead",
+   "plainBytes": 10619,
+   "plainChars": 3711,
+   "packBytes": 6248,
+   "title": "关于领导方法的若干问题",
+   "vol": 3
+  },
+  "v3n14": {
+   "plainSha256": "1dba4a1af35b080c735e35f59fa58814137e2d8b7f4bb4a6515fb4227e6c9a7c",
+   "cipherSha256": "5e0a7dc2ab117bb2c0823740e8655036fa6c60dbf1391e8d7832588c2e930ea7",
+   "plainBytes": 12861,
+   "plainChars": 4525,
+   "packBytes": 7916,
+   "title": "质问国民党",
+   "vol": 3
+  },
+  "v3n15": {
+   "plainSha256": "9d1048aea78b50b12593fdea3eceb649cb466bf6658d3fffe74ed32725be2252",
+   "cipherSha256": "d22f343409076b3069e1cad0a5a644ff4b1d4b72b77b607eda814091c9e6f87e",
+   "plainBytes": 7159,
+   "plainChars": 2503,
+   "packBytes": 4644,
+   "title": "开展根据地的减租、生产和拥政爱民运动",
+   "vol": 3
+  },
+  "v3n16": {
+   "plainSha256": "ec0812f876631fd2e14954ab12a10afef42cad1199079fcf0f6f4bc2ffda0f85",
+   "cipherSha256": "8cd321dfc7f4b9768ec158ba339fc01c9cb28b731b1905c145f298d877c8bfec",
+   "plainBytes": 26893,
+   "plainChars": 9395,
+   "packBytes": 15544,
+   "title": "评国民党十一中全会和三届二次国民参政会",
+   "vol": 3
+  },
+  "v3n17": {
+   "plainSha256": "78af1307c09f8f64f9293cff4722fc9e78084b6917ee03c249ef07a0ecb59d6f",
+   "cipherSha256": "86d8c4617f550cebdb7169af4c6508b7e152f20f73ce80f9ff9e8f5128497671",
+   "plainBytes": 16442,
+   "plainChars": 5755,
+   "packBytes": 9624,
+   "title": "组织起来",
+   "vol": 3
+  },
+  "v3n18": {
+   "plainSha256": "ef6bfacff37d3a564d8265ed64b9cca5a1790da1c68460b27e2f4d33d7459d43",
+   "cipherSha256": "61c6b4e9eb8fb9b5ae9e94af3d1b68cf3a59081b2d96fbf03a102c32c75da51b",
+   "plainBytes": 29172,
+   "plainChars": 10249,
+   "packBytes": 16352,
+   "title": "学习和时局",
+   "vol": 3
+  },
+  "v3n19": {
+   "plainSha256": "3ba2f748fa3ff752eeae3524b3259709cbbe1aa366563dcf3f943ddeb77192b8",
+   "cipherSha256": "60563d48805cf0d1bcc3c869a11a7f40bc0ade4d1c3ee07d887fc5006c212dad",
+   "plainBytes": 3419,
+   "plainChars": 1202,
+   "packBytes": 2524,
+   "title": "为人民服务",
+   "vol": 3
+  },
+  "v3n20": {
+   "plainSha256": "e2ef61b5a09c6a328c2a4234e20d77df722e7929aae50da5fdc4f5c6708df97b",
+   "cipherSha256": "fcb46063d7392265a964fd7fbef6a7d49a53f63a4f61c254a98c32d0aec848dd",
+   "plainBytes": 7719,
+   "plainChars": 2697,
+   "packBytes": 5184,
+   "title": "评蒋介石在双十节的演说",
+   "vol": 3
+  },
+  "v3n21": {
+   "plainSha256": "a8f5e41bcaf9c77fb6380960ea971bce76a6098c174d7bc3d3685cbc859bee8b",
+   "cipherSha256": "0d9a606b67af0043a9fd3fb9d609c13a9d9d4525a7b1a992208053b74574a33b",
+   "plainBytes": 3966,
+   "plainChars": 1389,
+   "packBytes": 2824,
+   "title": "文化工作中的统一战线",
+   "vol": 3
+  },
+  "v3n22": {
+   "plainSha256": "14059df5e6381794bb5332e62c64859c095528e5674f720bf43eaa5c34735cf2",
+   "cipherSha256": "610a390fff3443a9fb7082db6e93acaa4d96d4cacc0e54e444ec339619bdc608",
+   "plainBytes": 12304,
+   "plainChars": 4304,
+   "packBytes": 7528,
+   "title": "必须学会做经济工作",
+   "vol": 3
+  },
+  "v3n23": {
+   "plainSha256": "a9ced7cb558d6f2e0c718effcd11bc2e04bdac9e60c2d21d45cd886dc9ae1c2c",
+   "cipherSha256": "411ca883616ccee03481d2ac8369c769f11228570926e3c996e09df356c0aff4",
+   "plainBytes": 5821,
+   "plainChars": 2035,
+   "packBytes": 4168,
+   "title": "游击区也能够进行生产",
+   "vol": 3
+  },
+  "v3n24": {
+   "plainSha256": "3a0a920b70e1ba9e02b6ffb24ce83085b4b73224446fd0b4e42346e1668bde24",
+   "cipherSha256": "44334ef42dd0f3aa73dd304796fd2bb870ca276d3f3f7f7247faf0f13c2951f4",
+   "plainBytes": 5154,
+   "plainChars": 1812,
+   "packBytes": 3036,
+   "title": "两个中国之命运",
+   "vol": 3
+  },
+  "v3n25": {
+   "plainSha256": "c52269abe267db57aecea653ef898cdbb7875c31da018693771e263b1dd29f20",
+   "cipherSha256": "07b94830d00d5939c69226ce24c19087796e9e8edf0e1e5318992de76fec5644",
+   "plainBytes": 132278,
+   "plainChars": 46390,
+   "packBytes": 65904,
+   "title": "论联合政府",
+   "vol": 3
+  },
+  "v3n26": {
+   "plainSha256": "cbcf613e96168e7e9f4995069ab4e574e499a7f46d38fc0de7e08ec7a887f1dd",
+   "cipherSha256": "24ddc4fe2ec233ab4ff8393e600e7f3cc9e6d739da6edac787e812980cfc9de6",
+   "plainBytes": 7179,
+   "plainChars": 2518,
+   "packBytes": 4948,
+   "title": "愚公移山",
+   "vol": 3
+  },
+  "v3n27": {
+   "plainSha256": "e20b452e3b0a700216d5e1ac2d62ebf83eaf3aeecbb09034568625842d0e93eb",
+   "cipherSha256": "40929310724dbc8102963c1a8c2dde5b2a487284a7868459ab9219da6b02b387",
+   "plainBytes": 8228,
+   "plainChars": 2876,
+   "packBytes": 5448,
+   "title": "论军队生产自给，兼论整风和生产两大运动的重要性",
+   "vol": 3
+  },
+  "v3n28": {
+   "plainSha256": "fe8704bc7cb9d5efc4b949654c3217ad0c683d12b4bf16b144d70b57d7436d3f",
+   "cipherSha256": "470dbb1a110a06c772c4468b4d976a67ec66e6761c854ae85423d05b65bac8a8",
+   "plainBytes": 6926,
+   "plainChars": 2422,
+   "packBytes": 4860,
+   "title": "赫尔利和蒋介石的双簧已经破产",
+   "vol": 3
+  },
+  "v3n29": {
+   "plainSha256": "7365df2b42bdd090d04e9855ae772c631c6c503a2ad7528e424d57eb198d9f5a",
+   "cipherSha256": "ae4c657570ba1de67d4e6ffeaa6a69171496c74248e5b52ca740d140179b52f7",
+   "plainBytes": 3264,
+   "plainChars": 1144,
+   "packBytes": 2476,
+   "title": "评赫尔利政策的危险",
+   "vol": 3
+  },
+  "v3n30": {
+   "plainSha256": "ab974485ea116feb5ad4f07e4d9641ef6af560c7112e34eb19c58c279d3cde7f",
+   "cipherSha256": "a7946bc56789190e3b002a8a43c852807a7f299efa21ee62c1bf6a8cac581f2e",
+   "plainBytes": 2637,
+   "plainChars": 921,
+   "packBytes": 1908,
+   "title": "给福斯特同志的电报",
+   "vol": 3
+  },
+  "v3n31": {
+   "plainSha256": "79399f9687f235b41f67a523ea20658f9f2be89c8ac8cd0bf92ca93744af2e89",
+   "cipherSha256": "af1e1de7f5e7d8dca53e07d218f883707253c86c7ba97fdfee3cf245da52a47c",
+   "plainBytes": 1669,
+   "plainChars": 583,
+   "packBytes": 1368,
+   "title": "对日寇的最后一战",
+   "vol": 3
+  },
+  "v4n01": {
+   "plainSha256": "89cb356358ecc74292cdd636b7ee26787e4d80e15ac1ca9db758fd74b9823e2e",
+   "cipherSha256": "62ac6e4e7d7b19651c81abb9b2b972d43197fb82faf6568c61fbc1aa43924513",
+   "plainBytes": 28277,
+   "plainChars": 9911,
+   "packBytes": 16372,
+   "title": "抗日战争胜利后的时局和我们的方针",
+   "vol": 4
+  },
+  "v4n02": {
+   "plainSha256": "455f64858f1beb19997fe3a2dd811ecd401f1d928d4156413f099633c88130d3",
+   "cipherSha256": "042194a8865f1cde286377063e560b1ca9e6b781057ae9a0a9634da6c2e2e6a7",
+   "plainBytes": 8054,
+   "plainChars": 2824,
+   "packBytes": 5488,
+   "title": "蒋介石在挑动内战",
+   "vol": 4
+  },
+  "v4n03": {
+   "plainSha256": "bb04a434baa39d805c8661a9714fa59ecdd3d4d2031e7d524f483db2f7c6be0e",
+   "cipherSha256": "ffa84ced0a3d96f819032cce5e84a502812bb1fa6b5a8a3ec256dfe1676befba",
+   "plainBytes": 12799,
+   "plainChars": 4483,
+   "packBytes": 7844,
+   "title": "第十八集团军总司令给蒋介石的两个电报",
+   "vol": 4
+  },
+  "v4n04": {
+   "plainSha256": "e7d93b66023ebd162ad7c68c734eac0a02a1c51c8011a0caf7890c75d38efa7d",
+   "cipherSha256": "4eab74ef70934e5688fe46115e287ce5698271745b2a9852aed900b96a383c84",
+   "plainBytes": 7567,
+   "plainChars": 2649,
+   "packBytes": 5012,
+   "title": "评蒋介石发言人谈话",
+   "vol": 4
+  },
+  "v4n05": {
+   "plainSha256": "8170ad89e84e3b94cf67d2afeff35696eccd8078b7fed086a930ede5744bead9",
+   "cipherSha256": "6a800c861417b08c0bff4df48bf28ae1642e812d89ca075a01217d572cda2baa",
+   "plainBytes": 7456,
+   "plainChars": 2618,
+   "packBytes": 5224,
+   "title": "中共中央关于同国民党进行和平谈判的通知",
+   "vol": 4
+  },
+  "v4n06": {
+   "plainSha256": "3bdf2a11f0fe45ce97d0d72a0e4386814d51b74af009047d49ee16d38aab9249",
+   "cipherSha256": "c452ce0a33e2a6a6d6b3313e0082964ce490f49f708a2517b5eca0d2676edcf5",
+   "plainBytes": 23075,
+   "plainChars": 8063,
+   "packBytes": 13576,
+   "title": "关于重庆谈判",
+   "vol": 4
+  },
+  "v4n07": {
+   "plainSha256": "4d2550ad414f35783268d4183c73a451bbf5386cbbe25552fb5caffbab4058c0",
+   "cipherSha256": "a73cf44036d6a42ac8b992d7fbce4c1024002697229186e383b8bc7da5f3ab64",
+   "plainBytes": 9100,
+   "plainChars": 3190,
+   "packBytes": 6000,
+   "title": "国民党进攻的真相",
+   "vol": 4
+  },
+  "v4n08": {
+   "plainSha256": "1b7ad3a81e8ce2d4483414d5d76d74e65cd230f673e52fe2142b139386423b99",
+   "cipherSha256": "630cb4ca0241cf2f36ebb7256bab7c2c068da6d1100da0f6fe442efeeee06adf",
+   "plainBytes": 3387,
+   "plainChars": 1185,
+   "packBytes": 2544,
+   "title": "减租和生产是保卫解放区的两件大事",
+   "vol": 4
+  },
+  "v4n09": {
+   "plainSha256": "592ed8a6c84c1a46d84a7f282d12fee44c5640a8a9ef54932147623732bc6cdb",
+   "cipherSha256": "39149b699312192afbe643d8afe12b97c2ed092c30b3a969090f9aec2fa907b1",
+   "plainBytes": 8435,
+   "plainChars": 2957,
+   "packBytes": 5700,
+   "title": "一九四六年解放区工作的方针",
+   "vol": 4
+  },
+  "v4n10": {
+   "plainSha256": "b13b47bdc15dcc36f091c628bca47904cd2309e4f193068a5a07aea5f243c810",
+   "cipherSha256": "56e8953a8b6ba609d9e4066686e8609b375f460bb119804a604a98bacabd2b21",
+   "plainBytes": 8723,
+   "plainChars": 3049,
+   "packBytes": 5584,
+   "title": "建立巩固的东北根据地",
+   "vol": 4
+  },
+  "v4n11": {
+   "plainSha256": "6f4b92127dd323a60ea5ca49b7a90a25ba8b89d59107fd759c76bb22c3366e4a",
+   "cipherSha256": "10d59faed836b2b73a27665a4e9715548197d81647431b02d7ec4fcaf71465a7",
+   "plainBytes": 2909,
+   "plainChars": 1015,
+   "packBytes": 1976,
+   "title": "关于目前国际形势的几点估计",
+   "vol": 4
+  },
+  "v4n12": {
+   "plainSha256": "bcb8c1c207852aca3faa1014fb38b9a635a880161a6e02630d1c8f75a803e3d7",
+   "cipherSha256": "e0c6f715651cacbec80ebc2e4dcec8d4c910725724ec74a861b9811a5df2914a",
+   "plainBytes": 13122,
+   "plainChars": 4578,
+   "packBytes": 8184,
+   "title": "以自卫战争粉碎蒋介石的进攻",
+   "vol": 4
+  },
+  "v4n13": {
+   "plainSha256": "36fcfbecba18dc154ef79dea7e769a2f6bccffc4ea9070a6033bd821834561d5",
+   "cipherSha256": "0341a93ecb18b7ff8f1af3e66fade13483ee98ece6c0697ebe805b963e87015c",
+   "plainBytes": 11615,
+   "plainChars": 4065,
+   "packBytes": 7292,
+   "title": "和美国记者安娜·路易斯·斯特朗的谈话",
+   "vol": 4
+  },
+  "v4n14": {
+   "plainSha256": "7a9f14ce9441b19295fad44fb7b51e9a33921eb1ddfe614bd0904036bb9dc538",
+   "cipherSha256": "8aa9cfa64496544fbc95d5249a1ecf8dad9c2204db90f5e3b5a02dfd12453e4c",
+   "plainBytes": 8740,
+   "plainChars": 3062,
+   "packBytes": 5420,
+   "title": "集中优势兵力，各个歼灭敌人",
+   "vol": 4
+  },
+  "v4n15": {
+   "plainSha256": "3f22df00ee188d621fe4328600558ab4f71a87d7f328630bc68c23aefab522f5",
+   "cipherSha256": "dc7cfed315846b3a7cf518941a0270d90bd6be8054f7d9f5151b9369266af3ea",
+   "plainBytes": 5604,
+   "plainChars": 1968,
+   "packBytes": 3932,
+   "title": "美国“调解”真相和中国内战前途",
+   "vol": 4
+  },
+  "v4n16": {
+   "plainSha256": "ac3509fcd2db6699c10ddf161729331b4731e52c7747d9d2817c223949369837",
+   "cipherSha256": "536b460c424bfcbe1c1ea4e268ca0e25c3430b0fd8f52e72c9095781c8c36abb",
+   "plainBytes": 11399,
+   "plainChars": 4001,
+   "packBytes": 7296,
+   "title": "三个月总结",
+   "vol": 4
+  },
+  "v4n17": {
+   "plainSha256": "d82c7c077d80aac7dcbb26f2833ef10c6256d50f547667ce69809e1bd097d0a0",
+   "cipherSha256": "1b6b0cadd7b8b0c190ff34ae436722393f7a66c4ff7102e877ba419783759525",
+   "plainBytes": 15873,
+   "plainChars": 5563,
+   "packBytes": 10096,
+   "title": "迎接中国革命的新高潮",
+   "vol": 4
+  },
+  "v4n18": {
+   "plainSha256": "2327c2dacd2b75e0c7926f1589f7ca4980f2636bb3e5902726488d47e5b422d9",
+   "cipherSha256": "607b61654d6bc8d443036ddaf1831305ba41f6527ddbc48b5b638d375d06545b",
+   "plainBytes": 5883,
+   "plainChars": 2063,
+   "packBytes": 3816,
+   "title": "中共中央关于暂时放弃延安和保卫陕甘宁边区的两个文件",
+   "vol": 4
+  },
+  "v4n19": {
+   "plainSha256": "b9d90a872a2d4043d5f706e60152543f69797e37c5d688243191969d7cde32b6",
+   "cipherSha256": "e0e1ce224fa4dd74be63c06b35c572b8b7755ea5d2238cfbf03daa3d19eca6a7",
+   "plainBytes": 2692,
+   "plainChars": 946,
+   "packBytes": 2064,
+   "title": "关于西北战场的作战方针",
+   "vol": 4
+  },
+  "v4n20": {
+   "plainSha256": "e1cf18ab50747d2bbb46d6103e0d8f5ab7593b6335abe40e82c192bec6f482d2",
+   "cipherSha256": "899f06e3c347bb546f6ab10975f3410fff7dd050f4c39cc0374b8680340abf56",
+   "plainBytes": 8983,
+   "plainChars": 3153,
+   "packBytes": 5916,
+   "title": "蒋介石政府已处在全民的包围中",
+   "vol": 4
+  },
+  "v4n21": {
+   "plainSha256": "22a8cda091592b01d2dd659b2ea76b9ac481cd54ab2c55d2b5e7288843cea63a",
+   "cipherSha256": "eaa2575bae8c5790cee09c55b86eaebefd6561aaea3b5a26c8ecdbf14e574a76",
+   "plainBytes": 11725,
+   "plainChars": 4097,
+   "packBytes": 7472,
+   "title": "解放战争第二年的战略方针",
+   "vol": 4
+  },
+  "v4n22": {
+   "plainSha256": "1244579ff5e1c172fc2aa6e0fc490d15f18b9cab68cd76ebec050c17550bc4a1",
+   "cipherSha256": "f56bf2c23cd6b0f9805a5ee5b013250a9f282ddd666bb469fb7ac2b1a54bb4b9",
+   "plainBytes": 10252,
+   "plainChars": 3602,
+   "packBytes": 6828,
+   "title": "中国人民解放军宣言",
+   "vol": 4
+  },
+  "v4n23": {
+   "plainSha256": "de1d725df92d4ac5ecafe982a858e7332362085c7cb8d8f0e37ee0f86aabae1e",
+   "cipherSha256": "efbb40c2d1e586b9bb0c3c7b3b58a6943b64cfd0663ed55ac2a388bcb98849d5",
+   "plainBytes": 2176,
+   "plainChars": 776,
+   "packBytes": 1580,
+   "title": "中国人民解放军总部关于重行颁布三大纪律八项注意的训令",
+   "vol": 4
+  },
+  "v4n24": {
+   "plainSha256": "65ef2613a2164ac45940dddd60f1afd615b581064c037d23bb9b6ff701c13724",
+   "cipherSha256": "0575b06f7daecd4c43ad2b08aab632fe9589c61dea5737892b408ab9b3ad95eb",
+   "plainBytes": 41038,
+   "plainChars": 14346,
+   "packBytes": 22004,
+   "title": "目前形势和我们的任务",
+   "vol": 4
+  },
+  "v4n25": {
+   "plainSha256": "3927fcad47e7ff04e4247b6008e80bfb8df6eae11587a510ec9f0b8dd69dc226",
+   "cipherSha256": "119d186f54bb248ca294ef2b7fa6aac4150cb80ad6e4c0fd98a4b01922ca14ae",
+   "plainBytes": 4631,
+   "plainChars": 1617,
+   "packBytes": 3212,
+   "title": "关于建立报告制度",
+   "vol": 4
+  },
+  "v4n26": {
+   "plainSha256": "4fac96e3b87f58cb90bfcc54687e951b3c1f262757feeca4ec582fa6ddfbb3e8",
+   "cipherSha256": "5bbcb02084176adec2d839beafc6d28271bef5dc765e6fa27eaf58c337e31012",
+   "plainBytes": 12471,
+   "plainChars": 4369,
+   "packBytes": 7484,
+   "title": "关于目前党的政策中的几个重要问题",
+   "vol": 4
+  },
+  "v4n27": {
+   "plainSha256": "4faa6e853b4435c19047c6a943618b50babdda7740c07af3a70ac3896e21391f",
+   "cipherSha256": "5567bfccc0047a80ccbe8e9f7265c8ee95323cb674ae44b4a02f57973054771a",
+   "plainBytes": 2508,
+   "plainChars": 884,
+   "packBytes": 2004,
+   "title": "军队内部的民主运动",
+   "vol": 4
+  },
+  "v4n28": {
+   "plainSha256": "95a55f04ee79a3aaae7cd6ff548fe7f2ad4aa7122e6bc2023dc0b87a24b69e8c",
+   "cipherSha256": "fd7eed1d4215fd234a1cafd4595c9fcd4e4e3a42ddcf605ce90e67b745ef4ad3",
+   "plainBytes": 3525,
+   "plainChars": 1239,
+   "packBytes": 2448,
+   "title": "在不同地区实施土地法的不同策略",
+   "vol": 4
+  },
+  "v4n29": {
+   "plainSha256": "f177eb288b1ac028a3957db91627b907e5ace8764247da2737db68dcb55ef2fa",
+   "cipherSha256": "3a5176a37ebcc9bc98a4b6afb9da0c885c0b2e5dbd49074414a78e84a39b4fb1",
+   "plainBytes": 3413,
+   "plainChars": 1191,
+   "packBytes": 2448,
+   "title": "纠正土地改革宣传中的“左”倾错误",
+   "vol": 4
+  },
+  "v4n30": {
+   "plainSha256": "52fd09dae2a349ba2e5e40ad85535dda6d94bc8bfb48738f4548a4805f4a2766",
+   "cipherSha256": "253702b1138336bbcc25ed6e45201ceeadc8409687144de0b6b345e42520ff46",
+   "plainBytes": 2730,
+   "plainChars": 958,
+   "packBytes": 2048,
+   "title": "新解放区土地改革要点",
+   "vol": 4
+  },
+  "v4n31": {
+   "plainSha256": "e03a34e29a34472132dcba70ae331224a328cc66e9bf90d183b9966e6b12b48a",
+   "cipherSha256": "e5541f3ee6c9a27d7ba74f2f86c032af058891abd9a5b98529262e5524e116c6",
+   "plainBytes": 3365,
+   "plainChars": 1175,
+   "packBytes": 2480,
+   "title": "关于工商业政策",
+   "vol": 4
+  },
+  "v4n32": {
+   "plainSha256": "2b5f3abd426fcf6af936cce510ddd3ec31848aefa32b6977a418b04f1bb81b40",
+   "cipherSha256": "b15abaf44b46800761d474c39d95d8f0f9cce1a45e8b197ca9a183f3fd4a808d",
+   "plainBytes": 6790,
+   "plainChars": 2372,
+   "packBytes": 3996,
+   "title": "关于民族资产阶级和开明绅士问题",
+   "vol": 4
+  },
+  "v4n33": {
+   "plainSha256": "d070da1e19a20f8436b8a6b18635b7f6e2c2a68d0f72b0fbd692893b2c2a8233",
+   "cipherSha256": "d02d1a2cd201116e49e3ccd4de9f95973309064c86246cd48a7916af06fc93ec",
+   "plainBytes": 13012,
+   "plainChars": 4562,
+   "packBytes": 8096,
+   "title": "评西北大捷兼论解放军的新式整军运动",
+   "vol": 4
+  },
+  "v4n34": {
+   "plainSha256": "a6f78f076f8f12bece19075492713340a6f84f217cf8ad37d84b8c50dffebe85",
+   "cipherSha256": "27274da205568a7c10d77cf483a5d5e7f21069a42399ce7f5ecd540baab8f176",
+   "plainBytes": 14403,
+   "plainChars": 5039,
+   "packBytes": 8904,
+   "title": "关于情况的通报",
+   "vol": 4
+  },
+  "v4n35": {
+   "plainSha256": "8380959c39d4126627226102e384c44a816a2ae61c190aaec1f9c4a385aedced",
+   "cipherSha256": "dcceb8816e6e1aee4aa26e95eb180c83ae0a0b230468063d0d59e7fae3cdb3a6",
+   "plainBytes": 23883,
+   "plainChars": 8369,
+   "packBytes": 12728,
+   "title": "在晋绥干部会议上的讲话",
+   "vol": 4
+  },
+  "v4n36": {
+   "plainSha256": "c43c2eb93e130a80c5b1e92f95b48d178ce4a1216869ffa142da9484e2695ca0",
+   "cipherSha256": "790e5b5c308795f251b4655d343c772eae17c2f6ae4be7c6da45aff3d01d640c",
+   "plainBytes": 8572,
+   "plainChars": 3001,
+   "packBytes": 5532,
+   "title": "对晋绥日报编辑人员的谈话",
+   "vol": 4
+  },
+  "v4n37": {
+   "plainSha256": "1171b16a1cb5e90a1c1f248ee20f82d41bafdb164ae40a3cf129cd5ef7119899",
+   "cipherSha256": "f6c3931278f16e4b063893d3094c8349b0bb83c31d2b146c98b4e51664e03022",
+   "plainBytes": 3454,
+   "plainChars": 1212,
+   "packBytes": 2632,
+   "title": "再克洛阳后给洛阳前线指挥部的电报",
+   "vol": 4
+  },
+  "v4n38": {
+   "plainSha256": "dbb563bd8f581ec46e0363593c259b6fd5c08ad70acb6c7d4b20c72b1fcea70e",
+   "cipherSha256": "de4fdaf584581d4356721048295ef6cd7c75e651cd0504ba0368135409eb663c",
+   "plainBytes": 1690,
+   "plainChars": 590,
+   "packBytes": 1396,
+   "title": "新解放区农村工作的策略问题",
+   "vol": 4
+  },
+  "v4n39": {
+   "plainSha256": "60bd2a4cba9e41b51b36e2d7be7e2c3100de827f009f3dc828ac7df42a308f5d",
+   "cipherSha256": "97b73717b826ce1ca2c70a64697ee4832e040d227ef05b78b1be5fe5a8a27352",
+   "plainBytes": 9532,
+   "plainChars": 3340,
+   "packBytes": 6240,
+   "title": "一九四八年的土地改革工作和整党工作",
+   "vol": 4
+  },
+  "v4n40": {
+   "plainSha256": "0b7145f5fe5fed17de939ff5f0d1e96a4760c5aaa04d1d052da56bcfd3d04fb6",
+   "cipherSha256": "dfc58aef03f3bb0f335098f0dc1a802f4e7f129abdce14062f90c9b60101ea25",
+   "plainBytes": 11275,
+   "plainChars": 3937,
+   "packBytes": 6956,
+   "title": "关于辽沈战役的作战方针",
+   "vol": 4
+  },
+  "v4n41": {
+   "plainSha256": "18917e20f1409be0efaec44e7f619cd38d234b405d2d796bb55e4ceef0356d18",
+   "cipherSha256": "25724ec1f92c7d9f1e9cae25db57c82dfa25141abb7e681f556fa28452eb8c16",
+   "plainBytes": 2743,
+   "plainChars": 957,
+   "packBytes": 2068,
+   "title": "关于健全党委制",
+   "vol": 4
+  },
+  "v4n42": {
+   "plainSha256": "b38cf6cfa6609869f6677c708b45d1580c351ee6bb9dfe66a7994c9987d4639b",
+   "cipherSha256": "69da4ad07de50b14ba8825cbe193d912ed4ed67cc1777702fe56fd23cc1a07e7",
+   "plainBytes": 17097,
+   "plainChars": 5985,
+   "packBytes": 9900,
+   "title": "中共中央关于九月会议的通知",
+   "vol": 4
+  },
+  "v4n43": {
+   "plainSha256": "352b3f9da7ebc25d32e84a50d4d1fb5d7b7b96aaf13a845764df69f15a4ccb80",
+   "cipherSha256": "5a386222ebb0174333bdf2b05d004188716933b2b87f0b68e24c6056f9ce4c4c",
+   "plainBytes": 8608,
+   "plainChars": 3014,
+   "packBytes": 5420,
+   "title": "关于淮海战役的的作战方针",
+   "vol": 4
+  },
+  "v4n44": {
+   "plainSha256": "15101af4d57f77e462791958201e5fcb86ce7adbf02b819f725594d121a01dad",
+   "cipherSha256": "a4a1669d8a0b94d7b85c61215074f25ef49a96347eaef2d414d1a0ce7958df1d",
+   "plainBytes": 6919,
+   "plainChars": 2423,
+   "packBytes": 4272,
+   "title": "全世界革命力量团结起来，反对帝国主义的侵略",
+   "vol": 4
+  },
+  "v4n45": {
+   "plainSha256": "e2399c254bcc0a018ba64583dee063f493b458a007f716bdfd40ebad36662c37",
+   "cipherSha256": "bdd62882115e3d4363dfd9e9a6a635cc6d2445f226456d03fa864ab8a1183404",
+   "plainBytes": 4339,
+   "plainChars": 1521,
+   "packBytes": 2964,
+   "title": "中国军事形势的重大变化",
+   "vol": 4
+  },
+  "v4n46": {
+   "plainSha256": "6f7c996f3f3289d5537cbc5db6f1f969f2748ed9e8269c754531f7f83fe7f8d8",
+   "cipherSha256": "1db1a0a9562451d5561481e3d98bfe2708591dbf4be647acb17e1b2dc0439de4",
+   "plainBytes": 9043,
+   "plainChars": 3173,
+   "packBytes": 5848,
+   "title": "关于平津战役的作战方针",
+   "vol": 4
+  },
+  "v4n47": {
+   "plainSha256": "6ee2968839eae3aba6bf8f31cf5952bc8a51c552636efb9693bd9b4e891876a7",
+   "cipherSha256": "7caee97fd8f611f1e51996fa45e44452df56d151d19a6c7044026e878ea77fb5",
+   "plainBytes": 4766,
+   "plainChars": 1668,
+   "packBytes": 3120,
+   "title": "敦促杜聿明等投降书",
+   "vol": 4
+  },
+  "v4n48": {
+   "plainSha256": "6d133eeac030038e64b503962f585708efff2cbd1f02bee068d0e39f379e2d87",
+   "cipherSha256": "ee127a5705b1a26662919b7f9cb9ce35dbcc888e10e0b75c97cc38785ae8573a",
+   "plainBytes": 17798,
+   "plainChars": 6224,
+   "packBytes": 10948,
+   "title": "将革命进行到底",
+   "vol": 4
+  },
+  "v4n49": {
+   "plainSha256": "1473b40ca67e6c26b5110910f652874a4d2080824097b5309230bda1c346c9ef",
+   "cipherSha256": "68ce516d97414ab7ce35b966628981bd1e8fa330b8bb5de77c282eaac0d9bf60",
+   "plainBytes": 8267,
+   "plainChars": 2893,
+   "packBytes": 5452,
+   "title": "评战犯求和",
+   "vol": 4
+  },
+  "v4n50": {
+   "plainSha256": "32452cd1bfa32104e7678e49505fa30e23a7ab52a9afac77b9ef4f1584026ca2",
+   "cipherSha256": "43b34d8b0d1de6f5e0c01091951389796e893eb981817e8721bb0a3f6b51f369",
+   "plainBytes": 8192,
+   "plainChars": 2864,
+   "packBytes": 5128,
+   "title": "中共中央毛泽东主席关于时局的声明",
+   "vol": 4
+  },
+  "v4n51": {
+   "plainSha256": "149c2a134a883397600db0ce98587ebb804807be5919e30a25116686f61ee36f",
+   "cipherSha256": "12aac74ff1f17961877d025377ce8000323fdcbd92fd925af18cd728b36465df",
+   "plainBytes": 3503,
+   "plainChars": 1221,
+   "packBytes": 2164,
+   "title": "中共发言人评南京行政院的决议",
+   "vol": 4
+  },
+  "v4n52": {
+   "plainSha256": "941efdfe2068e21c55660d2852d88afdc04067b6ccfc39a5314e08538cff6cea",
+   "cipherSha256": "6cc2e107ecde217d256c0bcd6c521f7f1a7e85f00d34cb213fda51281a53c282",
+   "plainBytes": 13663,
+   "plainChars": 4787,
+   "packBytes": 8380,
+   "title": "中共发言人关于命令国民党反动政府重新逮捕前日本侵华军总司令冈村宁次和逮捕国民党内战罪犯的谈话",
+   "vol": 4
+  },
+  "v4n53": {
+   "plainSha256": "f2ce4e24d6caaac48e8d97b09c7f87281d7a859a0949c7f10a0fc3e140df23c5",
+   "cipherSha256": "4e8ebfd4d9d12be6f7656f4df5b96ff4516b3ca011b42764638067ac55031994",
+   "plainBytes": 7557,
+   "plainChars": 2637,
+   "packBytes": 4592,
+   "title": "中共发言人关于和平条件必须包括惩办日本战犯和国民党战犯的声明",
+   "vol": 4
+  },
+  "v4n54": {
+   "plainSha256": "8c5ee71c8dea8480db5a2252be32cb7e4404370a0097d24947e4b891be6e1e84",
+   "cipherSha256": "74c3f3e2290d21c196b5f6c9b53a1971fc72d146175128e39729879a6e3131fa",
+   "plainBytes": 5039,
+   "plainChars": 1763,
+   "packBytes": 3568,
+   "title": "把军队变为工作队",
+   "vol": 4
+  },
+  "v4n55": {
+   "plainSha256": "d7d9cf9232c9dabb68b8f3f6addd704c6c9b8851015ee4b6c4e422b860419f65",
+   "cipherSha256": "3aa64338ae3a96d26533f5e3324e0da7755d79381ee7b095f0e36988b183cdbc",
+   "plainBytes": 9827,
+   "plainChars": 3445,
+   "packBytes": 6440,
+   "title": "四分五裂的反动派为什么还要空喊“全面和平”？",
+   "vol": 4
+  },
+  "v4n56": {
+   "plainSha256": "ff23938d04bb70bf09d0c633955e23755c39c6908d9f5601e343fa34ac7646e1",
+   "cipherSha256": "2886201aa03e77b9eeba4579b0588ff6393493a6d4d020928dc8aee569ecd14f",
+   "plainBytes": 4307,
+   "plainChars": 1501,
+   "packBytes": 3028,
+   "title": "国民党反动派由“呼吁和平”变为呼吁战争",
+   "vol": 4
+  },
+  "v4n57": {
+   "plainSha256": "0a8a3cfd246c72d3a565447abb83a4cec72df539ecaf842deb49ab7664d0b671",
+   "cipherSha256": "cb80d8039c96e7c1b58b9e7dd5e4a8f30fa6c034b8a11134c201162d3b7a0648",
+   "plainBytes": 13907,
+   "plainChars": 4865,
+   "packBytes": 9000,
+   "title": "评国民党对战争责任问题的几种答案",
+   "vol": 4
+  },
+  "v4n58": {
+   "plainSha256": "6e4395eb856d027f9621a7a29403128830a006b1d71a1e4eba7aabb88e995918",
+   "cipherSha256": "3c4a844cac15074c732a10cfe10b3cb0c3ccef95055dae52d86c7eb3aaab1c86",
+   "plainBytes": 29026,
+   "plainChars": 10144,
+   "packBytes": 15900,
+   "title": "在中国共产党第七届中央委员会第二次全体会议上的报告",
+   "vol": 4
+  },
+  "v4n59": {
+   "plainSha256": "5f0c9b0ba85559cfdf30abe3620ccc1b8c9ab9827c81aba36ef2b294777ad4b2",
+   "cipherSha256": "92d123822264eeb6787dacfa874ff2b4073568f7699a707f3d19c2f2a5b3690c",
+   "plainBytes": 9088,
+   "plainChars": 3179,
+   "packBytes": 5908,
+   "title": "党委会的工作方法",
+   "vol": 4
+  },
+  "v4n60": {
+   "plainSha256": "1ab3c501a53d08cde8ebd9b1c08836a5012db1f7112880b92e5b22da65fa7ada",
+   "cipherSha256": "74a7cc597375a3fe5ff38dac9a06378fde955b0a5258160cee79a068649cb64d",
+   "plainBytes": 5619,
+   "plainChars": 1970,
+   "packBytes": 3768,
+   "title": "南京政府向何处去？",
+   "vol": 4
+  },
+  "v4n61": {
+   "plainSha256": "575a87646714e3e802cf69cbbc47f32ffc0ff8a013723e19ae3e2bcfa2a8a755",
+   "cipherSha256": "946c6e8f3a380f140757db7689932a311e8562c4b6107fbb81400fd827411aca",
+   "plainBytes": 20338,
+   "plainChars": 7132,
+   "packBytes": 10664,
+   "title": "向全国进军的命令",
+   "vol": 4
+  },
+  "v4n62": {
+   "plainSha256": "9c1fb52bdbdfe891a516a30dcfd602caa786439227b934764514e36374a3cea3",
+   "cipherSha256": "051178013da0dec26123310048a2864a3006081f875a4cf50991b4741741a9d3",
+   "plainBytes": 4624,
+   "plainChars": 1622,
+   "packBytes": 3248,
+   "title": "中国人民解放军布告",
+   "vol": 4
+  },
+  "v4n63": {
+   "plainSha256": "2b03a21deb8d819633aeff0318cec4d317a345afb0a66899999454a4aae8f004",
+   "cipherSha256": "cac4d2276212e94e643fe0f36733f5a237dea281a70330d14b5c6af351a44251",
+   "plainBytes": 5187,
+   "plainChars": 1813,
+   "packBytes": 3380,
+   "title": "中国人民解放军总部发言人为英国军舰暴行发表的声明",
+   "vol": 4
+  },
+  "v4n64": {
+   "plainSha256": "46af871efb00467985452403bdad4e2873b26b74810cd465c79aa3f120ad9081",
+   "cipherSha256": "4762edc55487b93bf872809f2f1bafa3115a26002d27a76a51991a307cb8ac87",
+   "plainBytes": 8483,
+   "plainChars": 2971,
+   "packBytes": 5172,
+   "title": "在新政治协商会议筹备会上的讲话",
+   "vol": 4
+  },
+  "v4n65": {
+   "plainSha256": "9c70610159ffbbde17a52cd57f1bd2ca7a7155730e81cde747977554bed020b2",
+   "cipherSha256": "d8320f2a0e99c87569e484f569e6327907a81a74c217826085ee1c7e081aa46f",
+   "plainBytes": 28475,
+   "plainChars": 9976,
+   "packBytes": 16116,
+   "title": "论人民民主专政",
+   "vol": 4
+  },
+  "v4n66": {
+   "plainSha256": "7f2cd0d373ca0a5f30aaf5cf17ffa8b5c75ddeac360238a868a383dc7876beb2",
+   "cipherSha256": "9749dee7996bf5c058574f7d9bf71539fd1f5f1556ae52dc9b8d1ed22070d80b",
+   "plainBytes": 14463,
+   "plainChars": 5073,
+   "packBytes": 8592,
+   "title": "丢掉幻想，准备斗争",
+   "vol": 4
+  },
+  "v4n67": {
+   "plainSha256": "69ba1027d6d8386d0e284d730aebe2435d76d15723bc2b5dd1c5341d4818e0ad",
+   "cipherSha256": "bc4e3ddb99ece1afc61d8fec883f4bb551225e81bd8af1d80b0902e75f93a9bd",
+   "plainBytes": 15883,
+   "plainChars": 5568,
+   "packBytes": 10232,
+   "title": "别了，司徒雷登",
+   "vol": 4
+  },
+  "v4n68": {
+   "plainSha256": "59fcd43f849843a7d526e7412c8363461cba993dc6f912e1a1d6bade75661900",
+   "cipherSha256": "4155530769f821c39472f1dd91c887aaf4eb60eca94855c480dc96be398c1a1c",
+   "plainBytes": 6574,
+   "plainChars": 2314,
+   "packBytes": 4296,
+   "title": "“友谊”，还是侵略？",
+   "vol": 4
+  },
+  "v4n69": {
+   "plainSha256": "08a0c3363e9376fb07388c2e065294c20389b99b177c1463607ed19dabf0c133",
+   "cipherSha256": "b396012ba47f2b0d6f271a737d9a914d6b57998fddee24df0b940258703c93c9",
+   "plainBytes": 11786,
+   "plainChars": 4118,
+   "packBytes": 7460,
+   "title": "为什么要讨论白皮书？",
+   "vol": 4
+  },
+  "v4n70": {
+   "plainSha256": "8cbb836139760db17807d973bfeda7de26104c431d014cbaff558ae7638a0852",
+   "cipherSha256": "222945774fee584e009927f4097bd04c27b3aa12e35f4c03c8e3f52b5658536c",
+   "plainBytes": 17296,
+   "plainChars": 6076,
+   "packBytes": 10276,
+   "title": "唯心历史观的破产",
+   "vol": 4
+  },
+  "v5n01": {
+   "plainSha256": "9839f4ab541f8764435514501fe706797de129e60e73f6081b4c3ecc644c30f3",
+   "cipherSha256": "2c68e0bca82c97d755fea5c28bb6d0256777d9e3d0ccace3f023c300d5ae8237",
+   "plainBytes": 7305,
+   "plainChars": 2565,
+   "packBytes": 4440,
+   "title": "中国人民站起来了",
+   "vol": 5
+  },
+  "v5n02": {
+   "plainSha256": "707bed23d3943c8d4c766d32a4caf26d62f0005cb48bff49e381ca25676744ad",
+   "cipherSha256": "3aa87eab2f41aad5a91154de448c18c313904cf664f848e5f66bcedd9f69475c",
+   "plainBytes": 3590,
+   "plainChars": 1260,
+   "packBytes": 2420,
+   "title": "中国人民大团结万岁",
+   "vol": 5
+  },
+  "v5n03": {
+   "plainSha256": "fbae43b6989703f3b4f6d3c92614e568836ed115c9f6df8f142fedec80119ffa",
+   "cipherSha256": "8908d210d0ff616d886440161f42e429b7438b41a48ec0c9acb511bfbfd2061d",
+   "plainBytes": 516,
+   "plainChars": 184,
+   "packBytes": 464,
+   "title": "人民英雄们永垂不朽",
+   "vol": 5
+  },
+  "v5n04": {
+   "plainSha256": "f595aaa859652ed887a9e2a5a1f44356878777351c758ddb78f62478b15fed92",
+   "cipherSha256": "8cf365a4f8eb4f813df70a3769c4916ddca591d81a71876e1b96003046be55f3",
+   "plainBytes": 754,
+   "plainChars": 266,
+   "packBytes": 648,
+   "title": "永远保持艰苦奋斗的作风",
+   "vol": 5
+  },
+  "v5n05": {
+   "plainSha256": "658965adb01978b161f7772f54a92124a1cb61c1083903443344094f4fc4a322",
+   "cipherSha256": "9f38c011f77fde00fd05defc5d43513738c7644d36ccbd5e13f51bbbd6cd3aec",
+   "plainBytes": 2124,
+   "plainChars": 742,
+   "packBytes": 1660,
+   "title": "征询对待富农策略问题的意见",
+   "vol": 5
+  },
+  "v5n06": {
+   "plainSha256": "38f39ee09ea995a617142edb6eefef78c1a76fd7888199a1ff2a7e1af0108f5e",
+   "cipherSha256": "8f30d4d4d0b07e684e03433cf9b48f86da0b23604a0f08f82f7a676330bb73eb",
+   "plainBytes": 11376,
+   "plainChars": 4070,
+   "packBytes": 7140,
+   "title": "为争取国家财政经济状况的基本好转而斗争",
+   "vol": 5
+  },
+  "v5n07": {
+   "plainSha256": "fcc6ae747091f6b6f091286aa6c3104404c39e35692c13728c6d4943458de6cf",
+   "cipherSha256": "8e3ec0e827f6c3dd3c6f54d6f0d14ef1bd8bb4ac47039a5f93ea62b7ffba4033",
+   "plainBytes": 6091,
+   "plainChars": 2185,
+   "packBytes": 3884,
+   "title": "不要四面出击",
+   "vol": 5
+  },
+  "v5n08": {
+   "plainSha256": "71ed8880f43e1ecd12469c776bbfd330442acf298851376b4f2157a74006dfe2",
+   "cipherSha256": "adaaff35a20cb4a9659e674d76ebc35808e9c725e5a20a573114b1b61eb1b8bf",
+   "plainBytes": 8209,
+   "plainChars": 2895,
+   "packBytes": 4868,
+   "title": "做一个完全的革命派",
+   "vol": 5
+  },
+  "v5n09": {
+   "plainSha256": "0066e914ec1d2905e701094497f400dba55f6b71dc9b5a4a9a2c6bfec490f304",
+   "cipherSha256": "e372aebb4e6d9b5f490f8c00a5ae87c967c01f4d658e0c24846c6c0bc587ce60",
+   "plainBytes": 1735,
+   "plainChars": 633,
+   "packBytes": 1340,
+   "title": "你们是全民族的模范人物",
+   "vol": 5
+  },
+  "v5n10": {
+   "plainSha256": "fb07749c5b62aecde0f4033c313c76fbe2aba9afebb0160511c49db477624d4d",
+   "cipherSha256": "4c8ac68fb43e220c12a5cc2e40559918b00b57173fe5b0c48cfe15ddaaea0644",
+   "plainBytes": 1310,
+   "plainChars": 466,
+   "packBytes": 1100,
+   "title": "给中国人民志愿军的命令",
+   "vol": 5
+  },
+  "v5n11": {
+   "plainSha256": "2146dc0a4decff3cbe5e100c96bfe171f95aa5bdca3f476fcb9cfaf6b9c8f441",
+   "cipherSha256": "2edd65c7e8e27e37050d61acaf7b5d9f7a88a62d21f13e6f25b913287f892e46",
+   "plainBytes": 605,
+   "plainChars": 213,
+   "packBytes": 596,
+   "title": "中国人民志愿军要爱护朝鲜的一山一水一草一木",
+   "vol": 5
+  },
+  "v5n12": {
+   "plainSha256": "a745eea0afffcce1dbd13b2ec667cda4729bea8bb76eb662c49954f4e8ca7ea6",
+   "cipherSha256": "002758de937dc605fde581c4f59cdbca6cd427abe6fad91b0e2946488766d99b",
+   "plainBytes": 5470,
+   "plainChars": 2034,
+   "packBytes": 3700,
+   "title": "中共中央政治局扩大会议决议要点",
+   "vol": 5
+  },
+  "v5n13": {
+   "plainSha256": "eae7f15ccccf876d7844657f66998534502d2dc039e45dcc8cac2b5fd4e2798d",
+   "cipherSha256": "21dd637e1ba8f89a75d91cae5403103acd12dfd770d4aa58103ffafb064c5d7b",
+   "plainBytes": 4246,
+   "plainChars": 1496,
+   "packBytes": 3144,
+   "title": "镇压反革命必须实行党的群众路线",
+   "vol": 5
+  },
+  "v5n14": {
+   "plainSha256": "a2d12cec4e49f99beed7c44529f35214f0f7d43bdb09b888c04e12d6ce208c85",
+   "cipherSha256": "e4a2611d5d3ed0274ab0afb6c7bc49ad1e13c8bebb9ebaa977a21d99c4aa1dc3",
+   "plainBytes": 5021,
+   "plainChars": 1767,
+   "packBytes": 3264,
+   "title": "镇压反革命必须打得稳，打得准，打得狠",
+   "vol": 5
+  },
+  "v5n15": {
+   "plainSha256": "9c85626757687e9b8b7a59f7d94f20405e8b538dc0e721f2472ab51c801d42f7",
+   "cipherSha256": "89dc4ffd5c2fb7bc32f07a5234defa8e96ab556c6ba204a1052b908aa37c59f7",
+   "plainBytes": 2879,
+   "plainChars": 1013,
+   "packBytes": 2056,
+   "title": "应当重视电影《武训传》的讨论",
+   "vol": 5
+  },
+  "v5n16": {
+   "plainSha256": "d4a6aa05f5c02eef286dbfd15e0fe6164ecc16720ac5b23c86bb3d802d428ba8",
+   "cipherSha256": "bb060a57eb3895badccbc6182ca1f1d1dfd1ceb97f829d02bc2781fab56afbca",
+   "plainBytes": 8574,
+   "plainChars": 2992,
+   "packBytes": 5164,
+   "title": "三大运动的伟大胜利",
+   "vol": 5
+  },
+  "v5n17": {
+   "plainSha256": "f02e20d593a76bc9153e5ec2de199cfd7723cc814d5f27961457035b970d64a1",
+   "cipherSha256": "51234be04d335f2d536bde0c1ec43770799628f3654d609e4305ec028b9a5e52",
+   "plainBytes": 8811,
+   "plainChars": 3189,
+   "packBytes": 5704,
+   "title": "关于“三反”、“五反”的斗争",
+   "vol": 5
+  },
+  "v5n18": {
+   "plainSha256": "33e1f755f54fd789730449eeafc7340488819a811c40d465602268149a7175d5",
+   "cipherSha256": "842c368fdfdf167369970d03e12eda93872d59bae2d0e070bfc42f6fe533c376",
+   "plainBytes": 1374,
+   "plainChars": 540,
+   "packBytes": 1044,
+   "title": "把农业互助合作当作一件大事去做",
+   "vol": 5
+  },
+  "v5n19": {
+   "plainSha256": "a55972c194c6e3cc3bc6a16e9608c49b466618c0d9af35140eb8ae239111a9fe",
+   "cipherSha256": "6989952006a7d7275fe46c5d498a427aaac29da6d287e1a4bbecf19db47f97db",
+   "plainBytes": 1199,
+   "plainChars": 433,
+   "packBytes": 928,
+   "title": "元旦祝词",
+   "vol": 5
+  },
+  "v5n20": {
+   "plainSha256": "ce0cbd25a33dca547183e5a7eeabdc86d7f42dfcbf04a11608ebe6c5d39414ef",
+   "cipherSha256": "e2f5fcf8db0cbcdb5ce90b75af3637f153fb5f1e848c0cb92e2e772cb2bcdfd2",
+   "plainBytes": 6215,
+   "plainChars": 2253,
+   "packBytes": 4220,
+   "title": "中共中央关于西藏工作方针的指示",
+   "vol": 5
+  },
+  "v5n21": {
+   "plainSha256": "e1a8ba001d53afae06b499ebec397cdd4d366b37f7353b4336aa1b9b0348e0a3",
+   "cipherSha256": "774320b4bf45d0f8e6958a0763c1374fe219a0e1aa8e51b9902d12ae0f057b40",
+   "plainBytes": 563,
+   "plainChars": 255,
+   "packBytes": 488,
+   "title": "工人阶级与资产阶级的矛盾是国内的主要矛盾",
+   "vol": 5
+  },
+  "v5n22": {
+   "plainSha256": "85fd834105fa4be2655832757e66059a76bd1f37c160ff4a771176b9b449d09d",
+   "cipherSha256": "0512bfe61adae34a64d33554bde796410f04bf3d45fac1f8eba0080ebc97cc34",
+   "plainBytes": 5286,
+   "plainChars": 1858,
+   "packBytes": 3704,
+   "title": "团结起来，划清敌我界限",
+   "vol": 5
+  },
+  "v5n23": {
+   "plainSha256": "66633ea5a21da6d61b2c344842e9bbe5aee07ce866d483b33b30f78881224d29",
+   "cipherSha256": "ab3bbd0c6835d54cf5aa02ce0988e55b8d0c201b45dedf9e2c85789831f6e873",
+   "plainBytes": 2047,
+   "plainChars": 727,
+   "packBytes": 1568,
+   "title": "祝贺中国人民志愿军的重大胜利",
+   "vol": 5
+  },
+  "v5n24": {
+   "plainSha256": "0c2952ba31eae5a20f8d16ee4d305c5855cfeab4d2bb43d6fdb6596dae20f0b4",
+   "cipherSha256": "cff833f17951d53503cb92600dfcc9368ba25ab2c4ef893c3640289179b6725b",
+   "plainBytes": 3833,
+   "plainChars": 1341,
+   "packBytes": 2536,
+   "title": "反对官僚主义、命令主义和违法乱纪",
+   "vol": 5
+  },
+  "v5n25": {
+   "plainSha256": "aea831fd280cbdfc9e1c90dda303319076def8718cb9e442f372a626ce5a627f",
+   "cipherSha256": "c1d8620747a9cf5af3facab3aace4e977f648eabcfdf71f47b8185602d5871e2",
+   "plainBytes": 1837,
+   "plainChars": 743,
+   "packBytes": 1352,
+   "title": "批判大汉族主义",
+   "vol": 5
+  },
+  "v5n26": {
+   "plainSha256": "9e00a88657cc1c1f4787c37dec1a053981bd9a7b3bb1149c09d2f1c8dd6fdb3e",
+   "cipherSha256": "f371d8c42e9eaa89d944610a70c0c016fe59c70853f059e8f8822667545fa3de",
+   "plainBytes": 4493,
+   "plainChars": 1599,
+   "packBytes": 3056,
+   "title": "解决“五多”问题",
+   "vol": 5
+  },
+  "v5n27": {
+   "plainSha256": "c170b056f21dec8f365927257d467f154cc3b5674497c14524e68f7ba3ea37cd",
+   "cipherSha256": "a8a94d68c349f7c00472b10154af1bf9aef311aa2d473e328efd17103ddbbf4c",
+   "plainBytes": 703,
+   "plainChars": 253,
+   "packBytes": 668,
+   "title": "对刘少奇、杨尚昆破坏纪律擅自以中央名义发出文件的批评",
+   "vol": 5
+  },
+  "v5n28": {
+   "plainSha256": "01323782460d979025d183d1ca63a4fc9dc7143266007525fd9a142832c98917",
+   "cipherSha256": "2653f9508fac3410b755e6e2bc02be6c54760a5e0eb79cb8608a77d1444e9d41",
+   "plainBytes": 3082,
+   "plainChars": 1100,
+   "packBytes": 2156,
+   "title": "批判离开总路线的右倾观点",
+   "vol": 5
+  },
+  "v5n29": {
+   "plainSha256": "f672a310e9b4f870e117043ea2d5c5cede5195f438f26cfb3737c82979012787",
+   "cipherSha256": "b3ea64b85da1d95bec95031bf846546fabf5455a6b35aa8b493b500c2ddc44b3",
+   "plainBytes": 8991,
+   "plainChars": 3225,
+   "packBytes": 5796,
+   "title": "青年团的工作要照顾青年的特点",
+   "vol": 5
+  },
+  "v5n30": {
+   "plainSha256": "d346a1a5bb181b5ebc6818bda6c745458563117129eee34826827c73b6c1bd70",
+   "cipherSha256": "bc7a706166506ce924bf9c28f581fe44d86de3913ed7cf8d888c40c30e45ec4b",
+   "plainBytes": 1051,
+   "plainChars": 369,
+   "packBytes": 844,
+   "title": "关于国家资本主义",
+   "vol": 5
+  },
+  "v5n31": {
+   "plainSha256": "d8f7f4617dd1390757bc39ae609b642863612df43d0582f5eca6c4f131a46a42",
+   "cipherSha256": "95d7869189a672df2af5bed7f590d51259d0fa48c5d54045792d02da4a4acac0",
+   "plainBytes": 960,
+   "plainChars": 338,
+   "packBytes": 880,
+   "title": "党在过渡时期的总路线",
+   "vol": 5
+  },
+  "v5n32": {
+   "plainSha256": "993b76b35e7614beb82f4dcbbeac1b74ce07b869a46c799019657d285640acfa",
+   "cipherSha256": "b19051482148f08df92b41e6b27643c629283824eba9b20aad68632471583c99",
+   "plainBytes": 14922,
+   "plainChars": 5228,
+   "packBytes": 8920,
+   "title": "反对党内的资产阶级思想",
+   "vol": 5
+  },
+  "v5n33": {
+   "plainSha256": "b9be9e4a2b18de58f4826f3138b81986136f2c45934add986c0cf51ba2d73c75",
+   "cipherSha256": "a537eb8804ceccf130bd590bf9cfa28c26c8bfcf47e72e7bd01018c74b11e369",
+   "plainBytes": 4382,
+   "plainChars": 1668,
+   "packBytes": 3036,
+   "title": "改造资本主义工商业的必经之路",
+   "vol": 5
+  },
+  "v5n34": {
+   "plainSha256": "810d75fba5a1567de991be02e63374a64b0cc376c89b2fcb857d5e13387dd39d",
+   "cipherSha256": "884f5c78add4ab88115a1696087734f96026db9a6d2466bda65745e2368bdd82",
+   "plainBytes": 9468,
+   "plainChars": 3322,
+   "packBytes": 5912,
+   "title": "抗美援朝的伟大胜利和今后的任务",
+   "vol": 5
+  },
+  "v5n35": {
+   "plainSha256": "72f53016995b77b840866c0a686e1df5ec7b98f194d1ba5b39939610c00f2be1",
+   "cipherSha256": "a5701677d006a68133824f150456aaba4d9b373dc18d803953be1946fe8c43ab",
+   "plainBytes": 15839,
+   "plainChars": 5621,
+   "packBytes": 9408,
+   "title": "关于农业互助合作的两次谈话",
+   "vol": 5
+  },
+  "v5n36": {
+   "plainSha256": "2433fa275a77a9c290f1bba42a138f0f78d91c55988b888afd1815f403fb2da3",
+   "cipherSha256": "f1cda865be0d390727cd16339b9c6f683a2b14e373bc10956cbca626678fe622",
+   "plainBytes": 13006,
+   "plainChars": 4616,
+   "packBytes": 7308,
+   "title": "关于中华人民共和国宪法草案",
+   "vol": 5
+  },
+  "v5n37": {
+   "plainSha256": "7de273d88b6afe3c0eb441f9280b4ea6e19d847a954c8716b9f913f72a96bbb1",
+   "cipherSha256": "34b4f8e8ea119a754c5c0fc510d2024f487d03c42ae19b6234c40c175ef94d9f",
+   "plainBytes": 2463,
+   "plainChars": 961,
+   "packBytes": 1692,
+   "title": "为建设一个伟大的社会主义国家而奋斗",
+   "vol": 5
+  },
+  "v5n38": {
+   "plainSha256": "2bf3476eee47e69d1acff2bac61da4b2a54a34e3e85c7ad1f39b222fb9c71d12",
+   "cipherSha256": "599654396dcadec07789af7708493c0dbd77580857a01f46a999fbf90df94519",
+   "plainBytes": 2490,
+   "plainChars": 976,
+   "packBytes": 1972,
+   "title": "关于《红楼梦》研究问题的信",
+   "vol": 5
+  },
+  "v5n39": {
+   "plainSha256": "d1de630399de9191f783c7941313c0f0e8cb1a207b7813d91a29f930cd66eaff",
+   "cipherSha256": "cf87bd156651b8f0b46bacde0ec48937dcc42caecb1f5f2f1073308447e07108",
+   "plainBytes": 2752,
+   "plainChars": 962,
+   "packBytes": 2048,
+   "title": "原子弹吓不倒中国人民",
+   "vol": 5
+  },
+  "v5n40": {
+   "plainSha256": "d8948abdd05fe838dd712dd25fc02717b843db6ad671a4e4a2e3d2623079888b",
+   "cipherSha256": "fb7e38c1d2bea7c62d4a2e0533eac078cd4bd41faf1f23c14edf750bd48df6e1",
+   "plainBytes": 5508,
+   "plainChars": 1920,
+   "packBytes": 3544,
+   "title": "驳“舆论一律”",
+   "vol": 5
+  },
+  "v5n41": {
+   "plainSha256": "23ee72a12642520895664769d6b6bcfbc2b6889ebd5ceff15d0f456d2d80a259",
+   "cipherSha256": "69f2b8b5571c0ba98a0af31d86f0a8f7ee684e9b17b3f62d8b571891082a7d40",
+   "plainBytes": 43383,
+   "plainChars": 15357,
+   "packBytes": 22616,
+   "title": "关于农业合作化问题",
+   "vol": 5
+  },
+  "v5n42": {
+   "plainSha256": "d6f2fecbbf5892757161a26b304c0dd0176d046e21e80700a52b70bd4a55b6e3",
+   "cipherSha256": "61e3f8cbccf06a410f4282cfeda6aa3a68e7a24829e7d9571fd293a8c551bcf7",
+   "plainBytes": 3851,
+   "plainChars": 1363,
+   "packBytes": 2600,
+   "title": "农业合作化必须依靠党团员和贫农下中农",
+   "vol": 5
+  },
+  "v5n43": {
+   "plainSha256": "8c8a8f8c0f158c565883ebf58764e73194d052950c20117fd17c8eb9ccf86d10",
+   "cipherSha256": "2099829c957493b2679026dcadd3530de587520ddf369fccbf092f72aa89fb7a",
+   "plainBytes": 42671,
+   "plainChars": 14927,
+   "packBytes": 23408,
+   "title": "农业合作化的一场辩论和当前的阶级斗争",
+   "vol": 5
+  },
+  "v5n44": {
+   "plainSha256": "f94c84f459d29c84389df78524941e86a0d507dd0c39a5a09e551e9071c80dfa",
+   "cipherSha256": "12ca1487e2925a2d9afed23ba06520402aa5ec142233e913eba2d763c223d87e",
+   "plainBytes": 5955,
+   "plainChars": 2139,
+   "packBytes": 4072,
+   "title": "征询对农业十七条的意见",
+   "vol": 5
+  },
+  "v5n45": {
+   "plainSha256": "e083e0a79318db3c6a1a2c5c8c97a9cd8a06bfbf8ef74a3109c829f8cacb9e55",
+   "cipherSha256": "909b46920e0fddae4f90ef69f6de5fa5dfe46f806fccf3fa7b024bf070d2cf37",
+   "plainBytes": 4383,
+   "plainChars": 1567,
+   "packBytes": 3200,
+   "title": "加快手工业的社会主义改造",
+   "vol": 5
+  },
+  "v5n46": {
+   "plainSha256": "8df5257522b3507a6c70a9f33b237e816ac6158fe82297f7440a19d23f8687f4",
+   "cipherSha256": "ea09a832dea4e98df53e6002fcf9df683b06c3455660a6c1b8c57d490c4adc39",
+   "plainBytes": 6615,
+   "plainChars": 2435,
+   "packBytes": 4240,
+   "title": "美帝国主义是纸老虎",
+   "vol": 5
+  },
+  "v5n47": {
+   "plainSha256": "0f75140947e68e2af826bd0885c20fcc3442a1317deb5e48175014f90f65bc96",
+   "cipherSha256": "9c5dde5ccb401ca6ee8b594d6c52381c84a164951db7f516d9e7bad5191a390c",
+   "plainBytes": 23168,
+   "plainChars": 8198,
+   "packBytes": 12964,
+   "title": "增强党的团结，继承党的传统",
+   "vol": 5
+  },
+  "v5n48": {
+   "plainSha256": "133f04705ce9b90cb725314ba94f96363d508d2698be089bd4ee46050a3cde60",
+   "cipherSha256": "cc8273b76fbc27837f05110edbb746c6443a5f438bbf8f412ebff6f0cfd9fae0",
+   "plainBytes": 10983,
+   "plainChars": 3959,
+   "packBytes": 6444,
+   "title": "我们党的—些历史经验",
+   "vol": 5
+  },
+  "v5n49": {
+   "plainSha256": "41a67b144e49ed70cad323145a58a5c5c2aa7c130dd050ad820d27c374671cec",
+   "cipherSha256": "c18b18b10a022bb46cd2521ed7da4af89d593aaa5b635acab8b549ad7809f873",
+   "plainBytes": 2230,
+   "plainChars": 790,
+   "packBytes": 1696,
+   "title": "纪念孙中山先生",
+   "vol": 5
+  },
+  "v5n50": {
+   "plainSha256": "373696bf1cfcb61bfe65c1a63679969b4f44af2fe23b45a486717706cf69d744",
+   "cipherSha256": "3b895f9d7a8693b57f51cb5cc390d949eff581b7edc73d068e384902ffc4178d",
+   "plainBytes": 31967,
+   "plainChars": 11187,
+   "packBytes": 18608,
+   "title": "在中国共产党第八届中央委员会第二次全体会议上的讲话",
+   "vol": 5
+  },
+  "v5n51": {
+   "plainSha256": "2c187433da1370f65485e7ed3defada59b81e19d605cb867e8b1416a0213c000",
+   "cipherSha256": "005ebcf1bf217e489985b649e2c7221fb7a1928b641abd30fff31cf646955170",
+   "plainBytes": 30845,
+   "plainChars": 10763,
+   "packBytes": 16508,
+   "title": "在中国共产党全国宣传工作会议上的讲话",
+   "vol": 5
+  },
+  "v5n52": {
+   "plainSha256": "293c2f71e3382e97e95ee4068f5faf7571e7388cb490d656e42d73661f313424",
+   "cipherSha256": "8d59a77d23da371f645714f860c1c4e3b5a70bdc6c8fd0b72e11ae8ee2d06da8",
+   "plainBytes": 690,
+   "plainChars": 246,
+   "packBytes": 632,
+   "title": "中国共产党是全中国人民的领导核心",
+   "vol": 5
+  },
+  "v5n53": {
+   "plainSha256": "dbe6f4a29cd99dff10c810a656c40571a7f09c62d55c58c9a8e4129d4cd6134b",
+   "cipherSha256": "b87911a32b3a05de27a328ea12cb3ae979668114fe2ba85a119d76318375bc41",
+   "plainBytes": 3931,
+   "plainChars": 1375,
+   "packBytes": 3020,
+   "title": "组织力量反击右派分子的猖狂进攻",
+   "vol": 5
+  },
+  "v5n54": {
+   "plainSha256": "7f881c16035973de3b950135f8fabc5e13e672f18652595201e1fa817bc0032d",
+   "cipherSha256": "2a42c704c6387c2f69224db58a3a04abb3523b251cc5c6d06a2ba2d8a8e30707",
+   "plainBytes": 10006,
+   "plainChars": 3492,
+   "packBytes": 6756,
+   "title": "文汇报的资产阶级方向应当批判",
+   "vol": 5
+  },
+  "v5n55": {
+   "plainSha256": "d398c3004d12635d2ca6f353f6bc3032b206b72a7b1b561c1d617736c8bdcd68",
+   "cipherSha256": "6bd3ed25fdbcd7c042dff9d82f16b80eba8e219e4bd95fd67d02cee0a58d75fe",
+   "plainBytes": 17824,
+   "plainChars": 6230,
+   "packBytes": 10892,
+   "title": "一九五七年夏季的形势",
+   "vol": 5
+  },
+  "v5n56": {
+   "plainSha256": "c3c1f775733ef92ebfde9e1c8d54cf1ba6d28d006ede6fc0617a8cb04aaaef5a",
+   "cipherSha256": "b959680102ea83631ea7f3ba3dbdf9ef09f9c2e3cb7a1e137bff27aaf480de81",
+   "plainBytes": 29920,
+   "plainChars": 10452,
+   "packBytes": 16280,
+   "title": "坚定地相信群众的大多数",
+   "vol": 5
+  },
+  "v5n57": {
+   "plainSha256": "0d273f3ceaa8e9ebaa918a182664bf729f01e030946fd9cd6804c0d025679fe3",
+   "cipherSha256": "588e130d8661922042314d3985d0977e832ed9b09a1cf3bdbc22e5c71cb2b236",
+   "plainBytes": 5475,
+   "plainChars": 1911,
+   "packBytes": 3576,
+   "title": "党内团结的辩证方法",
+   "vol": 5
+  },
+  "v5n58": {
+   "plainSha256": "26632dc795038afb0b73de442b02917036567f301d2ef08cef2f2b23d6b9fc68",
+   "cipherSha256": "2fbd2c2079ffa100780f6a119f288499d417ddaeb2020d8752257976edf2da8f",
+   "plainBytes": 11609,
+   "plainChars": 4517,
+   "packBytes": 7352,
+   "title": "一切反动派都是纸老虎",
+   "vol": 5
+  }
+ }
+}

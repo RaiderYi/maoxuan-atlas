@@ -78,7 +78,7 @@ process.env.ASK_RL_MAX_PER_MIN = '5';
 process.env.ASK_RL_IP_PER_MIN = '8';
 process.env.ASK_RL_GLOBAL_PER_MIN = '60';
 
-const { default: handler } = await import(`./ask.mjs?b03=${crypto.randomUUID()}`);
+const { default: handler } = await import(`../../site/api/ask.mjs?b03=${crypto.randomUUID()}`);
 const BODY = { question: '井冈山在哪里', scope: { articleIds: ['v1n03'] } };
 const IP = '203.0.113.9';
 

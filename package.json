@@ -4,6 +4,10 @@
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "test:wp05": "node site/api/test-wp05.mjs"
+    "test": "node tests/run-all.mjs",
+    "verify:assets": "node pipeline/verify-deploy-assets.mjs",
+    "content:build": "node pipeline/build-content-pack.mjs",
+    "content:keygen": "node pipeline/build-content-pack.mjs --gen-key",
+    "probe": "node pipeline/probe-production.mjs"
   }
 }

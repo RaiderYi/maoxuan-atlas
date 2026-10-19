@@ -4,6 +4,10 @@ data/articles_full.json
 data/merged.json
 data/.key
 
+# R01: 内容包密钥（只存在于本机与部署环境变量，绝不入库）
+data/.textpack.key
+*.textpack.key
+
 # Terrain tiles (Esri/NatGeo copyrighted, rebuilt by pipeline/dl_tiles.py)
 site/assets/tiles/
 

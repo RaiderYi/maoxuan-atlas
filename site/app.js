@@ -523,9 +523,11 @@ function renderTopic(){
    - 原始 AI 回答与人工改写分开存：cards[].answerRaw 只写一次，人工改写写 editedAnswer
    - 导入只做数据合并，不执行任何内容；渲染一律 textContent（不解析 HTML）
    - 删除先进回收站（mx_trash），可恢复 */
+/* R11: 任务集合与活动指针也是用户成果的一部分, 必须进快照与备份 */
 var LIB_SCHEMA = "mx-library@2";
 var LIB_KEYS = ["mx_notes", "mx_research_cards", "mx_marks", "mx_read", "mx_recent",
-                "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts", "mx_persona_cards", "mx_trash"];
+                "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts", "mx_persona_cards", "mx_trash",
+                "mx_tasks", "mx_active_task"];
 
 function libGet(key, dflt) {
   var r = MXStore.read(key, "any");
@@ -638,11 +640,15 @@ function libExportJSON() {
   var doc = {
     schema: LIB_SCHEMA, exportedAt: new Date().toISOString(), app: "aibigplayer",
     stats: { notes: c.notes.length, cards: c.cards.length, marks: Object.keys(c.marks).length,
-             reads: Object.keys(c.reads).length, topics: Object.keys(c.progress).length },
+             reads: Object.keys(c.reads).length, topics: Object.keys(c.progress).length,
+             tasks: libGet("mx_tasks", []).value ? (libGet("mx_tasks", []).value || []).length : 0 },
     data: { mx_notes: c.notes, mx_research_cards: c.cards, mx_marks: c.marks, mx_read: c.reads,
             mx_recent: c.recent, mx_topic_progress: c.progress, mx_topic_conclusions: c.concl,
             mx_topic_drafts: libGet("mx_topic_drafts", {}).value || {},
-            mx_persona_cards: c.persona },
+            mx_persona_cards: c.persona,
+            /* R11: 任务与活动指针纳入导出; 旧版本导入端会忽略不认识的键, 不会报错 */
+            mx_tasks: libGet("mx_tasks", []).value || [],
+            mx_active_task: libGet("mx_active_task", {}).value || null },
   };
   var blob = new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" });
   var a = document.createElement("a");
@@ -711,7 +717,7 @@ function libPrecheckBackup(doc) {
   if (errs.length) return { ok: false, errors: errs };
   var expect = { mx_notes: "array", mx_research_cards: "array", mx_persona_cards: "array", mx_marks: "object",
                  mx_read: "object", mx_recent: "object", mx_topic_progress: "object",
-                 mx_topic_conclusions: "object" };
+                 mx_topic_conclusions: "object", mx_tasks: "array" };
   Object.keys(expect).forEach(function (k) {
     if (doc.data[k] === undefined) return;
     var v = doc.data[k];
@@ -729,7 +735,7 @@ function libImportJSON(text) {
 
   /* 预检目标状态：任一损坏/不可用即中止（不覆盖、不半途写入） */
   var targets = ["mx_notes", "mx_research_cards", "mx_persona_cards", "mx_marks", "mx_read", "mx_recent",
-                 "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts"];
+                 "mx_topic_progress", "mx_topic_conclusions", "mx_topic_drafts", "mx_tasks"];
   var badTargets = [];
   targets.forEach(function (k) {
     var r = MXStore.read(k, "any");
@@ -804,6 +810,25 @@ function libImportJSON(text) {
   var ok = mergeArray("mx_notes", "笔记");
   if (ok) ok = mergeArray("mx_research_cards", "研究卡");
   if (ok) ok = mergeArray("mx_persona_cards", "人物卡");
+  /* R11: 任务按 taskId 合并（mergeArray 已按 id 去重, 这里把 id 映射成 taskId 视图） */
+  if (ok && Array.isArray(doc.data.mx_tasks)) {
+    var taskRows = doc.data.mx_tasks.map(function (t) {
+      if (!t || typeof t !== "object") return null;
+      var copy = JSON.parse(JSON.stringify(t));
+      copy.id = copy.taskId || copy.id;
+      return copy.id ? copy : null;
+    }).filter(Boolean);
+    var savedTasks = doc.data.mx_tasks;
+    doc.data.mx_tasks = taskRows;
+    var taskMergeOk = mergeArray("mx_tasks", "研读任务");
+    doc.data.mx_tasks = savedTasks;
+    if (!taskMergeOk) ok = false;
+    else {
+      /* 合并后把 id 字段去掉, 保持 mx_tasks 的真实结构 */
+      var tl = MXStore.read("mx_tasks", "array");
+      if (tl.status === "ok") MXStore.write("mx_tasks", tl.value.map(function (t) { var c = Object.assign({}, t); delete c.id; return c; }));
+    }
+  }
   if (ok) ok = mergeObject("mx_marks");
   if (ok) ok = mergeObject("mx_read");
   if (ok) ok = mergeObject("mx_recent");
@@ -865,7 +890,7 @@ function renderStudy() {
   h += "<div class='libBar'>";
   h += "<input id='libQ' placeholder='查找：标题 / 摘录 / 笔记 / 段落号…' value='" + esc(studyState.q) + "'>";
   h += "<span class='libFilters'>";
-  [["all", "全部"], ["quote", "摘录"], ["note", "笔记"], ["card", "研究卡"]].forEach(function (p) {
+  [["all", "全部"], ["quote", "摘录"], ["note", "笔记"], ["card", "研究卡"], ["persona", "人物卡"]].forEach(function (p) {
     h += "<button data-lk='" + p[0] + "' class='" + (studyState.kind === p[0] ? "on" : "") + "'>" + p[1] + "</button>";
   });
   h += "</span>";
@@ -881,6 +906,30 @@ function renderStudy() {
          "<a class='lk' href='#/view/topic'>" + (ts.nextStep ? "继续第 " + ts.nextStep.seq + " 步" : "查看专题") + "</a></div>";
   }
   h += "</div>";
+
+  /* R12: 继续研读任务 —— 一步回到原文/任务（未完成优先，最多列 5 条） */
+  var T12 = tasksApi();
+  if (T12) {
+    var allT = T12.all();
+    if (allT.ok && allT.list && allT.list.length) {
+      var openT = allT.list.filter(function (x) { return x.state !== "completed"; });
+      var doneN = allT.list.length - openT.length;
+      if (openT.length) {
+        openT.sort(function (a, b) { return (b.updatedAt || 0) - (a.updatedAt || 0); });
+        h += "<div class='libConcl'><div class='libCh'>继续研读任务（未完成 " + openT.length + " 条 · 已完成 " + doneN + " 条）</div><ul class='libList'>";
+        openT.slice(0, 5).forEach(function (x) {
+          var href = "#/art/" + esc(x.articleId || "") + (x.paragraphId ? "/" + esc(x.paragraphId) : "");
+          h += "<li class='libItem'><div class='liTop'><span class='liKind persona'>研读任务</span>" +
+               "<span class='liTime'>" + (x.updatedAt ? new Date(x.updatedAt).toLocaleString() : "") + "</span></div>" +
+               "<div class='liTitle'>" + esc((x.personName ? x.personName + " · " : "") + (x.themeTitle || "研读")) +
+               (x.articleId ? " · <span class='liArt'>" + esc(x.articleId) + "</span>" : "") + "</div>" +
+               "<div class='liText'>" + esc(String(x.prompt || "").slice(0, 160)) + "</div>" +
+               "<div class='liActs'><a class='lk' data-task='" + esc(x.taskId) + "' href='" + href + "'>继续这条任务</a></div></li>";
+        });
+        h += "</ul></div>";
+      }
+    }
+  }
 
   /* 专题结论 */
   if (concl && concl.text) {
@@ -952,6 +1001,15 @@ function renderStudy() {
   track("page_view", { pageType: "study" });
 }
 function bindStudy(v, filtered, c) {
+  /* R12: 从书房继续任务 —— 先把指针指到该任务, 再进原文 */
+  v.querySelectorAll("[data-task]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      var T = tasksApi();
+      if (!T) return;
+      var r = T.setActive(a.getAttribute("data-task"));
+      if (!r.ok) toast("活动任务标记未写入存储：" + (r.error || "存储不可用"));
+    });
+  });
   var qi = v.querySelector("#libQ");
   if (qi) {
     qi.addEventListener("input", function () {
@@ -1901,7 +1959,9 @@ function openArticle(id, fromRoute, anchorPara){
   show("read");
   document.title = a.title + " · 毛泽东选集";
   if(!fromRoute) setHash("#/art/"+id);
-  fetch("data/texts/"+id+".txt").then(function(r){
+  /* R01: 正文改由同源内容服务提供（加密内容包解密）。旧地址 /data/texts/*.txt
+     在 vercel.json 里保留重写，外部旧链接仍然可用。 */
+  fetch("api/text?id="+encodeURIComponent(id)).then(function(r){
     if(!r.ok) throw new Error("HTTP "+r.status);
     return r.text();
   }).then(function(txt){
@@ -2033,8 +2093,14 @@ function openArticle(id, fromRoute, anchorPara){
   }).catch(function(err){
     if(seq !== articleSeq) return;              /* stale failure: drop */
     if(state.curArt !== a) return;
+    /* R01: 失败要说清是"服务未就绪"还是"正文缺失", 不用一句 HTTP 5xx 打发用户 */
+    var rawMsg = String(err && err.message || err);
+    var msg = rawMsg;
+    if(/HTTP 503/.test(rawMsg)) msg = "正文服务暂时不可用（内容包或密钥未就绪）。阅读进度、笔记与书房不受影响，可稍后重试。";
+    else if(/HTTP 404/.test(rawMsg)) msg = "该篇正文未随本版本发布。";
+    else if(/Failed to fetch|NetworkError|Load failed/i.test(rawMsg)) msg = "网络中断，正文未载入。请检查网络后重试。";
     v.innerHTML = "<div class='readErr'><h3>《"+esc(a.title)+"》加载失败</h3>"+
-      "<p>"+esc(String(err && err.message || err))+"</p>"+
+      "<p>"+esc(msg)+"</p>"+
       "<button class='retryBtn' id='retryArt'>重试</button> "+
       "<a href='#/view/cats'>返回目录</a></div>";
     var rb = document.getElementById("retryArt");
@@ -2107,16 +2173,22 @@ function preloadTexts(cb){
   if(textLoaded){ flushTextCbs(); return; }
   if(textLoading) return;               /* later callers queued, never dropped */
   textLoading = true;
-  var pending = ARTS.length;
   textLoadFail = 0;
-  ARTS.forEach(function(a){
-    if(textCache[a.id]){ pending--; if(!pending) finishTextLoad(); return; }
-    fetch("data/texts/"+a.id+".txt").then(function(r){
+  /* R01: 走批量接口（每批 20 篇）, 把 217 次请求降到 11 次, 避免函数调用量被打爆 */
+  var todo = ARTS.filter(function(a){ return !textCache[a.id]; }).map(function(a){ return a.id; });
+  if(!todo.length){ finishTextLoad(); return; }
+  var batches = [];
+  for(var i=0;i<todo.length;i+=20) batches.push(todo.slice(i,i+20));
+  var pending = batches.length;
+  batches.forEach(function(ids){
+    fetch("api/text?id="+ids.join(",")).then(function(r){
       if(!r.ok) throw new Error("HTTP "+r.status);
-      return r.text();
-    }).then(function(t){
-      textCache[a.id]=t;
-    }).catch(function(){ textLoadFail++; }).then(function(){
+      return r.json();
+    }).then(function(j){
+      if(!j || !j.texts) throw new Error("bad payload");
+      Object.keys(j.texts).forEach(function(k){ textCache[k]=j.texts[k]; });
+      if(j.missing && j.missing.length) textLoadFail += j.missing.length;
+    }).catch(function(){ textLoadFail += ids.length; }).then(function(){
       pending--;
       if(!pending) finishTextLoad();
     });
@@ -2236,26 +2308,42 @@ function doSearch(q){
 }
 /* ---------- P03.4 / A01: 本地摘录与笔记 —— 统一走 MXStore（损坏绝不覆盖） ---------- */
 
-/* ---------------- N22/N23: 人物卡研读任务 ---------------- */
+/* ---------------- N22/N23 + R07—R10: 人物卡研读任务 ----------------
+   F04 修复：任务改为持久集合（mx_tasks）+ 活动指针（mx_active_task 只存 taskId），
+   由 lib/mx-tasks.js 统一读写。进入已完成任务不再把状态打回 reading、不再丢 noteId。 */
 var ACTIVE_TASK_KEY = "mx_active_task";
+function tasksApi(){ return (typeof window !== "undefined" && window.MXTasks) ? window.MXTasks : null; }
 function readActiveTask(){
-  try{
-    var t = JSON.parse(localStorage.getItem(ACTIVE_TASK_KEY) || "null");
-    return (t && t.articleId) ? t : null;
-  }catch(e){ return null; }
+  var T = tasksApi();
+  if(!T) return null;
+  var a = T.active();
+  return (a && a.ok && a.task && a.task.articleId) ? a.task : null;
 }
 function writeActiveTask(t){
-  try{
-    if(t) localStorage.setItem(ACTIVE_TASK_KEY, JSON.stringify(t));
-    else localStorage.removeItem(ACTIVE_TASK_KEY);
-    return true;
-  }catch(e){ return false; }
+  var T = tasksApi();
+  if(!T) return false;
+  if(!t) return !!T.clearActive().ok;
+  if(t.taskId) return !!T.setActive(t.taskId).ok;
+  var e = T.ensure(t);
+  return e.ok ? !!T.setActive(e.task.taskId).ok : false;
+}
+/* 选任务：先看活动指针，再看本篇（可按段落锚点）最近的任务。
+   共用同一篇文章的两张卡不会再互相串任务。 */
+function pickTaskFor(a, anchorPara){
+  var T = tasksApi();
+  if(!T) return readActiveTask();
+  var act = T.active();
+  var t = (act && act.ok) ? act.task : null;
+  if(t && t.articleId === a.id && (!anchorPara || !t.paragraphId || t.paragraphId === anchorPara)) return t;
+  var list = T.forArticle(a.id, anchorPara || null);
+  if(list && list.ok && list.list && list.list.length) return list.list[0];
+  return null;
 }
 function taskStateText(s){
   return s === "completed" ? "已完成" : (s === "reading" ? "进行中" : "待完成");
 }
 function attachTaskBar(view, a, anchorPara){
-  var t = readActiveTask();
+  var t = pickTaskFor(a, anchorPara);
   if(!t || t.articleId !== a.id) return;
   if(document.getElementById("taskBar")) return;
   var bar = document.createElement("div");
@@ -2305,11 +2393,21 @@ function attachTaskBar(view, a, anchorPara){
         taskId: t.taskId || null, resultId: t.resultId || null });
     }
     if(!rec){ hint.textContent = "保存失败，状态未改变"; hint.className = "tbHint warn"; return; }
-    t.state = "completed"; t.noteId = rec.id; t.completedAt = Date.now(); t.updatedAt = Date.now();
-    writeActiveTask(t);
-    st.textContent = "已完成";
-    hint.textContent = "已保存，可在书房找回";
-    hint.className = "tbHint ok";
+    /* R09: 笔记与任务分别验证。笔记写成功但任务状态没落库时必须如实说"只保存了笔记",
+       不能像旧实现那样无条件显示"已完成"。 */
+    var T = tasksApi();
+    var done = T ? T.complete(t.taskId, rec.id) : { ok: false, error: "任务模块未加载" };
+    if(done && done.ok){
+      t.state = "completed"; t.noteId = rec.id; t.completedAt = done.task ? done.task.completedAt : Date.now();
+      st.textContent = "已完成";
+      hint.textContent = "已保存，可在书房找回";
+      hint.className = "tbHint ok";
+    }else{
+      st.textContent = taskStateText(t.state);
+      hint.textContent = "笔记已保存，但任务状态未写回本地（" + ((done && done.error) || "存储不可用") + "）。刷新后可重试。";
+      hint.className = "tbHint warn";
+      toast("笔记已保存；任务进度未能记录，请在书房确认笔记是否在列表里。");
+    }
   });
 }
 

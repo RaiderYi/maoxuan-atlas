@@ -1,6 +1,6 @@
 // WP05 真实调用验收: 本地开发环境, GLM (bigmodel.cn) 真实 key + 真实额度
 // 运行: node api/real-call-check.js   (key 从 D:/工作/maoxuan_viz/data/.key 读取, 不入仓)
-import { loadProviderConfig, callModel } from './_lib.mjs';
+import { loadProviderConfig, callModel } from '../site/api/_lib.mjs';
 import fs from 'node:fs';
 
 const KEY = fs.readFileSync('D:/工作/maoxuan_viz/data/.key', 'utf8').trim();

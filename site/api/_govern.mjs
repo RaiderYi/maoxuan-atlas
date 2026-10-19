@@ -218,8 +218,13 @@ export async function recordUsage(entry, { dayKey } = {}) {
       }
       const hk = `${LEDGER_KEY}:${day}`;
       await kvCmd(['HINCRBY', hk, 'calls', String(calls)]);
+      // R25: 部分已知的请求既记金额, 也单独记未回 usage 的调用次数
+      const unknownCalls = Number(entry.unknownCalls ?? 0);
       if (cost === null) {
         await kvCmd(['HINCRBY', hk, 'unknownCostCalls', String(calls)]);
+      } else if (unknownCalls > 0) {
+        await kvCmd(['HINCRBY', hk, 'unknownCostCalls', String(unknownCalls)]);
+        await kvCmd(['HINCRBYFLOAT', hk, 'cost', String(cost)]);
       } else {
         // 金额在 hash 字段上累加, 必须用 HINCRBYFLOAT (INCRBYFLOAT 是字符串键命令)
         await kvCmd(['HINCRBYFLOAT', hk, 'cost', String(cost)]);
@@ -371,12 +376,90 @@ export function costOfUsage(usage) {
    在额度已经放行之后, 不能再称为硬上限。
    这里按【字符数 = token 上界】(中文 1 字 ≥ 1 token 不成立, 但 1 字 ≤ 1 token 保守成立)
    与输出上限计算单次上界, 再乘尝试次数, 向上取整到 0.000001 元。 */
-export function estimateReserveCny({ inputChars = 0, maxOutputTokens = 4096, attempts = 1 } = {}) {
+/* R26: 预留上界的输入换算不再假装"1 字 = 1 token 可证明"。
+   - charToTokenFactor: 保守系数 (默认 1.2, 可用 ASK_TOKEN_CHAR_FACTOR 覆盖), 中文按字 ≈ 0.6~1 token,
+     取 >1 的系数是为了让上界站在安全侧 —— 这是工程上界, 不是数学证明, 文档里必须写成"预留上界估算"。
+   - messageOverheadChars: 每次尝试的 system prompt / 反馈 / JSON 结构开销。
+   - outputCap: 必须与实际调用 callChat 的 maxTokens 一致 (由调用方传入), 否则预留与真实花费脱钩。 */
+export const DEFAULT_MESSAGE_OVERHEAD_CHARS = 1400;
+
+export function estimateReserveCny({ inputChars = 0, maxOutputTokens = 4096, attempts = 1,
+  charToTokenFactor = 1.2, messageOverheadChars = DEFAULT_MESSAGE_OVERHEAD_CHARS } = {}) {
   const inTok = Math.max(0, Number(inputChars) || 0);
   const outTok = Math.max(0, Number(maxOutputTokens) || 0);
   const n = Math.max(1, Number(attempts) || 1);
-  const perAttempt = (inTok * PRICE_CNY_PER_M.in_miss + outTok * PRICE_CNY_PER_M.out) / 1e6;
+  const f = Math.max(1, Number(charToTokenFactor) || 1.2);
+  const overhead = Math.max(0, Number(messageOverheadChars) || 0);
+  const promptTok = Math.ceil((inTok + overhead) * f);          // 每次尝试都要重发完整消息
+  const perAttempt = (promptTok * PRICE_CNY_PER_M.in_miss + outTok * PRICE_CNY_PER_M.out) / 1e6;
   return Math.ceil(perAttempt * n * 1e6) / 1e6;
+}
+
+/* ---------- R25: 逐次尝试的费用汇总 ----------
+   复审反例的根因是"用最后一次响应代表整个请求":
+     · 成功路径以累计 token > 0 判定整个请求 costKnown
+     · 失败路径把最终 402/429 当作整个请求 definitelyFree
+   正确语义: 每一次上游调用各自判定 (已知金额 / 未知 / 明确未计费), 再由逐次结果汇总终态。
+   attempt 结构: { cost?:number|null, promptTokens?, completionTokens?, cacheHitTokens?, status?, code? } */
+export function attemptCostCny(a) {
+  if (!a) return null;
+  if (typeof a.cost === 'number' && Number.isFinite(a.cost)) return a.cost;
+  const pt = Number(a.promptTokens ?? 0);
+  const ct = Number(a.completionTokens ?? 0);
+  if (!pt && !ct) return null;                       // 上游没回 usage → 未知, 不是 0
+  return costOfUsage({
+    prompt_tokens: pt,
+    completion_tokens: ct,
+    prompt_cache_hit_tokens: Number(a.cacheHitTokens ?? 0),
+    prompt_cache_miss_tokens: a.cacheMissTokens != null
+      ? Number(a.cacheMissTokens)
+      : Math.max(0, pt - Number(a.cacheHitTokens ?? 0)),
+  }).cny;
+}
+
+export function classifyAttempt(a) {
+  const status = Number(a?.status ?? 0);
+  const code = String(a?.code ?? '');
+  // 上游明确拒绝 (余额不足/限流) → 该次调用未产生生成费用
+  if (status === 402 || status === 429 || code === 'insufficient_quota') return 'refused';
+  const cost = attemptCostCny(a);
+  if (typeof cost === 'number') return 'known';
+  return 'unknown';
+}
+
+/**
+ * 汇总一次请求内的所有尝试。
+ * @returns {{calls:number, knownCalls:number, unknownCalls:number, refusedCalls:number,
+ *            knownCost:number, fullyKnown:boolean, holdForUnknown:number,
+ *            targetCny:number|null, settlement:string, attempts:Array<{i:number,kind:string,cost:number|null}>}}
+ */
+export function summarizeAttempts(attemptsLog, { reserveCny = 0, maxAttempts = 1 } = {}) {
+  const log = Array.isArray(attemptsLog) ? attemptsLog : [];
+  const reserve = Math.max(0, Number(reserveCny) || 0);
+  const slots = Math.max(1, Number(maxAttempts) || 1);
+  const attempts = log.map((a, i) => {
+    const kind = classifyAttempt(a);
+    return { i, kind, cost: kind === 'known' ? attemptCostCny(a) : (kind === 'refused' ? 0 : null) };
+  });
+  const known = attempts.filter(x => x.kind === 'known');
+  const unknown = attempts.filter(x => x.kind === 'unknown');
+  const refused = attempts.filter(x => x.kind === 'refused');
+  const calls = attempts.length;
+  const knownCost = Math.round(known.reduce((s, x) => s + (x.cost || 0), 0) * 1e6) / 1e6;
+  // 未知尝试继续占用其份额的预留 (按最大尝试次数均摊, 不做乐观估计)
+  const holdForUnknown = unknown.length ? Math.round(reserve / slots * unknown.length * 1e6) / 1e6 : 0;
+  let settlement;
+  let targetCny = null;
+  if (calls === 0) settlement = 'released';
+  else if (known.length === 0 && unknown.length === 0) { settlement = 'released'; targetCny = 0; }  // 全部被上游拒绝
+  else if (unknown.length === 0) { settlement = 'settled_actual'; targetCny = knownCost; }
+  else if (known.length > 0) { settlement = 'partial_known_hold'; targetCny = Math.max(knownCost, Math.min(reserve, knownCost + holdForUnknown)); }
+  else settlement = 'held';
+  return {
+    calls, knownCalls: known.length, unknownCalls: unknown.length, refusedCalls: refused.length,
+    knownCost, fullyKnown: calls > 0 && unknown.length === 0,
+    holdForUnknown, targetCny, settlement, attempts,
+  };
 }
 
 export async function makeCnyBudget() {
@@ -430,30 +513,40 @@ export async function makeCnyBudget() {
       instanceSpent += amt;
       return true;
     },
-    /** 用实际费用替换预留 (差额可为负)。opts.idemKey 提供时同一 (request,attempt) 只结算一次 */
+    /** 用实际费用替换预留 (差额可为负)。opts.idemKey 提供时同一 (request,attempt) 只结算一次
+     *  R26: 终态互斥 — 守卫键不再带 mode, settle/release/hold 共享同一把锁,
+     *       第一次终态写入成功后其余终态一律去重 (旧实现 mode 进键, 同一请求可被 settle 又 release)。
+     *  R26: 可恢复 — 守卫写入成功但金额命令失败时, 删除守卫并返回 retryable=true,
+     *       否则这笔钱永远停在预留状态且重试被去重吞掉。 */
     async settle(reserved, actual, opts = {}) {
       const delta = (Number(actual) || 0) - (Number(reserved) || 0);
       const d = Math.round(delta * 1e6) / 1e6;
       const mode = opts.mode || 'settle';
+      const guard = opts.idemKey ? `${KEY_NS}budget:idem:${opts.idemKey}` : null;
       if (kv && opts.idemKey) {
         try {
-          const guard = `${KEY_NS}budget:idem:${opts.idemKey}:${mode}`;
           const ok = await kvCmd(['SET', guard, '1', 'NX', 'EX', '86400']);
-          if (ok && ok.result === null) return { ok: true, deduped: true, delta: 0, mode };
+          if (ok && ok.result === null) return { ok: true, deduped: true, delta: 0, mode, terminal: true };
         } catch (e) {
           // 去重守卫失败 → 不做金额变更 (宁可不结算, 也不重复结算)
-          return { ok: false, delta: 0, error: String(e && e.message), mode };
+          return { ok: false, delta: 0, error: String(e && e.message), mode, retryable: true };
         }
       }
       if (kv) {
-        try { await kvCmd(['INCRBYFLOAT', key, String(d)]); return { ok: true, delta: d, mode }; }
-        catch (e) { return { ok: false, delta: d, error: String(e && e.message), mode }; }
+        try {
+          await kvCmd(['INCRBYFLOAT', key, String(d)]);
+          return { ok: true, delta: d, mode, terminal: true };
+        } catch (e) {
+          // 守卫已置位但金额没落账 → 释放守卫, 允许下一次重试把钱记上
+          if (guard) { try { await kvCmd(['DEL', guard]); } catch { /* 释放失败不掩盖主错误 */ } }
+          return { ok: false, delta: d, error: String(e && e.message), mode, retryable: true };
+        }
       }
       instanceSpent = Math.max(0, instanceSpent + d);
-      return { ok: true, delta: d, mode };
+      return { ok: true, delta: d, mode, terminal: true };
     },
     /** FIX02: 上游可能已计费但用量未知 → 保留预留不结算 (不按零元已知费用处理) */
-    async hold(reason) { return { ok: true, held: true, delta: 0, reason: reason || 'usage_unknown' }; },
+    async hold(reason) { return { ok: true, held: true, delta: 0, reason: reason || 'usage_unknown', terminal: false }; },
     async release(reserved, opts = {}) { return api.settle(reserved, 0, { ...opts, mode: 'release' }); },
     /** FIX04: 上游明确余额不足 → 把本周期额度标记为已耗尽 (旧实现缺此方法, 命中即 TypeError) */
     async markExhausted() {

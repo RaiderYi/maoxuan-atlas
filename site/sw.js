@@ -1,5 +1,10 @@
-/* MaoXuan Viz sw.js v9: 修 cleanUrls 下 HTML 被判成 data(缓存优先) 导致旧页面常驻 */
-var CACHE = "mx-v9";
+/* MaoXuan Viz sw.js v10
+ * v9: 修 cleanUrls 下 HTML 被判成 data(缓存优先) 导致旧页面常驻
+ * v10 (R05): 正文改由 /api/text 提供 —— 浏览器的缓存策略随之调整：
+ *   · 正文响应仍走"缓存优先 + 后台刷新"，断网可继续读已读篇目；
+ *   · /api/text?check=1 这类运维自检不进缓存，避免把"当时没配密钥"的结果缓存一年；
+ *   · CACHE 版本号提升，旧 worker 缓存整体作废，用户不需要手动清缓存。 */
+var CACHE = "mx-v10";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",
@@ -74,6 +79,9 @@ self.addEventListener("fetch", function(e){
     return;
   }
 
+  /* 运维自检接口不进缓存 */
+  if (url.pathname === "/api/text" && url.searchParams.get("check")) return;
+
   /* same-origin texts/data: cache-first, revalidate in background (rarely change) */
   if(url.origin === location.origin){
     e.respondWith(
@@ -82,7 +90,10 @@ self.addEventListener("fetch", function(e){
           var net = fetch(req).then(function(res){
             if(res && res.ok){
               c.put(req, res.clone());
-              if(url.pathname.indexOf("/data/texts/") !== -1) trimCache(CACHE, MAX_TILES + SHELL.length + MAX_TEXTS);
+              /* R05: 正文现在来自 /api/text（旧地址 /data/texts/ 会被重写），两处都计入文本缓存配额 */
+              if(url.pathname.indexOf("/data/texts/") !== -1 || url.pathname === "/api/text") {
+                trimCache(CACHE, MAX_TILES + SHELL.length + MAX_TEXTS);
+              }
             }
             return res;
           }).catch(function(){

@@ -97,6 +97,7 @@ footer{font-size:11.5px;color:var(--ink2);margin-top:26px;text-align:center;line
 <div class="toast" id="toast"></div>
 
 <script src="lib/mx-store.js"></script>
+<script src="lib/mx-tasks.js"></script>
 <script>
 (function(){
 "use strict";
@@ -285,18 +286,7 @@ function cardBlock(themeId, primary){
   read.textContent = "读这一段 ·《" + c.readingTask.articleTitle + "》";
   read.onclick = function(){
     track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId });
-    /* N22/N23: 把任务交给阅读页（只存本机，不写进 URL，不夹带笔记正文） */
-    try{
-      localStorage.setItem("mx_active_task", JSON.stringify({
-        resultId: (state.result && state.result.resultId) || null,
-        taskId: c.cardId + "-v1",
-        cardId: c.cardId, personName: c.personName, themeTitle: c.themeTitle,
-        articleId: c.readingTask.articleId,
-        paragraphId: c.readingTask.paragraphId || null,
-        prompt: c.readingTask.prompt || "",
-        state: "reading", startedAt: Date.now(), updatedAt: Date.now()
-      }));
-    }catch(e){}
+    startReadingTask(c);
   };
   var save = document.createElement("button"); save.className = "btn ghost"; save.textContent = "保存这张卡";
   save.onclick = function(){ saveCard(themeId); };
@@ -375,6 +365,8 @@ function renderAllCards(){
     r.href = "index.html#/art/" + c.readingTask.articleId +
       (c.readingTask.paragraphId ? "/" + c.readingTask.paragraphId : "");
     r.textContent = "读《" + c.readingTask.articleTitle + "》";
+    /* R08: 画廊入口也建立/恢复真实任务（不需要答题即可开始）；已完成的不会被重置 */
+    r.onclick = function(){ track("gallery_read_open", { card: c.cardId }); startReadingTask(c); };
     a.appendChild(r);
     m.appendChild(a);
     box.appendChild(m);
@@ -385,11 +377,55 @@ function renderAllCards(){
   back.appendChild(b); box.appendChild(back);
 }
 
+/* ---------------- R07/R08/R10: 研读任务的建立与恢复 ----------------
+   · 同一张卡（同一 resultId）重复点击不会新增任务
+   · 已完成的任务再次进入不会被重置成 reading（F04 的直接修复）
+   · MXTasks 未加载（旧缓存页面）时退化为只写指针, 并提示刷新 */
+function startReadingTask(c){
+  var spec = {
+    resultId: (state.result && state.result.resultId) || null,
+    cardId: c.cardId, personName: c.personName, themeTitle: c.themeTitle,
+    articleId: c.readingTask.articleId,
+    paragraphId: c.readingTask.paragraphId || null,
+    prompt: c.readingTask.prompt || ""
+  };
+  var T = window.MXTasks;
+  if(!T){
+    try{ localStorage.setItem("mx_active_task", JSON.stringify(spec)); }catch(e){}
+    toast("旧版缓存页面：请刷新一次以启用任务进度记录");
+    return;
+  }
+  var e = T.ensure(spec);
+  if(!e.ok){ toast("无法建立研读任务（" + (e.error || e.status) + "），本次按普通阅读打开"); return; }
+  var a = T.setActive(e.task.taskId);
+  if(!a.ok) toast("任务已建立，但活动标记未写入存储：" + (a.error || "存储不可用"));
+  if(e.task.state === "completed") toast("这条任务已完成过，本次是回看；要再练一次请在书房选择重新练习");
+}
+
 /* ---------------- 保存（E09：走统一存储，失败明示） ---------------- */
 function saveCard(themeId){
   if(!window.MXStore){ toast("本地存储不可用，无法保存"); return; }
   var c = QUIZ.cards[themeId];
+  var resultId = (state.result && state.result.resultId) || null;
+  /* R10: 同一结果 + 同一张卡重复保存 → 更新已有卡片, 不新增副本 */
+  var existing = null;
+  var cur = MXStore.read(CARDS_KEY, "array");
+  if(cur.status === "ok"){
+    cur.value.forEach(function(x){
+      if(x && x.kind === "persona" && x.cardId === c.cardId && (x.resultId || null) === resultId) existing = x;
+    });
+  }
+  var taskState = "todo";
+  if(window.MXTasks){
+    var t = window.MXTasks.ensure({
+      resultId: resultId, cardId: c.cardId, personName: c.personName, themeTitle: c.themeTitle,
+      articleId: c.readingTask.articleId, paragraphId: c.readingTask.paragraphId || null,
+      prompt: c.readingTask.prompt || ""
+    });
+    if(t.ok && t.task) taskState = t.task.state || "todo";
+  }
   var rec = {
+    resultId: resultId,
     id: "pc" + Date.now() + "_" + themeId,
     kind: "persona",
     cardId: c.cardId,
@@ -402,11 +438,26 @@ function saveCard(themeId){
     createdAt: Date.now(), updatedAt: Date.now(),
     readingTask: { articleId: c.readingTask.articleId, articleTitle: c.readingTask.articleTitle,
                    paragraphId: c.readingTask.paragraphId, prompt: c.readingTask.prompt },
-    readingTaskState: "todo",
+    readingTaskState: taskState,
   };
-  var out = MXStore.update(CARDS_KEY, "array", function(list){ return [rec].concat(list); });
+  var out = MXStore.update(CARDS_KEY, "array", function(list){
+    if(existing){
+      var next = list.map(function(x){
+        if(x && x.id === existing.id){
+          var merged = Object.assign({}, x, { updatedAt: Date.now(), topCardIds: rec.topCardIds,
+            explanationOptionIds: rec.explanationOptionIds, readingTaskState: rec.readingTaskState,
+            readingTask: rec.readingTask });
+          rec.id = x.id;      /* 复用原 id, 避免同一张卡出现两条记录 */
+          return merged;
+        }
+        return x;
+      });
+      return next;
+    }
+    return [rec].concat(list);
+  });
   if(out.ok){
-    toast("已保存到书房 · 人物卡");
+    toast(existing ? "这张卡已更新（同一结果不新增副本）" : "已保存到书房 · 人物卡");
     track("quiz_card_saved", { card: themeId, qv: state.result.quizVersion });
   } else if(out.status === "corrupt"){
     toast("保存失败：本地人物卡数据损坏，已保留原值");

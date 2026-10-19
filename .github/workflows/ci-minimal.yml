@@ -60,17 +60,14 @@ jobs:
       - name: Data-safety regression (A01-A06)
         run: node tests/regression.mjs
 
-      # 6. A08/B06: 既有 AI 管线离线断言
-      - name: AI pipeline offline assertions
-        run: node site/api/test-wp07-offline.mjs
+      # 6. 全部回归套件（R44: 测试脚本已移出 site/api/，不再变成公开函数）
+      #    含: AI 离线断言 / B03 限流 / QA02 CNY 治理 / R25 混合尝试费用 / R01 正文服务 / 退役端点契约
+      - name: All regression suites
+        run: node tests/run-all.mjs
 
-      # 6b. B03: 限流分级 / 被限流不消耗预算 / KV 命名空间
-      - name: Rate-limit and budget-leak assertions (B03)
-        run: node site/api/test-b03.mjs
-
-      # 6c. QA02: CNY 费用治理反例（mock 供应商 + 内存 KV）
-      - name: CNY governance assertions (QA02)
-        run: node site/api/test-cny.mjs
+      # 6b. R02/R03: 发布资产门槛 —— 正文没进部署包时构建必须失败
+      - name: Deploy asset gate (R02/R03)
+        run: node pipeline/verify-deploy-assets.mjs
 
       # 7. A09: 跨平台冻结校验（LF 归一后 hash）
       - uses: actions/setup-python@v5

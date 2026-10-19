@@ -186,6 +186,8 @@ export async function askPipeline(question, opts, log) {
   if (evidence.length === 0) {
     ret.status = 'insufficient'; ret.answer = ''; ret.citations = [];
     ret.model = null; ret.ms = Date.now() - t0;
+    ret.attemptsLog = [];            // R25: 未发起任何模型调用, 供逐次费用汇总判定为"无调用"
+    ret.attempts = 0;
     return ret;
   }
 
@@ -228,10 +230,13 @@ export async function askPipeline(question, opts, log) {
     }
     try {
       r = await callChat(provider, messages,
-        { timeoutMs: opts.timeoutMs ?? provider.timeoutMs, maxRetries: 0 });
+        { timeoutMs: opts.timeoutMs ?? provider.timeoutMs, maxRetries: 0,
+          maxTokens: opts.maxTokens ?? 4096 });
     } catch (e) {
       // P0-r3: 失败调用也要随异常传出 (外层据此记账失败的上游调用)
-      ret.attemptsLog.push({ attempt, ms: Date.now() - tCall, error: String(e.message ?? e), code: e.code ?? null, cost: null });
+      // R25: 带上 status —— 402/429 才可判定为"上游明确拒绝、未产生生成费用"
+      ret.attemptsLog.push({ attempt, ms: Date.now() - tCall, error: String(e.message ?? e),
+        code: e.code ?? null, status: e.status ?? null, cost: null });
       e.attemptsLog = ret.attemptsLog;
       e.question = question;
       throw e;
