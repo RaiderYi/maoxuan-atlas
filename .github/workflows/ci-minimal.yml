@@ -64,6 +64,10 @@ jobs:
       - name: AI pipeline offline assertions
         run: node api/test-wp07-offline.mjs
 
+      # 6b. B03: 限流分级 / 被限流不消耗预算 / KV 命名空间
+      - name: Rate-limit and budget-leak assertions (B03)
+        run: node api/test-b03.js
+
       # 7. A09: 跨平台冻结校验（LF 归一后 hash）
       - uses: actions/setup-python@v5
         with:
