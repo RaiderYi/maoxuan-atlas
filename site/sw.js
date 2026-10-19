@@ -1,5 +1,5 @@
-/* MaoXuan Viz sw.js v8: P03 五项导航/专题/书房 — bump cache to evict v6 shell */
-var CACHE = "mx-v8";
+/* MaoXuan Viz sw.js v9: 修 cleanUrls 下 HTML 被判成 data(缓存优先) 导致旧页面常驻 */
+var CACHE = "mx-v9";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",
@@ -55,7 +55,11 @@ self.addEventListener("fetch", function(e){
 
   /* P03/T48: app shell (HTML/JS/CSS/manifest) → network-first.
      部署后首次访问即拿到新版本；断网时回落到缓存（离线阅读仍可用）。 */
-  var isShell = /\.(html|js|css|webmanifest)$/i.test(url.pathname) || url.pathname === "/" || url.pathname.slice(-1) === "/";
+  /* v9 修复: Vercel cleanUrls 下 /research 这类无扩展 URL 之前落到 data 分支(缓存优先),
+     部署后仍返回旧 HTML(实测旧版「保存为研究卡」按钮因此一直不可见)。
+     navigation request 一律按 shell 处理 → network-first。 */
+  var isNav = req.mode === "navigate" || req.destination === "document";
+  var isShell = isNav || /\.(html|js|css|webmanifest)$/i.test(url.pathname) || url.pathname === "/" || url.pathname.slice(-1) === "/";
   if(url.origin === location.origin && isShell){
     e.respondWith(
       caches.open(CACHE).then(function(c){
