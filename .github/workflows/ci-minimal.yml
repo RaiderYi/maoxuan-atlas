@@ -69,6 +69,10 @@ jobs:
       - name: Deploy asset gate (R02/R03)
         run: node pipeline/verify-deploy-assets.mjs
 
+      # 6c. R13: 锚点映射必须能重建且无失配（编号不再被当成"文本一致"的证据）
+      - name: Anchor map check (R13)
+        run: node pipeline/build-anchor-map.mjs --check
+
       # 7. A09: 跨平台冻结校验（LF 归一后 hash）
       - uses: actions/setup-python@v5
         with:

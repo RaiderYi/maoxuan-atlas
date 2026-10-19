@@ -250,9 +250,11 @@
    "readingTask": {
     "articleId": "v1n07",
     "articleTitle": "反对本本主义",
-    "paragraphId": "pa-v1n07-006",
+    "paragraphId": "pa-v1n07-003",
+    "quoteVerified": true,
+    "anchorVerifiedBy": "anchor-map@1",
     "prompt": "用一句话写下：你最近一次「没调查就下判断」是什么事？现在你打算先去查什么。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_map_verified",
     "anchorGranularity": "line",
     "quote": "你对于某个问题没有调查，就停止你对于某个问题的发言权。"
    },
@@ -268,9 +270,11 @@
    "readingTask": {
     "articleId": "v4n59",
     "articleTitle": "党委会的工作方法",
-    "paragraphId": "pa-v4n59-044",
+    "paragraphId": "pa-v4n59-042",
+    "quoteVerified": true,
+    "anchorVerifiedBy": "anchor-map@1",
     "prompt": "这次协作里，哪两件事在你这里抢时间？用一句话写下你会怎么「弹钢琴」——谁主谁次。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_map_verified",
     "anchorGranularity": "line",
     "quote": "五、学会“弹钢琴”。弹钢琴要十个指头都动作，不能有的动，有的不动。"
    },
@@ -286,9 +290,11 @@
    "readingTask": {
     "articleId": "v1n11",
     "articleTitle": "关心群众生活，注意工作方法",
-    "paragraphId": "pa-v1n11-049",
+    "paragraphId": null,
+    "quoteVerified": false,
+    "anchorNote": "本卡引文在当前正文版本(v1n11)中未找到, 已取消段落锚点; 需要编辑核对引文出处后恢复",
     "prompt": "你正在服务的那件小事，用一句话写下：对方最在意的到底是什么。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_unverified",
     "anchorGranularity": "line",
     "quote": "我们应当深刻地注意群众生活的问题，从土地、劳动问题，到柴米油盐问题。"
    },
@@ -304,9 +310,11 @@
    "readingTask": {
     "articleId": "v3n02",
     "articleTitle": "改造我们的学习",
-    "paragraphId": "pa-v3n02-142",
+    "paragraphId": "pa-v3n02-140",
+    "quoteVerified": true,
+    "anchorVerifiedBy": "anchor-map@1",
     "prompt": "把你现在最确信的一个判断拆开：哪部分是事实，哪部分是推断？各写一句。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_map_verified",
     "anchorGranularity": "line",
     "quote": "“实事”就是客观存在着的一切事物，“是”就是客观事物的内部联系。"
    },
@@ -322,9 +330,11 @@
    "readingTask": {
     "articleId": "v1n17",
     "articleTitle": "实践论",
-    "paragraphId": "pa-v1n17-133",
+    "paragraphId": "pa-v1n17-131",
+    "quoteVerified": true,
+    "anchorVerifiedBy": "anchor-map@1",
     "prompt": "你最近想验证的一个想法，最小可行的试验是什么？写一句就够了。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_map_verified",
     "anchorGranularity": "line",
     "quote": "你要有知识，你就得参加变革现实的实践。你要知道梨子的滋味，你就得变革梨子，亲口吃"
    },
@@ -340,9 +350,11 @@
    "readingTask": {
     "articleId": "v4n59",
     "articleTitle": "党委会的工作方法",
-    "paragraphId": "pa-v4n59-017",
+    "paragraphId": "pa-v4n59-015",
+    "quoteVerified": true,
+    "anchorVerifiedBy": "anchor-map@1",
     "prompt": "有一件你一直没摆到桌面上的问题：摆出来会怎样，不摆又会怎样？各写一句。",
-    "reviewStatus": "paragraph_anchor_verified",
+    "reviewStatus": "paragraph_anchor_map_verified",
     "anchorGranularity": "line",
     "quote": "要把问题摆到桌面上来。不仅“班长”要这样做，委员也要这样做。"
    },

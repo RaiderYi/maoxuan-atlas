@@ -1904,15 +1904,56 @@ function _highlightPara(view, elP){
   try{ elP.scrollIntoView({ block: "center", behavior: "smooth" }); }
   catch(e){ view.scrollTo({ top: elP.offsetTop - 70, behavior: "smooth" }); }
 }
-/* P03.2: 旧切片 id pv1n03-033 ↔ 新锚点 pa-v1n03-033（编号一致，直接换算） */
+/* P03.2: 旧切片 id pv1n03-033 ↔ 新锚点 pa-v1n03-033（编号换算只是候选, 不再直接当成事实）
+   R13: 真正的依据是 data/anchor-map.json —— 它记录了每个锚点当前指向的正文指纹；
+   旧编号若已被映射修正，按 correctedAnchor 走并明确提示，而不是静默跳到错误段落。 */
+var __anchorMapCache = null, __anchorMapLoading = false;
+function loadAnchorMap(cb){
+  if(__anchorMapCache){ cb(__anchorMapCache); return; }
+  if(__anchorMapLoading) return;
+  __anchorMapLoading = true;
+  fetch("data/anchor-map.json").then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ __anchorMapCache = j && j.entries ? j : { entries: [] }; try{ cb(__anchorMapCache); }catch(e){} })
+    .catch(function(){ __anchorMapCache = { entries: [] }; });
+}
+function anchorMapEntry(paraId){
+  if(!__anchorMapCache) return null;
+  if(__anchorMapCache.entries){
+    for(var i=0;i<__anchorMapCache.entries.length;i++){ if(__anchorMapCache.entries[i].anchor === paraId) return __anchorMapCache.entries[i]; }
+  }
+  /* R13: 旧编号别名（链接/书签可能还在用） */
+  if(__anchorMapCache.aliases){
+    for(var j=0;j<__anchorMapCache.aliases.length;j++){
+      if(__anchorMapCache.aliases[j].anchor === paraId){
+        return { anchor: paraId, correctedAnchor: __anchorMapCache.aliases[j].correctedAnchor, status: 'alias' };
+      }
+    }
+  }
+  return null;
+}
 function _paIdOf(paraId){
   var m = /^p(v\d+n\d+)-(\d+)$/.exec(paraId);
   if(!m) return null;
   return "pa-" + m[1] + "-" + ("000" + parseInt(m[2], 10)).slice(-3);
 }
 function scrollToPara(view, paraId){
+  /* 映射未加载时先加载一次再重试, 避免按旧编号静默跳到错误段落 */
+  if(!__anchorMapCache){
+    var vb = document.getElementById("view-read");
+    loadAnchorMap(function(){ if(vb) scrollToPara(vb, paraId); });
+    if(!__anchorMapCache) return null;
+  }
   var targetId = /^pa-v\d+n\d+-\d+$/.test(paraId) ? paraId : _paIdOf(paraId);
   if(!targetId){ toast("段落链接格式无法识别"); return false; }
+  var entry = anchorMapEntry(paraId);
+  if(entry && entry.correctedAnchor && entry.correctedAnchor !== targetId){
+    var elFixed = document.getElementById(entry.correctedAnchor);
+    if(elFixed){
+      toast("锚点已按映射校正：" + paraId + " → " + entry.correctedAnchor);
+      _highlightPara(view, elFixed);
+      return true;
+    }
+  }
   var el = document.getElementById(targetId);
   if(el){ _highlightPara(view, el); return true; }
   /* 兜底：按样本文本唯一匹配（不猜选） */

@@ -42,6 +42,7 @@ const REQUIRED = [
   'index.html', 'app.js', 'quiz.html', 'research.html', 'sw.js', 'vercel.json',
   'data/data.js', 'data/portraits.json', 'data/quiz.json', 'data/sample-topic.json',
   'data/topic-jgs.json', 'data/texts.pack.json', 'data/content-manifest.json',
+  'data/anchor-map.json',
   'lib/mx-store.js',
   'api/text.mjs', 'api/ask.mjs', 'api/version.mjs', 'api/status.mjs',
 ];
@@ -130,6 +131,18 @@ if (!key) {
   if (fail) bad(`${fail} 篇解密失败或明文哈希不符（示例 ${sample}）—— 密钥与内容包不匹配`);
   else ok(`${Object.keys(pack.files).length} 篇全部解密成功且明文哈希一致`);
 }
+
+/* ---------- 6. 肖像与 2D 资源 ---------- */
+console.log('[5b/7] 锚点映射');
+try {
+  const am = readJson(path.join(DATA, 'anchor-map.json'));
+  if (am.mismatches && am.mismatches.length) {
+    bad(`锚点映射有 ${am.mismatches.length} 处失配（人物卡可能跳到错误段落）: ` +
+      am.mismatches.slice(0, 3).map(m => m.articleId + ' ' + m.anchor).join('、'));
+  } else ok('锚点映射无失配（' + (am.entries || []).length + ' 条卡片锚点）');
+  const unverified = (am.entries || []).filter(e => e.status === 'quote-not-in-text').length;
+  if (unverified) warn(`${unverified} 条卡片引文在当前正文中找不到（已取消锚点，需编辑核对）`);
+} catch (e) { warn('anchor-map.json 无法读取: ' + e.message); }
 
 /* ---------- 6. 肖像与 2D 资源 ---------- */
 console.log('[6/7] 人物肖像资源');

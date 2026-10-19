@@ -7,6 +7,7 @@
     "test": "node tests/run-all.mjs",
     "verify:assets": "node pipeline/verify-deploy-assets.mjs",
     "content:build": "node pipeline/build-content-pack.mjs",
+    "content:anchors": "node pipeline/build-anchor-map.mjs",
     "content:keygen": "node pipeline/build-content-pack.mjs --gen-key",
     "probe": "node pipeline/probe-production.mjs"
   }

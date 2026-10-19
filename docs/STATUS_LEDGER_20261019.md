@@ -52,9 +52,9 @@
 
 | ID | 状态 | 说明 |
 |---|---|---|
-| R13 统一锚点映射 | OPEN | pa- 行锚点 与 pv… 段片 ID 仍是两套；当前兼容函数按序号换算，未做版本化映射 |
-| R14 来源与内容状态 | PARTIAL | `content-manifest.json` 记录 title/vol/字数/哈希；"原文/注释/AI推断/用户观点"四态未建模 |
-| R15 六卡文字与第六图 | OPEN | 五图沿用已签收记录；刘少奇仍姓名兜底；六卡史料依据未逐条审校 |
+| R13 统一锚点映射 | DONE（7 篇范围） | `pipeline/build-anchor-map.mjs` → `site/data/anchor-map.json`：逐条记录锚点行号、字符指纹、引文校验结果与别名；前端改为按映射校正（旧编号会提示"已按映射校正"）。**实测 6 张人物卡的锚点全部错位**：mao 006→003、deng 133→131、chen 142→140、zhou 044→042、liu 017→015（前五条已按证据修正），zhu 的引文在当前正文本里找不到 → 取消锚点、`quoteVerified:false`、审核状态从 `paragraph_anchor_verified` 降为 `paragraph_anchor_unverified` |
+| R14 来源与内容状态 | PARTIAL | `content-manifest.json` 记录 title/vol/字数/哈希；`anchor-map.json` 记录引文核对结果；"原文/注释/AI推断/用户观点"四态仍未建模 |
+| R15 六卡文字与第六图 | PARTIAL | 六卡的**引文-段落对应关系**已逐条核对（见 R13）；朱德卡引文不在 v1n11 正文中，需编辑确认出处或替换引文；第六张正式肖像仍缺；主题文字审校未做 |
 | R16 优化现有专题 | OPEN | |
 | R17 两个新短专题 | OPEN | |
 | R18 编辑发布与纠错流程 | OPEN | |
