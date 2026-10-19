@@ -240,7 +240,9 @@ function cardBlock(themeId, primary){
 
   var acts = document.createElement("div"); acts.className = "acts";
   var read = document.createElement("a"); read.className = "btn"; read.style.textDecoration = "none";
-  read.href = "index.html#/art/" + c.readingTask.articleId;
+  /* N21: 带段落锚点直达；没有锚点时明示，不伪装成"直达段落" */
+  read.href = "index.html#/art/" + c.readingTask.articleId +
+    (c.readingTask.paragraphId ? "/" + c.readingTask.paragraphId : "");
   read.textContent = "读这一段 ·《" + c.readingTask.articleTitle + "》";
   read.onclick = function(){ track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId }); };
   var save = document.createElement("button"); save.className = "btn ghost"; save.textContent = "保存这张卡";
@@ -251,8 +253,11 @@ function cardBlock(themeId, primary){
   d.appendChild(acts);
 
   var src = document.createElement("div"); src.className = "src";
-  src.textContent = c.sourceNote + " 人物史料依据：" + (c.reviewStatus === "theme_pending_editorial_review" ? "待编辑审校（当前不展示未经核实的语录）" : "已审校") +
-    "；推荐段落：" + (c.readingTask.paragraphId ? c.readingTask.paragraphId : "待人工选定（先链接到整篇，不编造段落号）");
+  src.textContent = c.sourceNote +
+    " 人物史料依据：" + (/pending/.test(c.reviewStatus || "") ? "待编辑审校（当前不展示未经核实的语录）" : "已审校") +
+    "；推荐段落：" + (c.readingTask.paragraphId
+        ? c.readingTask.paragraphId + (c.readingTask.quote ? "（“" + c.readingTask.quote.slice(0, 18) + "…”）" : "")
+        : "本篇暂无可用锚点，会先打开整篇并说明原因");
   d.appendChild(src);
   return d;
 }
@@ -313,7 +318,8 @@ function renderAllCards(){
     m.appendChild(b); m.appendChild(s);
     var a = document.createElement("div"); a.className = "acts";
     var r = document.createElement("a"); r.className = "btn ghost"; r.style.textDecoration = "none";
-    r.href = "index.html#/art/" + c.readingTask.articleId;
+    r.href = "index.html#/art/" + c.readingTask.articleId +
+      (c.readingTask.paragraphId ? "/" + c.readingTask.paragraphId : "");
     r.textContent = "读《" + c.readingTask.articleTitle + "》";
     a.appendChild(r);
     m.appendChild(a);

@@ -1,163 +1,354 @@
 {
-  "quizVersion": "quiz-1.0",
-  "scoringVersion": "score-1.0",
-  "title": "你的研读搭档是谁？",
-  "subtitle": "8 个选择，发现你更习惯怎样思考和行动，领取一张人物卡与一份阅读邀请。",
-  "disclaimer": "结果是由本次选择生成的趣味阅读推荐，不是心理量表，不评价能力高低、政治立场或与历史人物的完整人格相似度。",
-  "themes": {
-    "mao":   { "maxRaw": 5, "label": "调研破题" },
-    "chen":  { "maxRaw": 5, "label": "审慎求证" },
-    "zhou":  { "maxRaw": 5, "label": "协调整合" },
-    "deng":  { "maxRaw": 5, "label": "实践试验" },
-    "liu":   { "maxRaw": 6, "label": "组织落实" },
-    "zhu":   { "maxRaw": 6, "label": "务实建设" }
+ "quizVersion": "quiz-1.0",
+ "scoringVersion": "score-1.0",
+ "title": "你的研读搭档是谁？",
+ "subtitle": "8 个选择，发现你更习惯怎样思考和行动，领取一张人物卡与一份阅读邀请。",
+ "disclaimer": "结果是由本次选择生成的趣味阅读推荐，不是心理量表，不评价能力高低、政治立场或与历史人物的完整人格相似度。",
+ "themes": {
+  "mao": {
+   "maxRaw": 5,
+   "label": "调研破题"
   },
-  "questions": [
-    {
-      "questionId": "q1", "stem": "你接手一个从未做过的小项目，最先做什么？",
-      "options": [
-        { "optionId": "q1a", "themeId": "mao",  "text": "去了解真实情况，找出大家真正遇到的问题。" },
-        { "optionId": "q1b", "themeId": "chen", "text": "核查已有资料，列出哪些信息可靠、哪些还需确认。" },
-        { "optionId": "q1c", "themeId": "zhou", "text": "约相关的人聊一轮，听听他们各自希望得到什么。" },
-        { "optionId": "q1d", "themeId": "deng", "text": "选一个成本小的环节，先做出样例看看反应。" }
-      ]
-    },
-    {
-      "questionId": "q2", "stem": "一个计划推进不顺，你更想先从哪里入手？",
-      "options": [
-        { "optionId": "q2a", "themeId": "mao",  "text": "重新画出问题之间的关系，寻找影响最大的关键点。" },
-        { "optionId": "q2b", "themeId": "liu",  "text": "把目标、分工和时间节点逐项理清。" },
-        { "optionId": "q2c", "themeId": "chen", "text": "回查原来的判断，看看是否建立在错误信息上。" },
-        { "optionId": "q2d", "themeId": "zhu",  "text": "检查最具体的流程和资源，看事情卡在哪个环节。" }
-      ]
-    },
-    {
-      "questionId": "q3", "stem": "朋友共同筹办活动，对方案意见不同，你通常会？",
-      "options": [
-        { "optionId": "q3a", "themeId": "zhou", "text": "让各方说出真正顾虑，找一个都能接受的安排。" },
-        { "optionId": "q3b", "themeId": "zhu",  "text": "盘点能投入的人手和时间，从现实条件讨论取舍。" },
-        { "optionId": "q3c", "themeId": "liu",  "text": "约定讨论规则和负责人，把争议变成可以落实的决定。" },
-        { "optionId": "q3d", "themeId": "deng", "text": "将争论的部分做成小样，让体验结果帮助大家判断。" }
-      ]
-    },
-    {
-      "questionId": "q4", "stem": "时间和资源只够做一部分，你更倾向？",
-      "options": [
-        { "optionId": "q4a", "themeId": "chen", "text": "留出应对意外的余量，先确认最重要的假设。" },
-        { "optionId": "q4b", "themeId": "zhu",  "text": "先保证基础环节持续运转，让后续工作有依托。" },
-        { "optionId": "q4c", "themeId": "mao",  "text": "集中精力解决牵动其他问题的关键环节。" },
-        { "optionId": "q4d", "themeId": "deng", "text": "选一个最容易得到反馈的方案，尽快验证是否值得继续。" }
-      ]
-    },
-    {
-      "questionId": "q5", "stem": "第一次尝试没有达到预期，你通常怎样复盘？",
-      "options": [
-        { "optionId": "q5a", "themeId": "mao",  "text": "回到最初的问题，检查是不是一开始就找错了重点。" },
-        { "optionId": "q5b", "themeId": "chen", "text": "对照记录和数据，分清事实、猜测与偶然因素。" },
-        { "optionId": "q5c", "themeId": "liu",  "text": "回顾职责和过程，检查哪个交接或执行环节出了问题。" },
-        { "optionId": "q5d", "themeId": "deng", "text": "保留有效的部分，尽快换一种做法再试一次。" }
-      ]
-    },
-    {
-      "questionId": "q6", "stem": "学习一项新技能，怎样安排更容易让你坚持？",
-      "options": [
-        { "optionId": "q6a", "themeId": "liu",  "text": "拆成阶段目标，给每一步安排练习与检查。" },
-        { "optionId": "q6b", "themeId": "zhou", "text": "找同伴一起讨论、互相解释并提供反馈。" },
-        { "optionId": "q6c", "themeId": "zhu",  "text": "固定时间做具体练习，逐步积累熟练度。" },
-        { "optionId": "q6d", "themeId": "mao",  "text": "先弄懂基本原理，再把零散知识连成整体。" }
-      ]
-    },
-    {
-      "questionId": "q7", "stem": "在一项多人任务中，你最愿意承担哪种工作？",
-      "options": [
-        { "optionId": "q7a", "themeId": "zhou", "text": "联系不同参与者，让信息和需求充分沟通。" },
-        { "optionId": "q7b", "themeId": "liu",  "text": "明确分工、追踪进度，让每项工作有人负责。" },
-        { "optionId": "q7c", "themeId": "deng", "text": "试验新办法，为大家提供一个可验证的选项。" },
-        { "optionId": "q7d", "themeId": "zhu",  "text": "处理具体难题，确保必要的工作稳定推进。" }
-      ]
-    },
-    {
-      "questionId": "q8", "stem": "读到一段让你印象深刻的论述，你首先想？",
-      "options": [
-        { "optionId": "q8a", "themeId": "chen", "text": "核对它的依据和成立条件，再决定是否接受。" },
-        { "optionId": "q8b", "themeId": "zhou", "text": "听听不同读者怎样理解，比较彼此的看法。" },
-        { "optionId": "q8c", "themeId": "zhu",  "text": "联系一个具体情境，想清楚实际使用需要哪些条件。" },
-        { "optionId": "q8d", "themeId": "liu",  "text": "整理为步骤或检查清单，帮助自己以后使用。" }
-      ]
-    }
-  ],
-  "cards": {
-    "mao": {
-      "cardId": "mao", "personName": "毛泽东", "themeTitle": "调研破题",
-      "description": "先理解事情为什么发生，再寻找影响整体的关键问题。",
-      "suggestion": "可以补充尝试：把一个判断写成可验证的小问题，用一次具体观察检验它。",
-      "readingTask": {
-        "articleId": "v1n07", "articleTitle": "反对本本主义", "paragraphId": null,
-        "prompt": "打开《反对本本主义》，找一段与你选择有关的论述，再写下「我还需要了解什么事实」。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    },
-    "zhou": {
-      "cardId": "zhou", "personName": "周恩来", "themeTitle": "协调整合",
-      "description": "先理解不同人的诉求，再组织协作、形成共同安排。",
-      "suggestion": "可以补充尝试：在推进前，把各方真正的顾虑各写一句，再决定先解决哪一个。",
-      "readingTask": {
-        "articleId": "v4n59", "articleTitle": "党委会的工作方法", "paragraphId": null,
-        "prompt": "打开《党委会的工作方法》，找一段讲如何把不同意见变成可执行安排的内容，写下你能用上的一条。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    },
-    "zhu": {
-      "cardId": "zhu", "personName": "朱德", "themeTitle": "务实建设",
-      "description": "重视现实条件、具体环节和长期运转。",
-      "suggestion": "可以补充尝试：把一个目标拆成「必须持续运转的最小环节」，先把它做稳。",
-      "readingTask": {
-        "articleId": "v1n11", "articleTitle": "关心群众生活，注意工作方法", "paragraphId": null,
-        "prompt": "打开《关心群众生活，注意工作方法》，找一段讲具体环节的论述，写下它在你手上的对应做法。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    },
-    "chen": {
-      "cardId": "chen", "personName": "陈云", "themeTitle": "审慎求证",
-      "description": "比较资料、检查假设，在不确定中保留判断余地。",
-      "suggestion": "可以补充尝试：给当前最重要的判断列出「已知 / 推测 / 待确认」三栏。",
-      "readingTask": {
-        "articleId": "v3n02", "articleTitle": "改造我们的学习", "paragraphId": null,
-        "prompt": "打开《改造我们的学习》，找一段谈从实际出发、避免主观判断的论述，抄一句并说明你为何选它。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    },
-    "deng": {
-      "cardId": "deng", "personName": "邓小平", "themeTitle": "实践试验",
-      "description": "愿意通过可控的小试验获得反馈，再调整方案。",
-      "suggestion": "可以补充尝试：把方案切成一个两周内能看到结果的小试验。",
-      "readingTask": {
-        "articleId": "v1n17", "articleTitle": "实践论", "paragraphId": null,
-        "prompt": "打开《实践论》，找一段讲认识如何来自实践的内容，写下你准备做的那次试验。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    },
-    "liu": {
-      "cardId": "liu", "personName": "刘少奇", "themeTitle": "组织落实",
-      "description": "将目标转化为职责、步骤与可检查的工作安排。",
-      "suggestion": "可以补充尝试：把一件正在拖延的事拆成三步，每步写清负责人和检查点。",
-      "readingTask": {
-        "articleId": "v4n59", "articleTitle": "党委会的工作方法", "paragraphId": null,
-        "prompt": "打开《党委会的工作方法》，找一段讲分工与检查的论述，写下一个你会立刻改的做法。",
-        "reviewStatus": "article_verified_paragraph_pending"
-      },
-      "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-      "reviewStatus": "theme_pending_editorial_review"
-    }
+  "chen": {
+   "maxRaw": 5,
+   "label": "审慎求证"
+  },
+  "zhou": {
+   "maxRaw": 5,
+   "label": "协调整合"
+  },
+  "deng": {
+   "maxRaw": 5,
+   "label": "实践试验"
+  },
+  "liu": {
+   "maxRaw": 6,
+   "label": "组织落实"
+  },
+  "zhu": {
+   "maxRaw": 6,
+   "label": "务实建设"
   }
+ },
+ "questions": [
+  {
+   "questionId": "q1",
+   "stem": "你接手一个从未做过的小项目，最先做什么？",
+   "options": [
+    {
+     "optionId": "q1a",
+     "themeId": "mao",
+     "text": "去了解真实情况，找出大家真正遇到的问题。"
+    },
+    {
+     "optionId": "q1b",
+     "themeId": "chen",
+     "text": "核查已有资料，列出哪些信息可靠、哪些还需确认。"
+    },
+    {
+     "optionId": "q1c",
+     "themeId": "zhou",
+     "text": "约相关的人聊一轮，听听他们各自希望得到什么。"
+    },
+    {
+     "optionId": "q1d",
+     "themeId": "deng",
+     "text": "选一个成本小的环节，先做出样例看看反应。"
+    }
+   ]
+  },
+  {
+   "questionId": "q2",
+   "stem": "一个计划推进不顺，你更想先从哪里入手？",
+   "options": [
+    {
+     "optionId": "q2a",
+     "themeId": "mao",
+     "text": "重新画出问题之间的关系，寻找影响最大的关键点。"
+    },
+    {
+     "optionId": "q2b",
+     "themeId": "liu",
+     "text": "把目标、分工和时间节点逐项理清。"
+    },
+    {
+     "optionId": "q2c",
+     "themeId": "chen",
+     "text": "回查原来的判断，看看是否建立在错误信息上。"
+    },
+    {
+     "optionId": "q2d",
+     "themeId": "zhu",
+     "text": "检查最具体的流程和资源，看事情卡在哪个环节。"
+    }
+   ]
+  },
+  {
+   "questionId": "q3",
+   "stem": "朋友共同筹办活动，对方案意见不同，你通常会？",
+   "options": [
+    {
+     "optionId": "q3a",
+     "themeId": "zhou",
+     "text": "让各方说出真正顾虑，找一个都能接受的安排。"
+    },
+    {
+     "optionId": "q3b",
+     "themeId": "zhu",
+     "text": "盘点能投入的人手和时间，从现实条件讨论取舍。"
+    },
+    {
+     "optionId": "q3c",
+     "themeId": "liu",
+     "text": "约定讨论规则和负责人，把争议变成可以落实的决定。"
+    },
+    {
+     "optionId": "q3d",
+     "themeId": "deng",
+     "text": "将争论的部分做成小样，让体验结果帮助大家判断。"
+    }
+   ]
+  },
+  {
+   "questionId": "q4",
+   "stem": "时间和资源只够做一部分，你更倾向？",
+   "options": [
+    {
+     "optionId": "q4a",
+     "themeId": "chen",
+     "text": "留出应对意外的余量，先确认最重要的假设。"
+    },
+    {
+     "optionId": "q4b",
+     "themeId": "zhu",
+     "text": "先保证基础环节持续运转，让后续工作有依托。"
+    },
+    {
+     "optionId": "q4c",
+     "themeId": "mao",
+     "text": "集中精力解决牵动其他问题的关键环节。"
+    },
+    {
+     "optionId": "q4d",
+     "themeId": "deng",
+     "text": "选一个最容易得到反馈的方案，尽快验证是否值得继续。"
+    }
+   ]
+  },
+  {
+   "questionId": "q5",
+   "stem": "第一次尝试没有达到预期，你通常怎样复盘？",
+   "options": [
+    {
+     "optionId": "q5a",
+     "themeId": "mao",
+     "text": "回到最初的问题，检查是不是一开始就找错了重点。"
+    },
+    {
+     "optionId": "q5b",
+     "themeId": "chen",
+     "text": "对照记录和数据，分清事实、猜测与偶然因素。"
+    },
+    {
+     "optionId": "q5c",
+     "themeId": "liu",
+     "text": "回顾职责和过程，检查哪个交接或执行环节出了问题。"
+    },
+    {
+     "optionId": "q5d",
+     "themeId": "deng",
+     "text": "保留有效的部分，尽快换一种做法再试一次。"
+    }
+   ]
+  },
+  {
+   "questionId": "q6",
+   "stem": "学习一项新技能，怎样安排更容易让你坚持？",
+   "options": [
+    {
+     "optionId": "q6a",
+     "themeId": "liu",
+     "text": "拆成阶段目标，给每一步安排练习与检查。"
+    },
+    {
+     "optionId": "q6b",
+     "themeId": "zhou",
+     "text": "找同伴一起讨论、互相解释并提供反馈。"
+    },
+    {
+     "optionId": "q6c",
+     "themeId": "zhu",
+     "text": "固定时间做具体练习，逐步积累熟练度。"
+    },
+    {
+     "optionId": "q6d",
+     "themeId": "mao",
+     "text": "先弄懂基本原理，再把零散知识连成整体。"
+    }
+   ]
+  },
+  {
+   "questionId": "q7",
+   "stem": "在一项多人任务中，你最愿意承担哪种工作？",
+   "options": [
+    {
+     "optionId": "q7a",
+     "themeId": "zhou",
+     "text": "联系不同参与者，让信息和需求充分沟通。"
+    },
+    {
+     "optionId": "q7b",
+     "themeId": "liu",
+     "text": "明确分工、追踪进度，让每项工作有人负责。"
+    },
+    {
+     "optionId": "q7c",
+     "themeId": "deng",
+     "text": "试验新办法，为大家提供一个可验证的选项。"
+    },
+    {
+     "optionId": "q7d",
+     "themeId": "zhu",
+     "text": "处理具体难题，确保必要的工作稳定推进。"
+    }
+   ]
+  },
+  {
+   "questionId": "q8",
+   "stem": "读到一段让你印象深刻的论述，你首先想？",
+   "options": [
+    {
+     "optionId": "q8a",
+     "themeId": "chen",
+     "text": "核对它的依据和成立条件，再决定是否接受。"
+    },
+    {
+     "optionId": "q8b",
+     "themeId": "zhou",
+     "text": "听听不同读者怎样理解，比较彼此的看法。"
+    },
+    {
+     "optionId": "q8c",
+     "themeId": "zhu",
+     "text": "联系一个具体情境，想清楚实际使用需要哪些条件。"
+    },
+    {
+     "optionId": "q8d",
+     "themeId": "liu",
+     "text": "整理为步骤或检查清单，帮助自己以后使用。"
+    }
+   ]
+  }
+ ],
+ "cards": {
+  "mao": {
+   "cardId": "mao",
+   "personName": "毛泽东",
+   "themeTitle": "调研破题",
+   "description": "先理解事情为什么发生，再寻找影响整体的关键问题。",
+   "suggestion": "可以补充尝试：把一个判断写成可验证的小问题，用一次具体观察检验它。",
+   "readingTask": {
+    "articleId": "v1n07",
+    "articleTitle": "反对本本主义",
+    "paragraphId": "pa-v1n07-006",
+    "prompt": "用一句话写下：你最近一次「没调查就下判断」是什么事？现在你打算先去查什么。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "你对于某个问题没有调查，就停止你对于某个问题的发言权。"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  },
+  "zhou": {
+   "cardId": "zhou",
+   "personName": "周恩来",
+   "themeTitle": "协调整合",
+   "description": "先理解不同人的诉求，再组织协作、形成共同安排。",
+   "suggestion": "可以补充尝试：在推进前，把各方真正的顾虑各写一句，再决定先解决哪一个。",
+   "readingTask": {
+    "articleId": "v4n59",
+    "articleTitle": "党委会的工作方法",
+    "paragraphId": "pa-v4n59-044",
+    "prompt": "这次协作里，哪两件事在你这里抢时间？用一句话写下你会怎么「弹钢琴」——谁主谁次。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "五、学会“弹钢琴”。弹钢琴要十个指头都动作，不能有的动，有的不动。"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  },
+  "zhu": {
+   "cardId": "zhu",
+   "personName": "朱德",
+   "themeTitle": "务实建设",
+   "description": "重视现实条件、具体环节和长期运转。",
+   "suggestion": "可以补充尝试：把一个目标拆成「必须持续运转的最小环节」，先把它做稳。",
+   "readingTask": {
+    "articleId": "v1n11",
+    "articleTitle": "关心群众生活，注意工作方法",
+    "paragraphId": "pa-v1n11-049",
+    "prompt": "你正在服务的那件小事，用一句话写下：对方最在意的到底是什么。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "我们应当深刻地注意群众生活的问题，从土地、劳动问题，到柴米油盐问题。"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  },
+  "chen": {
+   "cardId": "chen",
+   "personName": "陈云",
+   "themeTitle": "审慎求证",
+   "description": "比较资料、检查假设，在不确定中保留判断余地。",
+   "suggestion": "可以补充尝试：给当前最重要的判断列出「已知 / 推测 / 待确认」三栏。",
+   "readingTask": {
+    "articleId": "v3n02",
+    "articleTitle": "改造我们的学习",
+    "paragraphId": "pa-v3n02-142",
+    "prompt": "把你现在最确信的一个判断拆开：哪部分是事实，哪部分是推断？各写一句。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "“实事”就是客观存在着的一切事物，“是”就是客观事物的内部联系。"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  },
+  "deng": {
+   "cardId": "deng",
+   "personName": "邓小平",
+   "themeTitle": "实践试验",
+   "description": "愿意通过可控的小试验获得反馈，再调整方案。",
+   "suggestion": "可以补充尝试：把方案切成一个两周内能看到结果的小试验。",
+   "readingTask": {
+    "articleId": "v1n17",
+    "articleTitle": "实践论",
+    "paragraphId": "pa-v1n17-133",
+    "prompt": "你最近想验证的一个想法，最小可行的试验是什么？写一句就够了。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "你要有知识，你就得参加变革现实的实践。你要知道梨子的滋味，你就得变革梨子，亲口吃"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  },
+  "liu": {
+   "cardId": "liu",
+   "personName": "刘少奇",
+   "themeTitle": "组织落实",
+   "description": "将目标转化为职责、步骤与可检查的工作安排。",
+   "suggestion": "可以补充尝试：把一件正在拖延的事拆成三步，每步写清负责人和检查点。",
+   "readingTask": {
+    "articleId": "v4n59",
+    "articleTitle": "党委会的工作方法",
+    "paragraphId": "pa-v4n59-017",
+    "prompt": "有一件你一直没摆到桌面上的问题：摆出来会怎样，不摆又会怎样？各写一句。",
+    "reviewStatus": "paragraph_anchor_verified",
+    "anchorGranularity": "line",
+    "quote": "要把问题摆到桌面上来。不仅“班长”要这样做，委员也要这样做。"
+   },
+   "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
+   "reviewStatus": "theme_and_paragraph_editorially_pending"
+  }
+ },
+ "updatedAt": "2026-10-19"
 }
