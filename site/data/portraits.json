@@ -1,0 +1,180 @@
+{
+ "schemaVersion": "0.1",
+ "generatedAt": "2026-10-19",
+ "designSpec": "docs/VIS01_CARD_DESIGN_SPEC_20261019.md",
+ "assets": {
+  "mao": {
+   "assetId": "portrait-mao-v1",
+   "personId": "mao",
+   "personName": "毛泽东",
+   "theme": "调研破题",
+   "src": "/assets/portraits/mao.webp",
+   "fallbackSrc": null,
+   "width": 750,
+   "height": 1000,
+   "alt": "毛泽东肖像（基于10 Novembe的双色版画处理）",
+   "sourceType": "public_domain_photograph",
+   "sourceRefs": {
+    "commonsTitle": "File:Mao Zedong 1950 Portrait (3x4 cropped).jpg",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File%3AMao_Zedong_1950_Portrait_%283x4_cropped%29.jpg",
+    "licenseShort": "Public domain",
+    "licenseUrl": "pd",
+    "dateOriginal": "10 November 1950",
+    "artist": "Chen Zhengqing (1917–1966)",
+    "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://newsroom.ap.org/editorial-photos-videos/detail?itemid=dfab0b3b1ce5da11af9f0014c2589dfb&amp;mediatype=photo\">https://newsroom.ap.org/editorial-phot"
+   },
+   "rightsStatus": "public_domain_verified_via_commons_api",
+   "reviewStatus": "pending_editorial_review",
+   "assetVersion": "v1-duotone",
+   "processing": {
+    "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
+    "tool": "PIL (local script _diag/portrait_process.py)",
+    "webpBytes": 134554,
+    "sha256_16": "780c6f2ddb1d83e3"
+   },
+   "notes": ""
+  },
+  "zhou": {
+   "assetId": "portrait-zhou-v1",
+   "personId": "zhou",
+   "personName": "周恩来",
+   "theme": "协调整合",
+   "src": "/assets/portraits/zhou.webp",
+   "fallbackSrc": null,
+   "width": 750,
+   "height": 1000,
+   "alt": "周恩来肖像（基于21 Februar的双色版画处理）",
+   "sourceType": "public_domain_photograph",
+   "sourceRefs": {
+    "commonsTitle": "File:Premier Chou En-Lai in the Great Hall of the People's Banquet Hall - DPLA - a40021a8100507bc7a244420481bf488.jpg",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File%3APremier_Chou_En-Lai_in_the_Great_Hall_of_the_People%27s_Banquet_Hall_-_DPLA_-_a40021a8100507bc7a244420481bf488.jpg",
+    "licenseShort": "Public domain",
+    "licenseUrl": "pd",
+    "dateOriginal": "21 February 1972<div style=\"display: none;\">date QS:P571,+19",
+    "artist": "President (1969-1974 : Nixon). White House Photo Office. 1969-1974; General Services Administration. National Archives and Records Service. Office of Presidential Libraries. Office of Presidential Pap",
+    "credit": "This file was contributed to Wikimedia Commons by <a href=\"https://en.wikipedia.org/wiki/en:National_Archives_and_Records_Administration\" class=\"extiw\" title=\"w:en:National Archives and Records Admini"
+   },
+   "rightsStatus": "public_domain_verified_via_commons_api",
+   "reviewStatus": "pending_editorial_review",
+   "assetVersion": "v1-duotone",
+   "processing": {
+    "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
+    "tool": "PIL (local script _diag/portrait_process.py)",
+    "webpBytes": 82132,
+    "sha256_16": "2de28770b733425e"
+   },
+   "notes": "1972 年时期，晚于其他卡的 1950s；编辑需决定是否统一时期"
+  },
+  "zhu": {
+   "assetId": "portrait-zhu-v1",
+   "personId": "zhu",
+   "personName": "朱德",
+   "theme": "务实建设",
+   "src": "/assets/portraits/zhu.webp",
+   "fallbackSrc": null,
+   "width": 750,
+   "height": 1000,
+   "alt": "朱德肖像（基于公开历史照片的双色版画处理）",
+   "sourceType": "public_domain_photograph",
+   "sourceRefs": {
+    "commonsTitle": "File:Zhu De, Commander of PLA.jpg",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File%3AZhu_De%2C_Commander_of_PLA.jpg",
+    "licenseShort": "Public domain",
+    "licenseUrl": "pd",
+    "dateOriginal": "",
+    "artist": "anonymous (Gov)",
+    "credit": "From old photos"
+   },
+   "rightsStatus": "public_domain_verified_via_commons_api",
+   "reviewStatus": "pending_editorial_review",
+   "assetVersion": "v1-duotone",
+   "processing": {
+    "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
+    "tool": "PIL (local script _diag/portrait_process.py)",
+    "webpBytes": 57450,
+    "sha256_16": "0079284a106cb536"
+   },
+   "notes": ""
+  },
+  "chen": {
+   "assetId": "portrait-chen-v1",
+   "personId": "chen",
+   "personName": "陈云",
+   "theme": "审慎求证",
+   "src": "/assets/portraits/chen.webp",
+   "fallbackSrc": null,
+   "width": 750,
+   "height": 1000,
+   "alt": "陈云肖像（基于早于1960年的双色版画处理）",
+   "sourceType": "public_domain_photograph",
+   "sourceRefs": {
+    "commonsTitle": "File:陈云标准像.jpg",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File%3A%E9%99%88%E4%BA%91%E6%A0%87%E5%87%86%E5%83%8F.jpg",
+    "licenseShort": "Public domain",
+    "licenseUrl": "pd",
+    "dateOriginal": "早于1960年",
+    "artist": "Unknown author<span style=\"display: none;\">Unknown author</span>",
+    "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://k.sinaimg.cn/n/sinacn/w500h688/20180118/ae43-fyqtwzu4632663.jpg/w700d1q75cms.jpg\">https://k.sinaimg.cn/n/sinacn/w500h688/20180118/ae43-fyqtwzu4632"
+   },
+   "rightsStatus": "public_domain_verified_via_commons_api",
+   "reviewStatus": "pending_editorial_review",
+   "assetVersion": "v1-duotone",
+   "processing": {
+    "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
+    "tool": "PIL (local script _diag/portrait_process.py)",
+    "webpBytes": 57902,
+    "sha256_16": "8133e09db6f0fce2"
+   },
+   "notes": ""
+  },
+  "deng": {
+   "assetId": "portrait-deng-v1",
+   "personId": "deng",
+   "personName": "邓小平",
+   "theme": "实践试验",
+   "src": "/assets/portraits/deng.webp",
+   "fallbackSrc": null,
+   "width": 750,
+   "height": 1000,
+   "alt": "邓小平肖像（基于Taken on 2的双色版画处理）",
+   "sourceType": "public_domain_photograph",
+   "sourceRefs": {
+    "commonsTitle": "File:Deng Xiaoping at the arrival ceremony for the Vice Premier of China (cropped).jpg",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File%3ADeng_Xiaoping_at_the_arrival_ceremony_for_the_Vice_Premier_of_China_%28cropped%29.jpg",
+    "licenseShort": "Public domain",
+    "licenseUrl": "pd",
+    "dateOriginal": "Taken on 29 January 1979",
+    "artist": "Unknown author<span style=\"display: none;\">Unknown author</span>",
+    "credit": "This tag does not indicate the copyright status of the attached work. <span style=\"white-space:nowrap\">A normal <a href=\"//commons.wikimedia.org/wiki/Special:MyLanguage/Commons:Copyright_tags\" title=\""
+   },
+   "rightsStatus": "public_domain_verified_via_commons_api",
+   "reviewStatus": "pending_editorial_review",
+   "assetVersion": "v1-duotone",
+   "processing": {
+    "pipeline": "grayscale → autocontrast → unsharp → 5-level posterize → duotone(paper #F5EFE3, ink per card)",
+    "tool": "PIL (local script _diag/portrait_process.py)",
+    "webpBytes": 119380,
+    "sha256_16": "bcbfc0a5c7ecbe87"
+   },
+   "notes": "1979 年前后（arrival ceremony），属晚年形象"
+  },
+  "liu": {
+   "assetId": "portrait-liu-placeholder",
+   "personId": "liu",
+   "personName": "刘少奇",
+   "theme": "组织落实",
+   "src": null,
+   "fallbackSrc": null,
+   "width": 0,
+   "height": 0,
+   "alt": "刘少奇（肖像素材待补，当前为姓名占位）",
+   "sourceType": null,
+   "sourceRefs": {},
+   "rightsStatus": "not_found_yet",
+   "reviewStatus": "blocked_missing_material",
+   "assetVersion": "v0-name-placeholder",
+   "processing": {},
+   "notes": "Commons 未找到可核实的 PD 正式肖像（候选为合影/会场/低分辨率或非 PD）。按 VIS02 不得标记 approved；正式交付前必须替换。"
+  }
+ }
+}
