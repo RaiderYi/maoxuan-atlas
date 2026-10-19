@@ -92,7 +92,7 @@
    "fallbackSrc": null,
    "width": 750,
    "height": 1000,
-   "alt": "朱德公开历史照片年肖像（基于公共领域历史照片的双色版画处理）",
+   "alt": "朱德肖像（年代未在元数据确证，基于公共领域历史照片的双色版画处理）",
    "sourceType": "public_domain_photograph",
    "sourceRefs": {
     "commonsTitle": "File:Zhu De, Commander of PLA.jpg",
@@ -112,7 +112,7 @@
     "webpBytes": 57450,
     "sha256_16": "0079284a106cb536"
    },
-   "notes": "",
+   "notes": "Commons 元数据未给拍摄年代；着元帅服，属 1955 年授衔时期形象，年代系服饰推断而非元数据确证。",
    "approval": {
     "approvedBy": "产品负责人（ShiJie Fang）",
     "role": "product_owner",

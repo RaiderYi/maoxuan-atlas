@@ -11,7 +11,7 @@
 |---|---|---|---|---|---|---|---|
 | mao | 毛泽东 | ✅ 已制作 | Public domain | 1950-11-10 | 673×908 | `mao.webp` 131KB | **已签收** |
 | zhou | 周恩来 | ✅ 已制作 | Public domain | 1972-02-21 | 717×961 | `zhou.webp` 80KB | **已签收** |
-| zhu | 朱德 | ✅ 已制作 | Public domain | 1955（元帅服） | 830×1097 | `zhu.webp` 56KB | **已签收** |
+| zhu | 朱德 | ✅ 已制作 | Public domain | 未确证（元帅服≈1955） | 830×1097 | `zhu.webp` 56KB | **已签收** |
 | chen | 陈云 | ✅ 已制作 | Public domain | 早于 1960 | 500×688 | `chen.webp` 56KB | **已签收** |
 | deng | 邓小平 | ✅ 已制作 | Public domain | 1970s 末 | 799×1065 | `deng.webp` 116KB | **已签收** |
 | liu | 刘少奇 | ⛔ 素材待补 | — | — | — | 姓名占位 | **blocked** |
