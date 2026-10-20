@@ -705,7 +705,9 @@ html.dark .catBar button{background:var(--cardbg)}
   footer{display:none}
   #readToc{width:min(78vw,300px)}
 }
-  .taskBar{background:#fffdf5;border:1px solid var(--border);border-left:3px solid var(--cinnabar);border-radius:10px;
+  .taskBar{/* 任务条是浅色卡片：局部固定深浅色，避免深色主题下"浅底+浅字"不可读 */
+    --ink:#2b2420; --ink2:#5a4f45; --cinnabar:#b03a2e; --gold:#a8842c; --border:#d8cbaa;
+    background:#fffdf5;border:1px solid var(--border);border-left:3px solid var(--cinnabar);border-radius:10px;
     padding:14px 16px;margin:10px 0 18px;position:sticky;top:0;z-index:46;box-shadow:0 6px 16px rgba(43,36,32,.08)}
   /* R20/R24: 跳到目标段落后任务条仍要可见；可收起，手机默认收起，别占掉半个屏幕 */
   .taskBar.compact{padding:8px 12px;margin:8px 0 10px}
