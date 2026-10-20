@@ -2394,6 +2394,10 @@ function attachTaskBar(view, a, anchorPara){
   b.textContent = (t.personName ? "来自人物卡：" + t.personName + " · " + (t.themeTitle || "") : "研读任务");
   var st = document.createElement("span"); st.className = "tbState"; st.textContent = taskStateText(t.state);
   head.appendChild(b); head.appendChild(st);
+  /* R20/R24: 收起/展开 —— 手机默认收起，跳段后仍吸顶可见 */
+  var toggle = document.createElement("button");
+  toggle.type = "button"; toggle.className = "tbToggle"; toggle.textContent = "收起";
+  head.appendChild(toggle);
   var pr = document.createElement("div"); pr.className = "tbPrompt"; pr.textContent = "本段任务：" + (t.prompt || "");
   var box = document.createElement("div"); box.className = "tbNote";
   var ta = document.createElement("textarea");
@@ -2407,6 +2411,22 @@ function attachTaskBar(view, a, anchorPara){
   box.appendChild(ta); box.appendChild(acts);
   bar.appendChild(head); bar.appendChild(pr); bar.appendChild(box);
   view.insertBefore(bar, view.firstChild.nextSibling || view.firstChild);
+
+  /* R20/R24: 让下面的阅读工具栏为吸顶任务条让位，并根据高度同步 --
+     否则两者都 sticky top:0 会互相盖住（复审要求"主操作不被面板遮挡"）。 */
+  var syncTbH = function(){
+    try{ view.style.setProperty("--tbH", (bar.offsetHeight || 0) + "px"); }catch(e){}
+  };
+  var setCompact = function(compact){
+    if(compact){ bar.classList.add("compact"); toggle.textContent = "展开"; }
+    else { bar.classList.remove("compact"); toggle.textContent = "收起"; }
+    syncTbH();
+  };
+  toggle.addEventListener("click", function(){ setCompact(!bar.classList.contains("compact")); });
+  view.classList.add("hasTask");
+  setCompact(!!(window.matchMedia && window.matchMedia("(max-width:720px)").matches));
+  window.addEventListener("resize", syncTbH);
+  setTimeout(syncTbH, 60);   /* 字体/图片加载完再校正一次高度 */
 
   /* 已保存过：回填原文并标为已完成（打开不算完成，只有笔记落库才算） */
   if(t.noteId){
