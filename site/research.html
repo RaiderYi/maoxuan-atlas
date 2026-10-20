@@ -83,8 +83,9 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .evBlk{border-left:3px solid var(--cinnabar);background:rgba(176,58,46,.04);border-radius:0 8px 8px 0;padding:9px 12px;margin-bottom:9px}
 .evBlk.unloc{border-left-color:var(--gold);background:rgba(168,132,44,.07)}
 .evRange{font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:5px}
-.evQ{color:var(--cinnabar);font-size:12.5px;line-height:1.9}
+.evQ{color:var(--cinnabar);font-size:12.5px;line-height:1.9;white-space:pre-wrap}
 .evQ + .evQ{margin-top:5px}
+.evMq{font-size:11px;color:var(--ink2);margin-top:7px;line-height:1.8}
 .evActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}
 .evActions button,.evActions a{font-family:inherit;font-size:11px;color:var(--ink2);background:rgba(255,252,243,.85);
   border:1px solid var(--border);border-radius:11px;padding:2px 10px;cursor:pointer;text-decoration:none}
@@ -549,12 +550,27 @@ function evArtGroup(g, failure){
     rg.textContent = EV.segLabel(b) +
       (b.located ? (b.match === "loose" ? " · 按标点容错定位" : "") : " · 原文未匹配到该引文");
     d.appendChild(rg);
-    b.items.forEach(function(it){
+    if (b.located){
+      /* 显示命中的完整原文行，而不是模型给的行片段——复审指出的"半句话引用"就在这里收口 */
+      var lines = (evTexts[g.articleId] || []).slice(b.zeroFrom, b.zeroTo + 1);
       var q = document.createElement("div");
       q.className = "evQ";
-      q.textContent = it.quote ? ("\u201c" + it.quote + "\u201d") : "（模型未给出引文原文）";
+      q.textContent = lines.join("\n");
       d.appendChild(q);
-    });
+      var mq = document.createElement("div");
+      mq.className = "evMq";
+      mq.textContent = "模型引文：" + b.items.map(function(it){
+        return it.quote ? ("\u201c" + it.quote + "\u201d") : "（无）";
+      }).join(" ");
+      d.appendChild(mq);
+    } else {
+      b.items.forEach(function(it){
+        var q2 = document.createElement("div");
+        q2.className = "evQ";
+        q2.textContent = it.quote ? ("\u201c" + it.quote + "\u201d") : "（模型未给出引文原文）";
+        d.appendChild(q2);
+      });
+    }
     var row = document.createElement("div");
     row.className = "evActions";
     if (b.located){
@@ -630,8 +646,11 @@ document.addEventListener("keydown", function(ev){
 });
 el("evCopy").onclick = function(){
   if (!evCur) return;
-  var txt = evCur.b.items.map(function(it){ return it.quote || ""; })
-    .filter(function(s){ return !!s; }).join("\n");
+  var lines = evTexts[evCur.g.articleId] || [];
+  var txt = evCur.b.located
+    ? lines.slice(evCur.b.zeroFrom, evCur.b.zeroTo + 1).join("\n")   /* 优先复制完整原文行 */
+    : evCur.b.items.map(function(it){ return it.quote || ""; })
+        .filter(function(s){ return !!s; }).join("\n");
   var done = function(){
     el("evCopy").textContent = "已复制";
     setTimeout(function(){ el("evCopy").textContent = "复制引文"; }, 1400);
