@@ -22,7 +22,7 @@
 | 不是根因 | 模型供应商、KV、限流、缓存；AI 可答是因为 `sample-topic.json` 随仓库发布 |
 | 修复 | 新增受控内容包产线：`pipeline/build-content-pack.mjs` → `site/data/texts.pack.json`（gzip + AES-256-GCM，明文不入库）；`site/api/text.mjs` 解密后同源返回；`vercel.json` 保留 `/data/texts/*` → `/api/text` 重写，旧链接不失效 |
 | 预防 | `pipeline/verify-deploy-assets.mjs` 进 CI（缺任一正文即失败）；`pipeline/probe-production.mjs` 上线后探测 8 篇 + 正文自检 |
-| 当前状态 | 代码与本地全量验证 DONE（217/217 解密一致）；**线上仍 404 直到提交推送 + 配置 `TEXT_PACK_KEY`** → BLOCKED(用户：一个环境变量) |
+| 当前状态 | **已闭环**。2026-10-20 上午由本机 Vercel CLI（`auth.json` 中的 CLI 登录态，昨日误判为"无登录凭证"而错记为 BLOCKED）写入 `TEXT_PACK_KEY`（Production + Preview），加密部署 `a629cb0` 后 `probe-production.mjs` = **15/15 通过**：8 篇正文全部返回字符数、旧地址 `/data/texts/v1n07.txt` 5345 字符可读 |
 
 ---
 
@@ -30,10 +30,10 @@
 
 | ID | 状态 | 证据 / 说明 |
 |---|---|---|
-| R01 恢复受控正文供应 | CODE-ONLY | `node tests/api/test-text.mjs` 9 例；217 篇逐篇解密 + 明文哈希对齐 manifest。线上生效需 `TEXT_PACK_KEY`（见 `CONTENT_PACK_20261019.md`） |
+| R01 恢复受控正文供应 | DONE | `node tests/api/test-text.mjs` 9 例；217 篇逐篇解密 + 明文哈希对齐 manifest。**线上实证**：`TEXT_PACK_KEY` 已配置（Production+Preview），`a629cb0` 部署后 `/api/text?id=…` 八篇全部返回正文（v1n03 6926 / v1n04 19250 / v1n07 5345 / v4n59 3179 / v1n11 3884 / v3n02 5606 / v1n17 11689 / v5n01 2565 字符），旧地址 rewrite 同时可用 |
 | R02 部署资产清单 | DONE | `site/data/content-manifest.json`（逐篇明文/密文 SHA256、字数、缺失与短篇清单）；`node pipeline/verify-deploy-assets.mjs` 0 错误 |
 | R03 发布前门槛 | DONE | 同一脚本进 CI（`.github/workflows/ci-minimal.yml` "Deploy asset gate"）；正文缺失 = 非零退出 = 不得接管生产 |
-| R04 上线后关键路径探测 | DONE（已执行，结果 5/15） | 部署 `dpl_FjYAdgiq…`（提交 `a9fc776`）后实跑：版本/状态/首页/画廊 ✓；正文自检 `packFound=true, keyConfigured=false`；8 篇与旧地址全部 503 `text_unavailable`。**探测准确指出唯一缺失项是密钥，不是内容包** |
+| R04 上线后关键路径探测 | DONE（首次 5/15 → 现 15/15） | 部署 `dpl_FjYAdgiq…`（提交 `a9fc776`）后实跑：版本/状态/首页/画廊 ✓；正文自检 `packFound=true, keyConfigured=false`；8 篇与旧地址全部 503 `text_unavailable`。**探测准确指出唯一缺失项是密钥，不是内容包** |
 | R05 缓存自然升级 | DONE | `sw.js` v9 → v10：缓存版本整体作废；`/api/text?check=1` 不入缓存；正文走"缓存优先 + 后台刷新"，断网可读已读篇目。手机真机/弱网验收仍属 R24 |
 | R06 统一状态与事故记录 | DONE | 本文件 + 事故表；旧 `N01_STATUS` 转历史 |
 
