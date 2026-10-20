@@ -52,6 +52,8 @@ header .sub{font-size:13.5px;color:var(--ink2)}
 .card .hero{display:flex;justify-content:center;margin:10px 0 16px}
 .card .hero .pimg{width:min(240px,62%);height:auto;aspect-ratio:3/4;object-fit:cover;object-position:50% 18%;
   border:1px solid var(--border);border-radius:12px;background:#F5EFE3;box-shadow:0 6px 18px rgba(43,36,32,.12)}
+.card.tie .hero .pimg{width:min(180px,46%)}
+.card.tie h2{font-size:19px}
 .card .hero .pimg.ph{display:flex;align-items:center;justify-content:center;font-size:34px;letter-spacing:.12em;color:var(--ink2,#4A443B)}
 .card .kw{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px}
 .card .kw span{font-size:12px;color:var(--ink2);background:rgba(168,132,44,.10);border:1px solid rgba(168,132,44,.35);
@@ -281,6 +283,7 @@ function cardBlock(themeId, primary){
   var c = QUIZ.cards[themeId];
   var d = document.createElement("div");
   d.className = "card";
+  if(!primary) d.classList.add("tie");
   var rd = document.createElement("div"); rd.className = "rd"; rd.textContent = primary ? "你本次的研读搭档" : "并列风格";
   d.appendChild(rd);
 
