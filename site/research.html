@@ -64,7 +64,7 @@ header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decorat
 .aiBanner{font-size:13px;color:#8a3b2e;background:rgba(176,58,46,.07);border:1px solid rgba(176,58,46,.3);border-radius:10px;padding:12px 14px;margin:0 0 12px;line-height:1.9}
 .aiBanner b{display:block;font-size:13.5px;margin-bottom:4px;color:#7d2f24}
 /* P05.2 / P05.5: 缺口说明 · 下一步 · 纠错 */
-font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px solid var(--gold);
+.gapBox{font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px solid var(--gold);
   padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;line-height:1.9}
 .nextStep{font-size:13px;color:var(--ink2);background:rgba(90,79,69,.06);border-radius:8px;padding:10px 12px;
   margin-top:10px;line-height:1.95}
@@ -76,6 +76,46 @@ font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px soli
 .fbMeta{font-size:11px;color:var(--ink2)}
 .cit .flag{font-family:inherit;font-size:11px;margin-left:8px;padding:1px 8px;border-radius:10px;cursor:pointer;
   border:1px solid rgba(176,58,46,.45);background:transparent;color:var(--cinnabar)}
+/* R27 证据工作区：按原文真实顺序分组 + 上下文面板 */
+.evArt{margin-bottom:14px}
+.evArtHd{font-size:12.5px;color:var(--cinnabar);letter-spacing:1px;margin:4px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.evArtHd .cnt{font-size:11px;color:var(--ink2);letter-spacing:0;margin-left:8px}
+.evBlk{border-left:3px solid var(--cinnabar);background:rgba(176,58,46,.04);border-radius:0 8px 8px 0;padding:9px 12px;margin-bottom:9px}
+.evBlk.unloc{border-left-color:var(--gold);background:rgba(168,132,44,.07)}
+.evRange{font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:5px}
+.evQ{color:var(--cinnabar);font-size:12.5px;line-height:1.9}
+.evQ + .evQ{margin-top:5px}
+.evActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}
+.evActions button,.evActions a{font-family:inherit;font-size:11px;color:var(--ink2);background:rgba(255,252,243,.85);
+  border:1px solid var(--border);border-radius:11px;padding:2px 10px;cursor:pointer;text-decoration:none}
+.evActions button:hover,.evActions a:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.evNote{font-size:11.5px;color:#8a3b2e;line-height:1.85;margin-top:6px}
+.evMask{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(43,36,32,.38);opacity:0;pointer-events:none;
+  transition:opacity .18s ease;z-index:40}
+.evMask.on{opacity:1;pointer-events:auto}
+.evPanel{position:fixed;top:0;right:0;height:100%;width:min(440px,92vw);background:#fffdf5;border-left:1px solid var(--border);
+  box-shadow:-8px 0 24px rgba(43,36,32,.16);transform:translateX(102%);transition:transform .22s ease;z-index:41;
+  display:flex;flex-direction:column}
+.evPanel.on{transform:translateX(0)}
+.evHead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(245,239,224,.9)}
+.evHead b{font-size:13.5px;letter-spacing:1px;color:var(--ink)}
+.evHead button{margin-left:auto;font-family:inherit;font-size:13px;line-height:1;border:1px solid var(--border);
+  background:transparent;color:var(--ink2);border-radius:8px;padding:5px 9px;cursor:pointer}
+.evMeta{font-size:11px;color:var(--gold);padding:8px 16px 0;letter-spacing:.5px}
+.evBody{flex:1;overflow-y:auto;padding:10px 16px 16px;font-size:13px;line-height:2}
+.evLine{display:flex;gap:8px;padding:2px 0;color:var(--ink2)}
+.evLine .n{flex:0 0 30px;color:#bda86f;font-size:10.5px;text-align:right;user-select:none}
+.evLine.hit{color:var(--ink);background:rgba(176,58,46,.07);border-left:3px solid var(--cinnabar);border-radius:0 6px 6px 0;padding-left:5px}
+.evFoot{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--border);background:rgba(245,239,224,.9)}
+.evFoot a,.evFoot button{font-family:inherit;font-size:12px;color:var(--cinnabar);text-decoration:none;
+  border:1px solid var(--border);border-radius:11px;padding:4px 12px;background:#fffdf5;cursor:pointer}
+@media (max-width:720px){
+  .evPanel{top:auto;bottom:0;right:0;left:0;width:auto;height:auto;max-height:76vh;border-left:0;
+    border-top:1px solid var(--border);border-radius:14px 14px 0 0;transform:translateY(102%)}
+  .evPanel.on{transform:translateY(0)}
+  .evBody{max-height:52vh}
+  .evActions button,.evActions a{font-size:11.5px;padding:4px 12px}
+}
 </style>
 </head>
 <body>
@@ -104,7 +144,7 @@ font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px soli
   <div class="result" id="result">
     <div class="model" id="model"></div>
     <div class="answer" id="answer"></div>
-    <h4 id="citHead">引用段落（点击可查看原文）</h4>
+    <h4 id="citHead">引用与原文核对（按原文顺序）</h4>
     <div id="cits"></div>
     <div id="flagBox" class="flagBox" style="display:none"></div>
     <div class="cardBtns">
@@ -119,9 +159,20 @@ font-size:13px;color:#8a3b2e;background:rgba(168,132,44,.1);border-left:3px soli
     </div>
     <div id="cardList"></div>
   </div>
-  <div class="footer">答案基于两篇原文；引用可点开核对。研究卡保存在本机浏览器，可导出 Markdown。</div>
+  <div class="footer">答案基于两篇原文；每条引用已按原文回查定位，可点开侧栏核对上下文。研究卡保存在本机浏览器，可导出 Markdown。</div>
 </div>
+<div class="evMask" id="evMask"></div>
+<aside class="evPanel" id="evPanel" role="dialog" aria-modal="true" aria-labelledby="evTitle" aria-hidden="true">
+  <div class="evHead"><b id="evTitle">原文核对</b><button id="evClose" aria-label="关闭原文面板">✕</button></div>
+  <div class="evMeta" id="evMeta"></div>
+  <div class="evBody" id="evBody"></div>
+  <div class="evFoot">
+    <a id="evOpen" href="#">在全文页打开这一段 →</a>
+    <button id="evCopy">复制引文</button>
+  </div>
+</aside>
 <script src="lib/mx-store.js"></script>
+<script src="lib/mx-evidence.js"></script>
 <script>
 (function(){
 "use strict";
@@ -211,6 +262,7 @@ function ask(){
   var ac = new AbortController();
   curAbort = ac;
   setBusy(true);
+  closeEvPanel();          /* R27: 换问题时收起上一轮的原文面板，避免看到旧上下文 */
   el("err").style.display = "none";
   el("result").style.display = "none";
   el("answer").textContent = "思考中（模型通常需要 15~40 秒）……";
@@ -289,20 +341,7 @@ function ask(){
       gp.textContent = "缺口说明：" + gap;
       el("answer").parentNode.insertBefore(gp, el("citHead"));
     }
-    var box = el("cits");
-    box.innerHTML = "";
-    (j.citations || []).forEach(function(c){
-      var d = document.createElement("div");
-      d.className = "cit";
-      /* WP08 联动: 引用直达段落级深链 #/art/<articleId>/<paraId> + 返回研究室 */
-      d.innerHTML = "<span class='id'></span><br><span class='q'></span><br><a href='index.html#/art/" + c.articleId + "/" + c.id + "'>\u6253\u5f00\u300a" + (c.articleTitle || c.articleId) + "\u300b\u5bf9\u5e94\u6bb5\u843d \u2192</a>" +
-        "<button class='flag' data-cit='" + c.id + "'>引用不相关</button>";
-      d.querySelector(".id").textContent = c.id;
-      d.querySelector(".q").textContent = c.quote ? ("\u201c" + c.quote + "\u201d") : "";
-      box.appendChild(d);
-    });
-    renderFlagBox(st);
-    bindFlagButtons();
+    renderEvidence(j.citations || [], st);
   })
   .catch(function(e){
     if(myReq !== curReq) return;
@@ -402,6 +441,211 @@ function bindFlagButtons(){
     b.onclick = function(){ sendFlag("citation_irrelevant", b.getAttribute("data-cit")); };
   });
 }
+
+/* ---------- R27: 证据工作区 ----------
+   复审 F07：研究室此前是纵向回答加碎片引用，出现半句话引用，证据侧栏与手机面板都未实现。
+   这里的做法：
+     · 引文一律按【原文文本回查】定位，不因编号相同就认定同一段（R13 已证明编号会错位）
+     · 按文章分组、按真实行号排序；只有重叠或相隔 ≤1 行才合并，不把不相邻片段拼成一段
+     · 定位不到就如实标注"原文未匹配"，引文照常展示，不猜段落、不丢内容
+     · 点开在侧栏（手机为底部抽屉）看该段前后各一段的真实上下文
+     · 正文服务不可用时报出具体原因，不显示空白冒充成功 */
+var EV = (typeof window !== "undefined" && window.MXEvidence) ? window.MXEvidence : null;
+var evLoad = EV ? EV.createTextLoader() : null;
+var evTexts = {};     /* articleId → lines，定位与面板共用同一份，避免重复取文 */
+var evCur = null;     /* 最近打开的证据块，供复制引文 */
+var evFocus = null;
+
+function evFetch(aid){
+  if (evTexts[aid]) return Promise.resolve({ ok: true });
+  if (!evLoad) return Promise.resolve({ ok: false, code: "no_lib", message: "证据组件未加载" });
+  return evLoad(aid).then(function(res){
+    if (res && res.ok) evTexts[aid] = res.lines;
+    return res;
+  });
+}
+function evArticleUrl(aid, paraId){
+  return "index.html#/art/" + encodeURIComponent(aid) + "/" + encodeURIComponent(paraId || "");
+}
+function evRawCit(c){
+  var d = document.createElement("div");
+  d.className = "cit";
+  var i = document.createElement("span"); i.className = "id"; i.textContent = c.id || "";
+  var q = document.createElement("span"); q.className = "q";
+  q.textContent = c.quote ? ("\u201c" + c.quote + "\u201d") : "";
+  var a = document.createElement("a");
+  a.href = evArticleUrl(c.articleId || (EV ? EV.articleIdOf(c) : ""), c.id);
+  a.textContent = "\u5728\u5168\u6587\u9875\u6253\u5f00\u5bf9\u5e94\u6bb5\u843d \u2192";
+  var f = document.createElement("button");
+  f.className = "flag"; f.setAttribute("data-cit", c.id || ""); f.textContent = "引用不相关";
+  d.appendChild(i);
+  d.appendChild(document.createElement("br"));
+  d.appendChild(q);
+  d.appendChild(document.createElement("br"));
+  d.appendChild(a); d.appendChild(f);
+  return d;
+}
+
+function renderEvidence(citations, st){
+  var box = el("cits");
+  box.innerHTML = "";
+  var list = citations || [];
+  if (!EV){
+    list.forEach(function(c){ box.appendChild(evRawCit(c)); });
+    renderFlagBox(st); bindFlagButtons(); return;
+  }
+  if (!list.length){ renderFlagBox(st); return; }
+  var aids = [];
+  list.forEach(function(c){
+    var a = EV.articleIdOf(c);
+    if (a && aids.indexOf(a) < 0) aids.push(a);
+  });
+  var hint = document.createElement("div");
+  hint.className = "evNote";
+  hint.textContent = "正在按原文回查引用位置…";
+  box.appendChild(hint);
+  Promise.all(aids.map(evFetch)).then(function(results){
+    var fail = {};
+    results.forEach(function(r, i){ if (!r || !r.ok) fail[aids[i]] = r || { code: "unknown" }; });
+    var linesBy = {};
+    aids.forEach(function(a){ if (evTexts[a]) linesBy[a] = evTexts[a]; });
+    var groups = EV.groupCitations(list, linesBy);
+    box.innerHTML = "";
+    if (!groups.length){
+      list.forEach(function(c){ box.appendChild(evRawCit(c)); });
+    } else {
+      groups.forEach(function(g){ box.appendChild(evArtGroup(g, fail[g.articleId])); });
+    }
+    renderFlagBox(st);
+    bindFlagButtons();
+  }).catch(function(e){
+    box.innerHTML = "";
+    var n = document.createElement("div");
+    n.className = "evNote";
+    n.textContent = "证据定位失败：" + e + "。引文仍按原样列出，可点开全文页核对。";
+    box.appendChild(n);
+    list.forEach(function(c){ box.appendChild(evRawCit(c)); });
+    renderFlagBox(st); bindFlagButtons();
+  });
+}
+
+function evArtGroup(g, failure){
+  var wrap = document.createElement("div");
+  wrap.className = "evArt";
+  var hd = document.createElement("div");
+  hd.className = "evArtHd";
+  hd.textContent = "\u300a" + (g.title || g.articleId) + "\u300b";
+  var cnt = document.createElement("span");
+  cnt.className = "cnt";
+  cnt.textContent = g.items.length + " 条引用" + (g.located ? "" : " · 正文暂不可用");
+  hd.appendChild(cnt);
+  wrap.appendChild(hd);
+
+  g.blocks.forEach(function(b){
+    var d = document.createElement("div");
+    d.className = "evBlk" + (b.located ? "" : " unloc");
+    var rg = document.createElement("div");
+    rg.className = "evRange";
+    rg.textContent = EV.segLabel(b) +
+      (b.located ? (b.match === "loose" ? " · 按标点容错定位" : "") : " · 原文未匹配到该引文");
+    d.appendChild(rg);
+    b.items.forEach(function(it){
+      var q = document.createElement("div");
+      q.className = "evQ";
+      q.textContent = it.quote ? ("\u201c" + it.quote + "\u201d") : "（模型未给出引文原文）";
+      d.appendChild(q);
+    });
+    var row = document.createElement("div");
+    row.className = "evActions";
+    if (b.located){
+      var ob = document.createElement("button");
+      ob.textContent = "查看上下文";
+      ob.onclick = function(){ openEvPanel(g, b); };
+      row.appendChild(ob);
+    }
+    var a = document.createElement("a");
+    a.href = evArticleUrl(g.articleId, b.items[0].id);
+    a.textContent = "在全文页打开";
+    row.appendChild(a);
+    b.items.forEach(function(it){
+      var fb = document.createElement("button");
+      fb.className = "flag";
+      fb.setAttribute("data-cit", it.id);
+      fb.textContent = "引用不相关";
+      row.appendChild(fb);
+    });
+    d.appendChild(row);
+    if (!b.located && failure){
+      var n = document.createElement("div");
+      n.className = "evNote";
+      n.textContent = EV.describeFailure(failure.code, failure.message) +
+        "。引文文字仍可读；正文恢复后这里会自动定位到具体段落。";
+      d.appendChild(n);
+    }
+    wrap.appendChild(d);
+  });
+  return wrap;
+}
+
+function openEvPanel(g, b){
+  evCur = { g: g, b: b };
+  var panel = el("evPanel"), mask = el("evMask");
+  var rangeTxt = (b.lineTo > b.lineFrom)
+    ? ("第 " + b.lineFrom + "–" + b.lineTo + " 段")
+    : ("第 " + b.lineFrom + " 段");
+  el("evTitle").textContent = "\u300a" + (g.title || g.articleId) + "\u300b" + rangeTxt;
+  el("evMeta").textContent = rangeTxt + " · 前后各 1 段上下文" +
+    (b.match === "loose" ? " · 按标点容错定位" : "") +
+    (evTexts[g.articleId] ? "" : " · 正文暂不可用");
+  var body = el("evBody");
+  body.innerHTML = "";
+  var lines = evTexts[g.articleId] || [];
+  EV.context(lines, b.zeroFrom, b.zeroTo, 1).forEach(function(it){
+    var row = document.createElement("div");
+    row.className = "evLine" + (it.hit ? " hit" : "");
+    var n = document.createElement("span"); n.className = "n"; n.textContent = it.n;
+    var t = document.createElement("span"); t.textContent = it.text;
+    row.appendChild(n); row.appendChild(t);
+    body.appendChild(row);
+  });
+  el("evOpen").href = evArticleUrl(g.articleId, b.items[0].id);
+  evFocus = document.activeElement;
+  mask.classList.add("on");
+  panel.classList.add("on");
+  panel.setAttribute("aria-hidden", "false");
+  try{ el("evClose").focus(); }catch(e){}
+}
+function closeEvPanel(){
+  var panel = el("evPanel"), mask = el("evMask");
+  if (!panel) return;
+  mask.classList.remove("on");
+  panel.classList.remove("on");
+  panel.setAttribute("aria-hidden", "true");
+  if (evFocus && evFocus.focus){ try{ evFocus.focus(); }catch(e){} }
+}
+el("evClose").onclick = closeEvPanel;
+el("evMask").onclick = closeEvPanel;
+document.addEventListener("keydown", function(ev){
+  if (ev.key === "Escape" || ev.key === "Esc") closeEvPanel();
+});
+el("evCopy").onclick = function(){
+  if (!evCur) return;
+  var txt = evCur.b.items.map(function(it){ return it.quote || ""; })
+    .filter(function(s){ return !!s; }).join("\n");
+  var done = function(){
+    el("evCopy").textContent = "已复制";
+    setTimeout(function(){ el("evCopy").textContent = "复制引文"; }, 1400);
+  };
+  try{
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, function(){
+        alert("复制失败，可手动选中文字复制。");
+      });
+      return;
+    }
+  }catch(e){}
+  alert("当前浏览器不支持自动复制，可手动选中文字复制。");
+};
 function sendFlag(kind, citationId){
   if(!lastRequest || !lastRequest.requestId){ return; }
   var reason = "";

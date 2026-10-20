@@ -17,6 +17,7 @@ const SUITES = [
   { name: 'CNY 费用治理', file: 'tests/api/test-cny.mjs' },
   { name: '混合尝试费用 (R25/R26)', file: 'tests/api/test-cny-mixed.mjs' },
   { name: '正文服务 (R01)', file: 'tests/api/test-text.mjs' },
+  { name: '证据工作区 (R27)', file: 'tests/evidence.mjs' },
   { name: '三级限流 (B03)', file: 'tests/api/test-b03.mjs' },
   { name: 'AI 离线断言', file: 'tests/api/test-wp07-offline.mjs' },
   { name: '退役端点契约 (R44)', file: 'tests/api/test-retired.mjs' },
