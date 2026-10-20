@@ -551,11 +551,14 @@ function evArtGroup(g, failure){
       (b.located ? (b.match === "loose" ? " · 按标点容错定位" : "") : " · 原文未匹配到该引文");
     d.appendChild(rg);
     if (b.located){
-      /* 显示命中的完整原文行，而不是模型给的行片段——复审指出的"半句话引用"就在这里收口 */
+      /* 显示命中的完整原文行，而不是模型给的行片段——复审指出的"半句话引用"就在这里收口。
+         连续行是同一段的硬折行（原文每行约 40 字），拼成一段读起来才通顺；
+         若块内行号不连续（相隔 1 行被合并进来），保留换行，不把两段缝成一段。 */
       var lines = (evTexts[g.articleId] || []).slice(b.zeroFrom, b.zeroTo + 1);
+      var contiguous = (b.zeroTo - b.zeroFrom + 1) === lines.length;
       var q = document.createElement("div");
       q.className = "evQ";
-      q.textContent = lines.join("\n");
+      q.textContent = lines.join(contiguous ? "" : "\n");
       d.appendChild(q);
       var mq = document.createElement("div");
       mq.className = "evMq";
