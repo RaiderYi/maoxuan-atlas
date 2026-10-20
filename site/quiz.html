@@ -48,6 +48,35 @@ header .sub{font-size:13.5px;color:var(--ink2)}
 .mini{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:#fffdf5}
 .mini b{font-size:15px}
 .mini span{font-size:12.5px;color:var(--ink2)}
+/* R20/R22 结果卡样板：肖像作主视觉 · 关键词 · 短理由 · 单一前进方式 */
+.card .hero{display:flex;justify-content:center;margin:10px 0 16px}
+.card .hero .pimg{width:min(240px,62%);aspect-ratio:3/4;object-fit:cover;object-position:50% 18%;
+  border:1px solid var(--border);border-radius:12px;background:#F5EFE3;box-shadow:0 6px 18px rgba(43,36,32,.12)}
+.card .hero .pimg.ph{display:flex;align-items:center;justify-content:center;font-size:34px;letter-spacing:.12em;color:var(--ink2,#4A443B)}
+.card .kw{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px}
+.card .kw span{font-size:12px;color:var(--ink2);background:rgba(168,132,44,.10);border:1px solid rgba(168,132,44,.35);
+  border-radius:12px;padding:3px 11px;letter-spacing:.5px}
+.card .reason{font-size:13.5px;color:var(--ink);line-height:1.95;margin-top:10px}
+.card .more{margin-top:12px;font-size:12px;color:var(--ink2)}
+.card .more summary{cursor:pointer;color:var(--cinnabar);font-size:12.5px;letter-spacing:.5px;list-style:none;outline:none}
+.card .more summary::-webkit-details-marker{display:none}
+.card .more summary::before{content:"＋ "}
+.card .more[open] summary::before{content:"－ "}
+.card .more .mrow{margin-top:9px;line-height:1.95}
+.card .more .mrow button{font-family:inherit;font-size:12px;color:var(--ink2);background:#fffdf5;
+  border:1px solid var(--border);border-radius:12px;padding:5px 14px;cursor:pointer;margin:0 8px 6px 0}
+.card .more .mrow button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.card .cta{display:block;width:100%;text-align:center;font-family:inherit;font-size:15px;letter-spacing:2px;
+  padding:13px 20px;border-radius:14px;border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff;
+  text-decoration:none;margin-top:16px}
+.card .cta:hover{filter:brightness(1.06)}
+.card .ctaNote{font-size:11.5px;color:var(--ink2);text-align:center;margin-top:7px;line-height:1.7}
+@media (max-width:480px){
+  .card{padding:18px 16px}
+  .card .hero .pimg{width:min(178px,54%)}
+  .card h2{font-size:20px}
+  .card .cta{font-size:14px;letter-spacing:1px;padding:12px 16px}
+}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(43,36,32,.94);color:#f5efe0;
   font-size:13px;padding:9px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
 .toast.on{opacity:1}
@@ -253,24 +282,48 @@ function cardBlock(themeId, primary){
   var d = document.createElement("div");
   d.className = "card";
   var rd = document.createElement("div"); rd.className = "rd"; rd.textContent = primary ? "你本次的研读搭档" : "并列风格";
+  d.appendChild(rd);
+
+  /* R20/R22: 肖像作主视觉。手机端也不裁脸 —— object-position 固定在面部高度 */
+  var hero = document.createElement("div"); hero.className = "hero";
+  hero.appendChild(portraitNode(themeId, { thumb: false }));
+  d.appendChild(hero);
+
   var h2 = document.createElement("h2"); h2.textContent = c.personName;
   var th = document.createElement("div"); th.className = "th"; th.textContent = "· " + c.themeTitle + " ·";
-  var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = c.description;
-  d.appendChild(rd);
-  var pw = document.createElement("div"); pw.className = "pwrap";
-  pw.appendChild(portraitNode(themeId, { thumb: false }));
-  d.appendChild(pw);
-  d.appendChild(h2); d.appendChild(th); d.appendChild(desc);
+  d.appendChild(h2); d.appendChild(th);
 
-  /* 解释只能来自用户实际选择的选项 */
-  var expl = (state.result.explanations || []).filter(function(x){ return x.themeId === themeId; }).slice(0, 2);
-  if(expl.length){
-    var why = document.createElement("div"); why.className = "why";
-    why.textContent = "在本次答题中：" + expl.map(function(x){
-      return "「" + shortStem(x.stem) + "」你选择「" + x.text.replace(/。$/, "") + "」";
-    }).join("；") + "。这次的选择呈现出「" + c.themeTitle + "」的取向。";
-    d.appendChild(why);
+  /* 关键词：由卡片描述提炼，编辑待审（与 sourceNote 同一审核状态，不冒充史料结论） */
+  if(c.keywords && c.keywords.length){
+    var kw = document.createElement("div"); kw.className = "kw";
+    c.keywords.slice(0, 4).forEach(function(k){
+      var s = document.createElement("span"); s.textContent = k; kw.appendChild(s);
+    });
+    d.appendChild(kw);
   }
+
+  var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = c.description;
+  d.appendChild(desc);
+
+  /* 短理由：先一句话说清"为什么是这张卡"，逐题依据收进可展开区，不铺满整屏 */
+  var expl = (state.result.explanations || []).filter(function(x){ return x.themeId === themeId; });
+  if(expl.length){
+    var reason = document.createElement("div"); reason.className = "reason";
+    reason.textContent = "本次 " + expl.length + " 题里，你都选了偏向「" + c.themeTitle + "」的做法。";
+    d.appendChild(reason);
+    var det = document.createElement("details"); det.className = "more";
+    var sm0 = document.createElement("summary"); sm0.textContent = "看逐题依据（" + expl.length + " 条）";
+    det.appendChild(sm0);
+    var body0 = document.createElement("div"); body0.className = "mrow";
+    expl.slice(0, 8).forEach(function(x){
+      var line = document.createElement("div");
+      line.textContent = "「" + shortStem(x.stem) + "」你选择「" + String(x.text || "").replace(/。$/, "") + "」";
+      body0.appendChild(line);
+    });
+    det.appendChild(body0);
+    d.appendChild(det);
+  }
+
   var sug = document.createElement("div"); sug.className = "sug"; sug.textContent = c.suggestion;
   d.appendChild(sug);
 
@@ -278,22 +331,37 @@ function cardBlock(themeId, primary){
   task.textContent = "阅读邀请：" + c.readingTask.prompt;
   d.appendChild(task);
 
-  var acts = document.createElement("div"); acts.className = "acts";
-  var read = document.createElement("a"); read.className = "btn"; read.style.textDecoration = "none";
+  /* 单一前进方式：整张卡只有一个主行动，其余收进"更多操作" */
+  var read = document.createElement("a"); read.className = "cta";
   /* N21: 带段落锚点直达；没有锚点时明示，不伪装成"直达段落" */
   read.href = "index.html#/art/" + c.readingTask.articleId +
     (c.readingTask.paragraphId ? "/" + c.readingTask.paragraphId : "");
-  read.textContent = "读这一段 ·《" + c.readingTask.articleTitle + "》";
+  read.textContent = "开始这一段研读 →";
   read.onclick = function(){
     track("quiz_read_open", { card: c.cardId, art: c.readingTask.articleId });
     startReadingTask(c);
   };
-  var save = document.createElement("button"); save.className = "btn ghost"; save.textContent = "保存这张卡";
+  d.appendChild(read);
+
+  var cn = document.createElement("div"); cn.className = "ctaNote";
+  var seg = c.readingTask.paragraphId ? String(c.readingTask.paragraphId).replace(/^.*-/, "") : "";
+  cn.textContent = "《" + c.readingTask.articleTitle + "》" +
+    (seg ? " · 直达第 " + seg + " 段（已按锚点映射核对）" : " · 本篇暂无可靠锚点，会先打开整篇并说明原因");
+  d.appendChild(cn);
+
+  var more = document.createElement("details"); more.className = "more";
+  var sm = document.createElement("summary"); sm.textContent = "更多操作";
+  more.appendChild(sm);
+  var row = document.createElement("div"); row.className = "mrow";
+  var save = document.createElement("button"); save.textContent = "保存这张卡";
   save.onclick = function(){ saveCard(themeId); };
-  var share = document.createElement("button"); share.className = "btn ghost"; share.textContent = "下载卡片文字";
+  var share = document.createElement("button"); share.textContent = "下载卡片文字";
   share.onclick = function(){ downloadCard(themeId); };
-  acts.appendChild(read); acts.appendChild(save); acts.appendChild(share);
-  d.appendChild(acts);
+  var all = document.createElement("button"); all.textContent = "看全部 6 张卡";
+  all.onclick = function(){ renderAllCards(); };
+  row.appendChild(save); row.appendChild(share); row.appendChild(all);
+  more.appendChild(row);
+  d.appendChild(more);
 
   var src = document.createElement("div"); src.className = "src";
   /* R13/R15: 只有"经过锚点映射核对"的引文才展示；对不上就说明原因, 不展示可能错位的引文 */
@@ -304,7 +372,7 @@ function cardBlock(themeId, primary){
                                    : (/pending/.test(c.reviewStatus || "") || qv === false
                                       ? "待编辑审校（当前不展示未经核实的语录）"
                                       : "待编辑审校")) +
-    "；推荐段落：" + (c.readingTask.paragraphId
+    "；关键词与主题为编辑提炼，待审校；推荐段落：" + (c.readingTask.paragraphId
         ? c.readingTask.paragraphId + (verified && c.readingTask.quote ? "（“" + c.readingTask.quote.slice(0, 18) + "…”）" : "")
         : "本篇暂无可用锚点，会先打开整篇并说明原因" +
           (c.readingTask.anchorNote ? "（" + c.readingTask.anchorNote + "）" : ""));

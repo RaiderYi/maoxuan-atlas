@@ -259,7 +259,12 @@
     "quote": "你对于某个问题没有调查，就停止你对于某个问题的发言权。"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "先调查再判断",
+    "找关键问题",
+    "结论后置"
+   ]
   },
   "zhou": {
    "cardId": "zhou",
@@ -279,7 +284,12 @@
     "quote": "五、学会“弹钢琴”。弹钢琴要十个指头都动作，不能有的动，有的不动。"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "先听诉求",
+    "组织协作",
+    "形成共同安排"
+   ]
   },
   "zhu": {
    "cardId": "zhu",
@@ -299,7 +309,12 @@
     "quote": "我们应当深刻地注意群众生活的问题，从土地、劳动问题，到柴米油盐问题。"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "看现实条件",
+    "抓具体环节",
+    "求长期运转"
+   ]
   },
   "chen": {
    "cardId": "chen",
@@ -319,7 +334,12 @@
     "quote": "“实事”就是客观存在着的一切事物，“是”就是客观事物的内部联系。"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "比对资料",
+    "检查假设",
+    "留判断余地"
+   ]
   },
   "deng": {
    "cardId": "deng",
@@ -339,7 +359,12 @@
     "quote": "你要有知识，你就得参加变革现实的实践。你要知道梨子的滋味，你就得变革梨子，亲口吃"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "小步试验",
+    "快速反馈",
+    "再调整"
+   ]
   },
   "liu": {
    "cardId": "liu",
@@ -359,8 +384,13 @@
     "quote": "要把问题摆到桌面上来。不仅“班长”要这样做，委员也要这样做。"
    },
    "sourceNote": "本站延伸阅读为毛泽东著作，并非对应人物本人的著作；人物方法主题为策划提炼，非人物定性。",
-   "reviewStatus": "theme_and_paragraph_editorially_pending"
+   "reviewStatus": "theme_and_paragraph_editorially_pending",
+   "keywords": [
+    "明确职责",
+    "拆解步骤",
+    "可检查交付"
+   ]
   }
  },
- "updatedAt": "2026-10-19"
+ "updatedAt": "2026-10-20"
 }
