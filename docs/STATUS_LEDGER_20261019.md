@@ -26,12 +26,22 @@
 
 ---
 
+## 事故记录二：PWA 图标全部 404（2026-10-20 发现）
+
+| 项目 | 内容 |
+|---|---|
+| 发现 | 同步 `deploy_nexior` 镜像时发现 `icons/` 只在旧本地目录里，仓库 `site/icons/` 根本不存在；线上实测 `icons/icon-192.png`、`icon-512.png`、`apple-touch-icon.png`、`icon-32.png` **全部 404** |
+| 根因 | 与 F01 同一类：`manifest.webmanifest` 与 `index.html` 声明了 7 个图标，仓库没带这些文件 → Git 部署产物里也没有。此前门禁只查正文与肖像，不查 manifest/html 引用的资源 |
+| 修复 | 从旧本地目录 `D:/工作/maoxuan_viz/site/icons/`（与 M0/R0 基线一致，2026-09-28 生成）恢复 7 个文件进 `site/icons/` 并提交 |
+| 预防 | `pipeline/verify-deploy-assets.mjs` 增加 `[1b/7]`：逐个校验 manifest 声明图标 + `index.html` 里 `<link rel=icon>` 引用；已做红/绿验证（移走 icons 目录 → 5 条报错；恢复 → 0 错误） |
+| 遗留 | 服务端仍需在 R03 发布门槛里覆盖更多"声明了但没带"的资源（字体、CSS 引用） |
+
 ## A. 发布与可用性
 
 | ID | 状态 | 证据 / 说明 |
 |---|---|---|
 | R01 恢复受控正文供应 | DONE | `node tests/api/test-text.mjs` 9 例；217 篇逐篇解密 + 明文哈希对齐 manifest。**线上实证**：`TEXT_PACK_KEY` 已配置（Production+Preview），`a629cb0` 部署后 `/api/text?id=…` 八篇全部返回正文（v1n03 6926 / v1n04 19250 / v1n07 5345 / v4n59 3179 / v1n11 3884 / v3n02 5606 / v1n17 11689 / v5n01 2565 字符），旧地址 rewrite 同时可用 |
-| R02 部署资产清单 | DONE | `site/data/content-manifest.json`（逐篇明文/密文 SHA256、字数、缺失与短篇清单）；`node pipeline/verify-deploy-assets.mjs` 0 错误 |
+| R02 部署资产清单 | DONE（2026-10-20 增强） | `site/data/content-manifest.json`（逐篇明文/密文 SHA256、字数、缺失与短篇清单）；`node pipeline/verify-deploy-assets.mjs` 0 错误 |
 | R03 发布前门槛 | DONE | 同一脚本进 CI（`.github/workflows/ci-minimal.yml` "Deploy asset gate"）；正文缺失 = 非零退出 = 不得接管生产 |
 | R04 上线后关键路径探测 | DONE（首次 5/15 → 现 15/15） | 部署 `dpl_FjYAdgiq…`（提交 `a9fc776`）后实跑：版本/状态/首页/画廊 ✓；正文自检 `packFound=true, keyConfigured=false`；8 篇与旧地址全部 503 `text_unavailable`。**探测准确指出唯一缺失项是密钥，不是内容包** |
 | R05 缓存自然升级 | DONE | `sw.js` v9 → v10：缓存版本整体作废；`/api/text?check=1` 不入缓存；正文走"缓存优先 + 后台刷新"，断网可读已读篇目。手机真机/弱网验收仍属 R24 |
@@ -123,7 +133,10 @@ node pipeline/build-content-pack.mjs      → 217/217 篇，明文 1,115,856 字
 | 反向污染 | `deploy_nexior/api/` 仍留着 `test-b03.mjs`、`test-cny.mjs`、`test-wp05.mjs`、`test-wp07-offline.mjs`、`real-call-check.mjs`（R44 已把这些挪出生产入口） |
 
 影响：两套目录不能再互为备份，误部署 `deploy_nexior` 会把测试端点重新暴露、并让正文回退成 404。
-待产品负责人决策：**repo_stage 为唯一真源**（`deploy_nexior` 降级为归档或删除），或做一次受控同步后明确只保留一套。
+**2026-10-20 处置**：按"`repo_stage` 为唯一真源"执行——把 `repo_stage/site` 全量同步到 `deploy_nexior`（477 个文件），
+清掉 7 个孤儿文件（5 个 `api/test-*.mjs` / `real-call-check.mjs` 与 2 个 `*.bak_m1`），
+只保留 `deploy_nexior` 独占的 `.vercel/`、`.env.local`、`.agents/`、`.claude/`、`package.json`（Vercel CLI 与项目元数据用）。
+`deploy_nexior` 从此定位为"本机镜像 + Vercel CLI 操作目录"，**不再作为部署源**；任何改动只改 `repo_stage` 并 push。
 
 ## 未关闭的关键项（按优先级）
 

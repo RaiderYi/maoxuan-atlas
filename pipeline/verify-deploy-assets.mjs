@@ -43,7 +43,9 @@ const REQUIRED = [
   'data/data.js', 'data/portraits.json', 'data/quiz.json', 'data/sample-topic.json',
   'data/topic-jgs.json', 'data/texts.pack.json', 'data/content-manifest.json',
   'data/anchor-map.json',
-  'lib/mx-store.js',
+  'lib/mx-store.js', 'lib/mx-evidence.js',
+  'icons/icon-32.png', 'icons/favicon-32.png', 'icons/icon-192.png', 'icons/icon-512.png',
+  'icons/icon-192-maskable.png', 'icons/icon-512-maskable.png', 'icons/apple-touch-icon.png',
   'api/text.mjs', 'api/ask.mjs', 'api/version.mjs', 'api/status.mjs',
 ];
 for (const rel of REQUIRED) {
@@ -51,6 +53,35 @@ for (const rel of REQUIRED) {
   if (!fs.existsSync(p)) { bad('缺少部署必需文件: site/' + rel); continue; }
   if (fs.statSync(p).size === 0) { bad('文件为空: site/' + rel); continue; }
   ok('site/' + rel);
+}
+
+/* 1b. manifest / index.html 里声明的图标必须真的存在
+   —— 2026-10-20 线上实测 7 个图标全是 404：仓库里根本没带 icons/，
+      而此前的门禁只看正文与肖像，所以"装得上但装不上桌面"没人发现。 */
+console.log('[1b/7] PWA 图标与 HTML 引用');
+try {
+  const mf = readJson(path.join(SITE, 'manifest.webmanifest'));
+  for (const ic of (mf.icons || [])) {
+    const rel = String(ic.src || '').replace(/^\.?\//, '');
+    if (!rel) continue;
+    const p = path.join(SITE, rel);
+    if (!fs.existsSync(p) || fs.statSync(p).size === 0) bad('manifest 声明的图标缺失: site/' + rel);
+    else ok('manifest 图标 ' + rel);
+  }
+} catch (e) {
+  bad('manifest.webmanifest 无法解析: ' + e.message);
+}
+try {
+  const idx = fs.readFileSync(path.join(SITE, 'index.html'), 'utf8');
+  const refs = [...idx.matchAll(/<link[^>]+href=["']([^"']+\.(?:png|ico|svg))["']/gi)].map(m => m[1]);
+  for (const rel of new Set(refs)) {
+    if (/^https?:/i.test(rel)) continue;
+    const p = path.join(SITE, rel.replace(/^\.?\//, ''));
+    if (!fs.existsSync(p) || fs.statSync(p).size === 0) bad('index.html 引用的图标缺失: ' + rel);
+    else ok('html 图标 ' + rel);
+  }
+} catch (e) {
+  bad('index.html 无法读取: ' + e.message);
 }
 
 /* ---------- 2. 文章清单 ---------- */
