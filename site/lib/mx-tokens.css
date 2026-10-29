@@ -1,0 +1,32 @@
+/* R21: 全站共用设计令牌 —— 单一来源（mx-tokens.css）
+ * 口径：
+ *   · 所有页面删除各自的 :root 令牌定义，统一引用本文件（<link> 放在各页 <style> 之前）；
+ *   · 边框色曾两套并存（#d8cbaa / #d9cdb4），统一为 #d8cbaa（index/research 口径）；
+ *   · --font-serif 统一衬线栈：macOS 补 "Songti SC"，Windows 落 SimSun；
+ *   · html.dark 令牌先行入库：供 index 现役暗色组件规则引用；
+ *     quiz/research/theatre 尚无成套暗色组件样式，暂不挂 .dark（保持现状，不整页变暗）。
+ * 页面专属变量（如 index 的 --tabbar-h）留在各页 :root，不进本文件。 */
+:root{
+  --paper:#f5efe0; --paper2:#efe6d0; --ink:#2b2420; --ink2:#5a4f45;
+  --cinnabar:#b03a2e; --cinnabar2:#8e2f26; --gold:#a8842c;
+  --border:#d8cbaa; --shadow:rgba(60,45,30,.18);
+  --font-serif:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+}
+body{font-family:var(--font-serif)}
+
+html{color-scheme:light}
+html.dark{color-scheme:dark}
+
+/* 夜间模式令牌（index 暗色组件规则引用；其他页面暂不启用 .dark） */
+html.dark{
+  --paper:#1b1916; --paper2:#232019; --ink:#e6ddc8; --ink2:#a3957c;
+  --cinnabar:#d4574a; --cinnabar2:#b03a2e; --gold:#c9a24b;
+  --border:#453d31; --shadow:rgba(0,0,0,.55);
+  --cardbg:rgba(38,34,28,.82); --cardbg2:rgba(38,34,28,.55); --popbg:rgba(33,30,25,.97);
+}
+
+/* 共用滚动条（纸墨风） */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#c9b98d;border-radius:5px}
+::-webkit-scrollbar-track{background:transparent}
+html.dark ::-webkit-scrollbar-thumb{background:#4a4133}

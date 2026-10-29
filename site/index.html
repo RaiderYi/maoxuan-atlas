@@ -17,17 +17,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='4' fill='%23b03a2e'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23f5efe0' font-family='serif' font-weight='bold'%3E毛%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/leaflet.css">
+<link rel="stylesheet" href="lib/mx-tokens.css">
 <style>
-:root{
-  --paper:#f5efe0; --paper2:#efe6d0; --ink:#2b2420; --ink2:#5a4f45;
-  --cinnabar:#b03a2e; --cinnabar2:#8e2f26; --gold:#a8842c;
-  --border:#d8cbaa; --shadow:rgba(60,45,30,.18);
-  --tabbar-h:52px;
-}
+/* R21: 设计令牌已抽取到 lib/mx-tokens.css；本页只保留页面专属变量 */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
-html{color-scheme:light}
-html.dark{color-scheme:dark}
+/* R21: color-scheme 与字体栈由 mx-tokens.css 提供 */
+:root{--tabbar-h:52px}
 body{
   transition:background-color .3s ease, color .3s ease;
   background:var(--paper);
@@ -36,12 +32,9 @@ body{
     radial-gradient(ellipse at 85% 90%, rgba(168,132,44,.05) 0%, transparent 50%),
     repeating-linear-gradient(0deg, transparent 0 3px, rgba(120,100,70,.022) 3px 4px);
   color:var(--ink);
-  font-family:"Noto Serif SC","Source Han Serif SC","SimSun",serif;
   display:flex;flex-direction:column;
 }
-::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-thumb{background:#c9b98d;border-radius:5px}
-::-webkit-scrollbar-track{background:transparent}
+/* R21: 滚动条样式由 mx-tokens.css 提供 */
 
 /* ===== header ===== */
 header{
@@ -351,6 +344,7 @@ main{flex:1 1 auto;min-height:0;position:relative}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ===== night mode ===== */
+/* R21: 夜间令牌（--paper…--popbg）由 mx-tokens.css 提供；本页只留组件级暗色规则 */
 html.dark body{
   background-color:#1b1916;
   background-image:
@@ -358,13 +352,7 @@ html.dark body{
     radial-gradient(ellipse at 85% 90%, rgba(201,162,75,.055) 0%, transparent 50%),
     repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.12) 3px 4px);
 }
-html.dark{
-  --paper:#1b1916; --paper2:#232019; --ink:#e6ddc8; --ink2:#a3957c;
-  --cinnabar:#d4574a; --cinnabar2:#b03a2e; --gold:#c9a24b;
-  --border:#453d31; --shadow:rgba(0,0,0,.55);
-  --cardbg:rgba(38,34,28,.82); --cardbg2:rgba(38,34,28,.55); --popbg:rgba(33,30,25,.97);
-}
-html.dark ::-webkit-scrollbar-thumb{background:#4a4133}
+/* R21: 夜间令牌（--paper…--popbg）已移至 lib/mx-tokens.css */
 html.dark header{background:linear-gradient(180deg, rgba(33,30,25,.97), rgba(29,26,22,.95))}
 html.dark .searchbox input{background:rgba(38,34,28,.85);color:var(--ink)}
 html.dark .cnlab{color:#cfc4a9;text-shadow:0 0 4px #1b1916, 0 0 7px #1b1916, 0 0 10px rgba(27,25,22,.95)}
@@ -735,7 +723,6 @@ html.dark .catBar button{background:var(--cardbg)}
     <div class="titleblock">
       <h1>毛泽东选集</h1>
       <div class="sub">五卷二百一十七篇 · 先读一段 · 写下判断 · 引用可核对</div>
-      <div class="sub" id="verTag" style="font-size:11px;opacity:.8;letter-spacing:1px">AIBIGPLAYER V2 · Alpha</div>
     </div>
     <nav>
       <button data-v="home" class="on">首页</button>
@@ -866,6 +853,7 @@ html.dark .catBar button{background:var(--cardbg)}
   <span>资料来源：《毛泽东选集》第一至五卷（人民出版社）</span>
   <span>地形底图：Esri / National Geographic</span>
   <span>本站仅作个人学习研读之用</span>
+  <span id="verTag" style="font-size:11px;opacity:.8;letter-spacing:1px">AIBIGPLAYER V2 · Alpha</span>
 </footer>
 
 <script src="assets/leaflet.js"></script>

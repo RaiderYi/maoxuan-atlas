@@ -1,7 +1,7 @@
 {
  "product": "AIBIGPLAYER V2",
- "releaseTag": "R1.6.0-content-and-tasks",
- "builtAt": "2026-10-19T23:10:00",
+ "releaseTag": "R1.6.1-shared-tokens",
+ "builtAt": "2026-10-29T21:50:00",
  "sourceCommit": "see /api/version",
  "note": "sourceCommit 由 Vercel 注入，线上以 /api/version 为准；本文件只描述打包时的功能集合",
  "features": {
@@ -10,6 +10,7 @@
   "library": "我的书房（聚合/筛选/回收站/备份导入导出，含研读任务）",
   "tasks": "研读任务持久集合（按卡/段落区分，重进不重置，可继续与再练）",
   "texts": "受控同源正文服务（加密内容包 + /api/text，旧地址兼容）",
-  "ai": "范围契约 + 引用校验（已启用；预算与限流为全局范围）"
+  "ai": "范围契约 + 引用校验（已启用；预算与限流为全局范围）",
+  "ui": "R21 全站共用设计令牌（lib/mx-tokens.css）+ 版本号移至页脚（F07）"
  }
 }

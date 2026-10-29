@@ -1,10 +1,11 @@
-/* MaoXuan Viz sw.js v10
+/* MaoXuan Viz sw.js v11
  * v9: 修 cleanUrls 下 HTML 被判成 data(缓存优先) 导致旧页面常驻
  * v10 (R05): 正文改由 /api/text 提供 —— 浏览器的缓存策略随之调整：
  *   · 正文响应仍走"缓存优先 + 后台刷新"，断网可继续读已读篇目；
  *   · /api/text?check=1 这类运维自检不进缓存，避免把"当时没配密钥"的结果缓存一年；
- *   · CACHE 版本号提升，旧 worker 缓存整体作废，用户不需要手动清缓存。 */
-var CACHE = "mx-v10";
+ *   · CACHE 版本号提升，旧 worker 缓存整体作废，用户不需要手动清缓存。
+ * v11 (R21): 全站设计令牌抽取为 lib/mx-tokens.css（页面壳不变，CSS 升版作废旧缓存）。 */
+var CACHE = "mx-v11";
 var SHELL = [
   "./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./assets/leaflet.js", "./assets/leaflet.css",

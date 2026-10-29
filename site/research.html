@@ -4,13 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 研究室 · 有据问答</title>
+<link rel="stylesheet" href="lib/mx-tokens.css">
 <style>
-:root{
-  --paper:#f5efe0; --paper2:#efe6d0; --ink:#2b2420; --ink2:#5a4f45;
-  --cinnabar:#b03a2e; --gold:#a8842c; --border:#d8cbaa;
-}
+/* R21: 设计令牌与字体栈由 lib/mx-tokens.css 提供 */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font-family:"Noto Serif SC","Source Han Serif SC","SimSun",serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+body{background:var(--paper);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 header{width:100%;padding:10px 16px;border-bottom:2px solid var(--cinnabar);display:flex;align-items:center;gap:14px;background:rgba(245,239,224,.97);position:sticky;top:0;z-index:10}
 header h1{font-size:16px;letter-spacing:3px}
 header .tag{font-size:11px;color:#fff;background:var(--gold);border-radius:9px;padding:2px 9px;letter-spacing:1px}
