@@ -883,7 +883,7 @@ el("exportMd").onclick = function(){
     lines.push("");
     lines.push("> " + new Date(c.ts).toLocaleString() + " · " + (c.model || "?") + (c.edited ? " · 已人工改写" : "") + " · AI归纳，仅供参考");
     lines.push("");
-    lines.push(c.answer);
+    lines.push(cardText(c));   /* R50 修复: 旧写法读 c.answer，新卡(answerRaw)导出为空 */
     if(c.citations && c.citations.length){
       lines.push("");
       c.citations.forEach(function(x){

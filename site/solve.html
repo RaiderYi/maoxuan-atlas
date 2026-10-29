@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>带着问题读经典 · 问题解决</title>
+<meta name="description" content="说出你的现实问题，AI 先帮你理清，再结合可核查的原文依据，给出可以尝试的行动方案。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='4' fill='%23b03a2e'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23f5efe0' font-family='serif' font-weight='bold'%3E问%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="lib/mx-tokens.css">
+<style>
+/* R50: 问题解决页 —— 四屏流程：提问 → 澄清 → 确认 → 方案；令牌与字体栈由 mx-tokens.css 提供 */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.9}
+.wrap{max-width:720px;margin:0 auto;padding:26px 20px 60px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+header h1{font-size:20px;letter-spacing:2px;color:var(--cinnabar)}
+header a.back{margin-left:auto;font-size:12px;color:var(--cinnabar);text-decoration:none;
+  border:1px solid var(--border);border-radius:13px;padding:4px 12px;background:rgba(255,252,243,.8)}
+.sub{font-size:12.5px;color:var(--ink2);margin-bottom:18px}
+.screen{display:none}
+.screen.on{display:block;animation:viewIn .25s ease}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none}}
+textarea{width:100%;min-height:110px;font-family:inherit;font-size:15px;line-height:1.9;padding:12px 14px;
+  border:1px solid var(--border);border-radius:10px;background:#fffdf5;color:var(--ink);resize:vertical;outline:none}
+textarea:focus{border-color:var(--cinnabar)}
+.btn{font-family:inherit;font-size:14px;padding:9px 22px;border-radius:12px;cursor:pointer;letter-spacing:1px;
+  border:1px solid var(--cinnabar);background:var(--cinnabar);color:#fff}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;color:var(--cinnabar)}
+.btn.small{font-size:12.5px;padding:6px 14px}
+.btn:disabled{opacity:.5;cursor:wait}
+.acts{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.hint{font-size:11.5px;color:var(--ink2);margin-top:12px;line-height:1.8}
+.samples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.samples button{font-family:inherit;font-size:12px;color:var(--ink2);background:rgba(255,252,243,.8);
+  border:1px solid var(--border);border-radius:14px;padding:5px 14px;cursor:pointer}
+.samples button:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+.err{display:none;background:rgba(176,58,46,.06);border:1px solid var(--cinnabar);border-radius:10px;
+  padding:12px 14px;font-size:13px;line-height:1.8;color:#8e2f26;margin-top:14px}
+.card{background:#fffdf5;border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:14px}
+.card h3{font-size:14px;color:var(--cinnabar);letter-spacing:1px;margin-bottom:8px}
+.card .kv{font-size:13.5px;line-height:1.95}
+.card .kv b{color:var(--cinnabar);font-weight:700}
+.fup{border-top:1px dashed var(--border);margin-top:14px;padding-top:12px}
+.fup .q{font-size:14.5px;margin-bottom:8px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{font-family:inherit;font-size:13.5px;text-align:left;padding:9px 14px;border-radius:10px;cursor:pointer;
+  border:1px solid var(--border);background:#fffdf5;color:var(--ink)}
+.opts button:hover,.opts button.on{border-color:var(--cinnabar);box-shadow:0 0 0 2px rgba(176,58,46,.10)}
+.answerIn{width:100%;min-height:52px;margin-top:8px}
+.tag{display:inline-block;font-size:10.5px;color:#fff;background:var(--gold);border-radius:9px;padding:1px 9px;
+  letter-spacing:1px;margin-left:6px;vertical-align:2px}
+.judge{font-size:15.5px;line-height:2;font-weight:700}
+.secT{font-size:13px;color:var(--cinnabar);letter-spacing:1px;margin:16px 0 6px;font-weight:700}
+table.bd{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.8}
+table.bd th,table.bd td{border:1px solid var(--border);padding:6px 9px;text-align:left;vertical-align:top}
+table.bd th{background:rgba(168,132,44,.08);color:var(--ink2);font-weight:400;white-space:nowrap}
+.act{border-left:3px solid var(--cinnabar);background:rgba(176,58,46,.04);border-radius:0 8px 8px 0;
+  padding:10px 14px;margin-bottom:10px}
+.act .st{font-size:14px;font-weight:700}
+.act .how{font-size:13px;color:var(--ink);margin-top:4px;line-height:1.9}
+.act .watch{font-size:12px;color:var(--ink2);margin-top:4px}
+.act .add{margin-top:6px}
+.example{background:rgba(168,132,44,.07);border:1px solid var(--gold);border-radius:10px;padding:12px 16px;
+  font-size:13px;line-height:1.95}
+.example .note{display:inline-block;font-size:10.5px;color:var(--gold);border:1px solid var(--gold);
+  border-radius:9px;padding:0 9px;margin-bottom:6px}
+.general{background:rgba(168,132,44,.1);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:10px 14px;font-size:12.5px;line-height:1.9;color:#8a6a2f;margin-bottom:12px}
+.cit{border-left:3px solid var(--cinnabar);background:rgba(176,58,46,.04);border-radius:0 8px 8px 0;
+  padding:10px 14px;margin-bottom:10px;font-size:13px;line-height:1.9}
+.cit .src{font-size:11.5px;color:var(--gold)}
+.cit .q{color:var(--cinnabar)}
+.cit .lab{font-size:11.5px;color:var(--ink2)}
+.saved{color:#4F7D78;font-size:12.5px}
+ul.kn{padding-left:20px;font-size:13px;line-height:1.95}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(43,36,32,.94);color:#f5efe0;
+  font-size:13px;padding:9px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+.toast.on{opacity:1}
+footer{font-size:11.5px;color:var(--ink2);margin-top:26px;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>带着问题读经典</h1><span class="tag">问题解决</span>
+    <a class="back" href="index.html">← 返回首页</a>
+  </header>
+  <div class="sub">先理清问题，再结合可核查的原文依据，形成可以尝试的行动方案。AI 建议仅供参考，判断由你做出。</div>
+
+  <!-- 屏一：提问 -->
+  <section id="sc-problem" class="screen on">
+    <textarea id="problem" maxlength="500" placeholder="用你自己的话描述你遇到的问题。&#10;例如：我负责推动一个跨部门项目，大家开会时都表示支持，也确定了负责人，但会后事情还是推进不动，我应该怎么办？"></textarea>
+    <div class="samples">
+      <button data-s="我负责推动一个跨部门项目，大家开会时都表示支持，也确定了负责人，但会后事情还是推进不动。我应该怎么办？">跨部门推进难</button>
+      <button data-s="接手了一项新工作，情况还不熟悉，不知道应该先从哪里入手了解。">新工作不知从哪入手</button>
+      <button data-s="团队里对怎么做一件事有分歧，各说各有理，我想把分歧理清楚再决策。">意见分歧待决策</button>
+    </div>
+    <div class="acts">
+      <button class="btn" id="startBtn">开始分析</button>
+      <span class="saved" id="busy1" style="display:none">分析问题结构中，通常 10~30 秒……</span>
+    </div>
+    <div class="hint">AI 会先帮你理清问题，最多追问两次；也可以跳过追问直接看方案。请勿输入密码、身份证号或单位涉密信息；你输入的内容将经服务端发送给模型处理。</div>
+    <div class="err" id="err1"></div>
+  </section>
+
+  <!-- 屏二：澄清 -->
+  <section id="sc-clarify" class="screen">
+    <div class="card">
+      <h3>我对问题的理解</h3>
+      <div class="kv" id="understanding"></div>
+    </div>
+    <div id="fupBox"></div>
+    <div class="acts">
+      <button class="btn" id="confirmBtn">确认并生成方案</button>
+      <button class="btn ghost" id="backBtn1">修改问题</button>
+      <span class="saved" id="busy2" style="display:none"></span>
+    </div>
+    <div class="hint">可以直接点「确认并生成方案」；也可以先回答上面的追问——回答越具体，方案越贴近你的情况。</div>
+    <div class="err" id="err2"></div>
+  </section>
+
+  <!-- 屏三：方案 -->
+  <section id="sc-solution" class="screen">
+    <div id="referralBox"></div>
+    <div class="card">
+      <h3>一句话判断</h3>
+      <div class="judge" id="judge"></div>
+    </div>
+    <div class="card">
+      <h3>问题拆解</h3>
+      <div id="breakdown"></div>
+    </div>
+    <div class="card">
+      <h3>行动方案</h3>
+      <div id="actions"></div>
+      <div class="acts"><button class="btn ghost small" id="tolistBtn">整理成行动清单</button></div>
+      <div id="todoBox" style="display:none;margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <h3>举个例子</h3>
+      <div class="example" id="example"></div>
+    </div>
+    <div class="card">
+      <h3>经典依据与适用边界</h3>
+      <div id="classics"></div>
+    </div>
+    <div class="acts">
+      <button class="btn" id="saveBtn">保存为研究卡</button>
+      <button class="btn ghost" id="moreBtn">继续补充情况</button>
+      <button class="btn ghost" id="restartBtn">换个问题</button>
+      <span class="saved" id="busy3" style="display:none">结合原文生成方案中，通常 20~60 秒……</span>
+    </div>
+    <div class="hint" id="metaLine"></div>
+    <div class="err" id="err3"></div>
+  </section>
+
+  <footer>
+    引用均经服务端逐字校验，可核对到原文；AI 解释与建议仅供参考。<br>
+    <span id="verLine"></span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="lib/mx-store.js"></script>
+<script>
+(function(){
+"use strict";
+var TITLES = { v1n03: "中国的红色政权为什么能够存在？", v1n04: "井冈山的斗争" };
+var state = { problem: "", understanding: null, followUps: [], answers: [], solution: null, decomposeMs: 0 };
+
+function el(id){ return document.getElementById(id); }
+function show(id){
+  var ids = ["sc-problem","sc-clarify","sc-solution"];
+  ids.forEach(function(x){ el(x).className = "screen" + (x === id ? " on" : ""); });
+  window.scrollTo(0, 0);
+}
+function toast(msg){
+  var t = el("toast"); t.textContent = msg; t.className = "toast on";
+  setTimeout(function(){ t.className = "toast"; }, 2200);
+}
+function fail(boxId, code, msg, rid){
+  var b = el(boxId);
+  b.textContent = friendly(code, msg) + (rid ? " · 请求号 " + rid : "");
+  b.style.display = "block";
+}
+function friendly(code, msg){
+  var m = {
+    rate_limited: "操作过于频繁，请稍后再试。",
+    budget_exhausted: "本轮试用额度已用完，AI 功能暂时关闭。阅读与笔记不受影响。",
+    provider_not_configured: "AI 服务暂未开放。",
+    upstream_timeout: "模型调用超时，请稍后重试；已发出的调用仍可能计费。",
+    upstream_rate_limited: "服务繁忙，请稍后再试。",
+    solve_validation_failed: "AI 输出未通过校验，已拦截。请重试一次。",
+    upstream_error: "服务暂时不可用，请稍后再试。"
+  };
+  return m[code] || (msg || "服务暂时不可用");
+}
+function busy(id, on){ el(id).style.display = on ? "" : "none"; }
+
+/* ---------- 屏一：提问 ---------- */
+var sampleBtns = document.querySelectorAll(".samples button");
+for (var i = 0; i < sampleBtns.length; i++) {
+  sampleBtns[i].onclick = function(){ el("problem").value = this.getAttribute("data-s"); };
+}
+el("startBtn").onclick = function(){
+  var q = el("problem").value.trim();
+  if (!q) { el("problem").focus(); return; }
+  el("err1").style.display = "none";
+  busy("busy1", true);
+  this.disabled = true;
+  var myReq = ++curReq;
+  fetch("api/solve", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "decompose", problem: q }) })
+  .then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j, rid: r.headers.get("X-Request-Id") }; }); })
+  .then(function(o){
+    busy("busy1", false); el("startBtn").disabled = false;
+    if (myReq !== curReq) return;
+    var j = o.j;
+    if (!j || !j.ok) {
+      fail("err1", j && j.error && j.error.code, j && j.error && j.error.message, o.rid);
+      return;
+    }
+    state.problem = q;
+    state.understanding = j.understanding;
+    state.followUps = j.followUps || [];
+    state.answers = [];
+    state.decomposeRid = o.rid;
+    renderClarify();
+    show("sc-clarify");
+  })
+  .catch(function(e){
+    busy("busy1", false); el("startBtn").disabled = false;
+    fail("err1", "network", "网络异常：" + e);
+  });
+};
+
+/* ---------- 屏二：澄清 ---------- */
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s ?? ""); return d.innerHTML; }
+function renderClarify(){
+  var u = state.understanding || {};
+  var h = "";
+  if (u.goal) h += "<div><b>目标：</b>" + esc(u.goal) + "</div>";
+  if ((u.known || []).length) h += "<div style=\u0022margin-top:4px\u0022><b>已知情况：</b></div><ul class=\u0022kn\u0022>" +
+    u.known.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+  if ((u.unknown || []).length) h += "<div style=\u0022margin-top:4px\u0022><b>还需核实：</b></div><ul class=\u0022kn\u0022>" +
+    u.unknown.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+  if (u.focus) h += "<div style=\u0022margin-top:4px\u0022><b>本次重点：</b>" + esc(u.focus) + "</div>";
+  el("understanding").innerHTML = h;
+
+  var box = el("fupBox");
+  box.innerHTML = "";
+  state.followUps.forEach(function(f, idx){
+    var d = document.createElement("div");
+    d.className = "card fup";
+    var h3 = document.createElement("h3");
+    h3.textContent = "追问 " + (idx + 1) + "／" + state.followUps.length + "（可跳过）";
+    d.appendChild(h3);
+    var q = document.createElement("div"); q.className = "q"; q.textContent = f.question;
+    d.appendChild(q);
+    var opts = document.createElement("div"); opts.className = "opts";
+    (f.options || []).forEach(function(op){
+      var b = document.createElement("button"); b.textContent = op;
+      b.onclick = function(){
+        var sibs = opts.querySelectorAll("button");
+        for (var k = 0; k < sibs.length; k++) sibs[k].className = "";
+        b.className = "on";
+        state.answers[idx] = { question: f.question, answer: op };
+      };
+      opts.appendChild(b);
+    });
+    d.appendChild(opts);
+    var ta = document.createElement("textarea");
+    ta.className = "answerIn";
+    ta.placeholder = "也可以用自己的话补充……";
+    ta.oninput = function(){
+      if (this.value.trim()) state.answers[idx] = { question: f.question, answer: this.value.trim() };
+    };
+    d.appendChild(ta);
+    var skip = document.createElement("button");
+    skip.className = "btn ghost small"; skip.style.marginTop = "8px";
+    skip.textContent = "这项不确定，跳过";
+    skip.onclick = function(){
+      state.answers[idx] = { question: f.question, answer: "用户表示不确定" };
+      opts.querySelectorAll("button").forEach ? opts.querySelectorAll("button").forEach(function(x){ x.className = ""; }) : null;
+      toast("已跳过，将按不确定处理");
+    };
+    d.appendChild(skip);
+    box.appendChild(d);
+  });
+}
+el("backBtn1").onclick = function(){ show("sc-problem"); };
+el("confirmBtn").onclick = function(){
+  el("err2").style.display = "none";
+  busy("busy2", true); busy("busy3", true);
+  this.disabled = true;
+  var myReq = ++curReq;
+  fetch("api/solve", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "solve", problem: state.problem,
+      understanding: state.understanding,
+      answers: state.answers.filter(Boolean) }) })
+  .then(function(r){ return r.json().then(function(j){ return { status: r.status, j: j, rid: r.headers.get("X-Request-Id") }; }); })
+  .then(function(o){
+    busy("busy2", false); busy("busy3", false); el("confirmBtn").disabled = false;
+    if (myReq !== curReq) return;
+    var j = o.j;
+    if (!j || !j.ok) {
+      fail("err2", j && j.error && j.error.code, j && j.error && j.error.message, o.rid);
+      show("sc-clarify");
+      return;
+    }
+    state.solution = j;
+    state.solveRid = o.rid;
+    renderSolution();
+    show("sc-solution");
+  })
+  .catch(function(e){
+    busy("busy2", false); busy("busy3", false); el("confirmBtn").disabled = false;
+    fail("err2", "network", "网络异常：" + e);
+  });
+};
+
+/* ---------- 屏三：方案 ---------- */
+function renderSolution(){
+  var s = state.solution;
+  el("referralBox").innerHTML = "";
+  el("judge").textContent = s.judgment || "";
+  var bd = el("breakdown");
+  if ((s.breakdown || []).length) {
+    var t = document.createElement("table"); t.className = "bd";
+    t.innerHTML = "<tr><th>要素</th><th>当前判断</th><th>还需核实</th></tr>";
+    s.breakdown.forEach(function(b){
+      var tr = document.createElement("tr");
+      var c1 = document.createElement("td"); c1.textContent = b.item;
+      var c2 = document.createElement("td"); c2.textContent = b.now;
+      var c3 = document.createElement("td"); c3.textContent = b.check;
+      tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3);
+      t.appendChild(tr);
+    });
+    bd.innerHTML = "";
+    bd.appendChild(t);
+  } else bd.textContent = "—";
+  var ac = el("actions");
+  ac.innerHTML = "";
+  (s.actions || []).forEach(function(a, i){
+    var d = document.createElement("div"); d.className = "act";
+    var st = document.createElement("div"); st.className = "st";
+    st.textContent = "第" + (i + 1) + "步 · " + a.step;
+    var how = document.createElement("div"); how.className = "how"; how.textContent = a.how;
+    d.appendChild(st); d.appendChild(how);
+    if (a.watch) {
+      var w = document.createElement("div"); w.className = "watch";
+      w.textContent = "执行后观察：" + a.watch;
+      d.appendChild(w);
+    }
+    var add = document.createElement("button");
+    add.className = "btn ghost small add"; add.textContent = "加入行动清单";
+    add.onclick = function(){ toggleTodo(add, a); };
+    d.appendChild(add);
+    ac.appendChild(d);
+  });
+  var ex = el("example");
+  ex.innerHTML = "<span class=\u0022note\u0022>模拟示例 · 不是真实事件</span>" +
+    "<div style=\u0022margin-top:6px\u0022>" + esc(s.example && s.example.story) + "</div>" +
+    ((s.example && s.example.point) ? "<div style=\u0022margin-top:8px\u0022><b>这个例子说明：</b>" + esc(s.example.point) + "</div>" : "");
+  var cl = el("classics");
+  cl.innerHTML = "";
+  if (s.basis === "general" || !(s.classics || []).length) {
+    var g = document.createElement("div"); g.className = "general";
+    g.textContent = "本次未在当前可检索语料中找到足够相关的经典原文。以上方案是 AI 根据你提供的信息形成的一般性分析，不是文集原文的直接结论。";
+    cl.appendChild(g);
+  } else {
+    s.classics.forEach(function(x){
+      var d = document.createElement("div"); d.className = "cit";
+      var src = document.createElement("div"); src.className = "src";
+      src.textContent = "《" + (x.articleTitle || TITLES[x.articleId] || x.articleId) + "》 · " + x.id;
+      var q = document.createElement("div"); q.className = "q"; q.textContent = "「" + (x.quote || "") + "」";
+      var r = document.createElement("div"); r.className = "lab";
+      r.textContent = "与问题的关系：" + (x.relevance || "—");
+      var it = document.createElement("div"); it.className = "lab";
+      it.textContent = "AI 对原文的理解：" + (x.interpretation || "—");
+      var bo = document.createElement("div"); bo.className = "lab";
+      bo.textContent = "适用边界：" + (x.boundary || "—");
+      d.appendChild(src); d.appendChild(q); d.appendChild(r); d.appendChild(it); d.appendChild(bo);
+      cl.appendChild(d);
+    });
+    var note = document.createElement("div"); note.className = "hint";
+    note.textContent = "引用已按原文逐字校验；「AI 对原文的理解」是模型解释，可点击引用 id 到原文页核对上下文。";
+    cl.appendChild(note);
+  }
+  el("metaLine").textContent = "模型 " + (s.model || "?") + " · 经典依据 " +
+    (s.basis === "corpus" ? (s.classics.length + " 条") : "本次无") +
+    (state.solveRid ? " · 请求号 " + state.solveRid : "") +
+    " · AI 归纳，仅供参考";
+}
+var todoItems = [];
+function toggleTodo(btn, a){
+  var i = todoItems.indexOf(a);
+  if (i >= 0) { todoItems.splice(i, 1); btn.textContent = "加入行动清单"; }
+  else { todoItems.push(a); btn.textContent = "已加入 ✓"; }
+  renderTodo();
+}
+function renderTodo(){
+  var box = el("todoBox");
+  if (!todoItems.length) { box.style.display = "none"; return; }
+  box.style.display = "";
+  var h = "<b style=\u0022font-size:13px;color:var(--cinnabar)\u0022>我的行动清单（可复制）</b><ul class=\u0022kn\u0022>";
+  todoItems.forEach(function(a){ h += "<li>" + esc(a.step) + "：" + esc(a.how) + "</li>"; });
+  h += "</ul>";
+  box.innerHTML = h;
+}
+el("tolistBtn").onclick = function(){
+  todoItems = (state.solution && state.solution.actions || []).slice();
+  renderTodo();
+  toast("已把全部行动整理到清单");
+};
+el("moreBtn").onclick = function(){
+  el("problem").value = state.problem + "\n\n补充情况：";
+  show("sc-problem");
+};
+el("restartBtn").onclick = function(){
+  state = { problem: "", understanding: null, followUps: [], answers: [], solution: null };
+  el("problem").value = "";
+  show("sc-problem");
+};
+
+/* ---------- 保存为研究卡（复用书房 mx_research_cards，回收站/导出天然兼容） ---------- */
+var CARDS_KEY = "mx_research_cards";
+function solutionText(s){
+  var L = [];
+  L.push("【一句话判断】" + (s.judgment || ""));
+  if ((s.breakdown || []).length) {
+    L.push("【问题拆解】");
+    s.breakdown.forEach(function(b){ L.push("· " + b.item + "：" + b.now + (b.check ? "（还需核实：" + b.check + "）" : "")); });
+  }
+  if ((s.actions || []).length) {
+    L.push("【行动方案】");
+    s.actions.forEach(function(a, i){ L.push((i + 1) + ". " + a.step + "：" + a.how + (a.watch ? "（执行后观察：" + a.watch + "）" : "")); });
+  }
+  if (s.example && s.example.story) {
+    L.push("【模拟示例 · 不是真实事件】" + s.example.story + (s.example.point ? "（说明：" + s.example.point + "）" : ""));
+  }
+  if (s.basis === "general" || !(s.classics || []).length) {
+    L.push("【经典依据】本次未找到足够相关的经典原文；以上为 AI 一般性分析，不是文集结论。");
+  } else {
+    L.push("【经典依据】");
+    s.classics.forEach(function(x){
+      L.push("· 《" + (x.articleTitle || TITLES[x.articleId] || x.articleId) + "》" + x.id + "「" + (x.quote || "") + "」");
+      if (x.relevance) L.push("  与问题的关系：" + x.relevance);
+      if (x.interpretation) L.push("  AI 对原文的理解：" + x.interpretation);
+      if (x.boundary) L.push("  适用边界：" + x.boundary);
+    });
+  }
+  L.push("（带着问题读经典 · AI 归纳，仅供参考）");
+  return L.join("\n");
+}
+el("saveBtn").onclick = function(){
+  var s = state.solution;
+  if (!s) return;
+  var r = MXStore.read(CARDS_KEY, "array");
+  if (r.status === "corrupt") {
+    alert("本地研究卡数据损坏，为保留原始内容已中止保存。");
+    return;
+  }
+  var now = Date.now();
+  var card = {
+    id: "rc" + now,
+    question: "【问题解决】" + state.problem,
+    answerRaw: solutionText(s),
+    editedAnswer: null,
+    citations: (s.classics || []).map(function(x){ return { id: x.id, quote: x.quote }; }),
+    model: s.model,
+    status: s.basis === "corpus" ? "answered" : "partial",
+    source: "solve",
+    corpusVersion: s.corpusVersion || null,
+    promptVersion: s.promptVersion || null,
+    pipelineVersion: s.pipelineVersion || null,
+    scope: { mode: "corpus" },
+    requestId: state.solveRid || null,
+    createdAt: now, updatedAt: now, ts: now, edited: false,
+  };
+  var out = MXStore.update(CARDS_KEY, "array", function(list){ return [card].concat(list); });
+  if (out.ok) {
+    el("saveBtn").textContent = "已保存到书房 ✓";
+    setTimeout(function(){ el("saveBtn").textContent = "保存为研究卡"; }, 1800);
+  } else if (out.status === "corrupt") {
+    alert("研究卡未保存：本地数据损坏，已中止写入以保留原值。");
+  } else {
+    alert("研究卡保存失败：" + (out.error || "本地存储不可用"));
+  }
+};
+
+var curReq = 0;
+el("verLine").textContent = "带着问题读经典 · solve-r1 · AI 归纳，仅供参考";
+})();
+</script>
+</body>
+</html>
