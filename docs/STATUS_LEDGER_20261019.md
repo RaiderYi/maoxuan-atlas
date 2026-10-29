@@ -169,3 +169,21 @@ node pipeline/build-content-pack.mjs      → 217/217 篇，明文 1,115,856 字
 运维记录（新机环境）：仓库 clone 至 `D:\工作\maoxuan-atlas`（旧 `repo_stage`/`deploy_nexior` 两目录不再存在）；本机代理实际 7890（git 全局已改，AGENTS.md 已更正）；git 推送需凭据 helper，helper 经 sh.exe 启动在 DSH 沙箱内受限，推送时逐次授权完整权限；删远端分支走 GitHub API（`ghapi.py` DELETE refs）绕过该限制。
 
 待签收：aibigplayer.top 五页视觉过目（浅色主题下应与改动前基本一致；quiz/theatre/map3d 边框色有极轻微色调变化属预期统一）。
+
+## 2026-10-29 批次二：R49/R50 「带着问题读经典」问题解决闭环（0058f53）
+
+产品决策（2026-10-29 用户确认）：产品主线为**帮助用户解决现实问题**——现实问题是主线、行动方案是主要交付物，经典是思想资源而非阅读任务；交互为"初始提问 + 最多 2 次追问（可跳过）"；无相关经典时诚实降级为一般性分析（明确标注），高风险领域（医疗/法律/投资/危机）分流到专业求助。
+
+| ID | 状态 | 证据 / 说明 |
+|---|---|---|
+| R49 solve API（/api/solve，stage=decompose\|solve） | DONE | `site/api/_solve.mjs` + `site/api/solve.mjs`：解构（理解+追问+referral）与方案卡（判断/拆解/行动/模拟示例/经典依据）两阶段；复用 `_ask` 检索与引用逐字校验（含相邻 seq 拼接）、`_govern` 三级限流/CNY 预算/台账，与 /api/ask 同构；**空引用诚实降级 general**（服务端强制，不保留空壳 corpus 标签）；生产入口白名单已加 solve 两文件。`node tests/api/test-solve.mjs` 18 例 |
+| R50 solve.html 四屏交互 | DONE（待视觉签收） | 提问（含示例问题）→ 澄清（≤2 追问，选项+自由输入+跳过）→ 方案卡五层（一句话判断/问题拆解表/行动方案可加入清单/模拟示例标注"不是真实事件"/经典依据含 relevance+interpretation+boundary）→ 保存为研究卡落 `mx_research_cards`（source:'solve'，书房/回收站/导出天然兼容）；index 桌面导航新增「带着问题读经典」入口 |
+| R50b P1-34 导出缺陷修复 | DONE | research.html `exportMd` 旧读 `c.answer`（新 schema 卡 answerRaw 导出为空）→ 改 `cardText(c)`；新卡导出含人工改写生效 |
+| R51 线上实证 | DONE（2026-10-29 冒烟） | 部署 `0058f53` 后 probe-production 15/15；真实调用① decompose：5.3s/0.006 元，2 追问各 4 选项、referral=null；② solve（带 1 条追问回答）：19.2s/0.024 元，basis=corpus、3 条经典引用（篇名/引文/解释/边界齐备）、judgment 命中"范围未分阶段+负责人缺推进权"；`/solve.html` HTTP 200。整会话成本 ≈0.03 元 |
+
+**本批次遗留（未做，如实记录）**：
+1. 经典引用的"查看原文上下文"面板未接（R27 证据面板在 research 页绑定，solve 页仅显示引文+篇名+解释）——下一步优先；
+2. 手机 tabbar 未加 solve 入口（仅桌面导航）；
+3. 移动端/弱网/200% 缩放与多轮状态机边界（刷新/返回/迟到响应）未回归（R28/R24 范围）；
+4. 追问质量与示例有效性未经真人观察（属 R39 五人观察范围）；
+5. 语料仍为 2 篇样本；扩容须先过权利处置 Stop gate（RIGHTS_LEDGER #1 未决，不得先扩大公开后再补决策）。
