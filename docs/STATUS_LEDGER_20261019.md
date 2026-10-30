@@ -168,7 +168,7 @@ node pipeline/build-content-pack.mjs      → 217/217 篇，明文 1,115,856 字
 
 运维记录（新机环境）：仓库 clone 至 `D:\工作\maoxuan-atlas`（旧 `repo_stage`/`deploy_nexior` 两目录不再存在）；本机代理实际 7890（git 全局已改，AGENTS.md 已更正）；git 推送需凭据 helper，helper 经 sh.exe 启动在 DSH 沙箱内受限，推送时逐次授权完整权限；删远端分支走 GitHub API（`ghapi.py` DELETE refs）绕过该限制。
 
-待签收：aibigplayer.top 五页视觉过目（浅色主题下应与改动前基本一致；quiz/theatre/map3d 边框色有极轻微色调变化属预期统一）。
+待签收：aibigplayer.top 五页视觉过目（浅色主题下应与改动前基本一致；quiz/theatre/map3d 边框色有极轻微色调变化属预期统一）。**2026-10-30 产品负责人视觉签收通过**（R20/R21/R50 一并确认，原话"看起来没什么问题"）。
 
 ## 2026-10-29 批次二：R49/R50 「带着问题读经典」问题解决闭环（0058f53）
 
@@ -187,3 +187,12 @@ node pipeline/build-content-pack.mjs      → 217/217 篇，明文 1,115,856 字
 3. 移动端/弱网/200% 缩放与多轮状态机边界（刷新/返回/迟到响应）未回归（R28/R24 范围）；
 4. 追问质量与示例有效性未经真人观察（属 R39 五人观察范围）；
 5. 语料仍为 2 篇样本；扩容须先过权利处置 Stop gate（RIGHTS_LEDGER #1 未决，不得先扩大公开后再补决策）。
+
+## 2026-10-30 批次三：R52 上下文面板 + 移动端入口（签收后第一批）
+
+| ID | 状态 | 证据 / 说明 |
+|---|---|---|
+| R52a solve 页「查看原文上下文」面板 | DONE（待视觉签收） | solve.html 接入 R27 `mx-evidence.js`：每条经典引用新增按钮 → `createTextLoader` 取文（带缓存）→ `groupCitations`/`locateIn` 按原文文本回查定位（不信编号）→ 面板展示命中段 ±2 行并高亮，标注「逐字命中/按标点归一命中 + 段号」；定位不到或正文服务异常（密钥缺失/包缺失/网络）时如实报因，不显示空白冒充成功。桌面右侧抽屉 / ≤720px 底部抽屉。`node --check` 内联脚本通过；既有套件零回归 |
+| R52b 移动端入口 | DONE（待视觉签收） | index 底栏 tabbar 新增第 6 项「解 · 问题」→ solve.html（桌面导航此前已有） |
+
+**剩余遗留**（承接批次二 3/4/5 条）：移动端与弱网系统回归（R24）、追问/示例真人观察（R39）、语料扩容前的权利处置决策（RIGHTS_LEDGER #1，Stop gate）。

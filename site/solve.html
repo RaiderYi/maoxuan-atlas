@@ -78,6 +78,32 @@ ul.kn{padding-left:20px;font-size:13px;line-height:1.95}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(43,36,32,.94);color:#f5efe0;
   font-size:13px;padding:9px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
 .toast.on{opacity:1}
+/* R52: 原文上下文面板 —— 复用 R27 mx-evidence，定位结果如实呈现 */
+.ctxMask{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(43,36,32,.38);opacity:0;pointer-events:none;
+  transition:opacity .18s ease;z-index:40}
+.ctxMask.on{opacity:1;pointer-events:auto}
+.ctxPanel{position:fixed;top:0;right:0;height:100%;width:min(460px,92vw);background:#fffdf5;
+  border-left:1px solid var(--border);box-shadow:-8px 0 24px rgba(43,36,32,.16);transform:translateX(102%);
+  transition:transform .22s ease;z-index:41;display:flex;flex-direction:column}
+.ctxPanel.on{transform:translateX(0)}
+.ctxHead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);
+  background:rgba(245,239,224,.9)}
+.ctxHead b{font-size:13.5px;letter-spacing:1px;color:var(--ink)}
+.ctxHead button{margin-left:auto;font-family:inherit;font-size:13px;line-height:1;border:1px solid var(--border);
+  background:transparent;color:var(--ink2);border-radius:8px;padding:5px 9px;cursor:pointer}
+.ctxMeta{font-size:11px;color:var(--gold);padding:8px 16px 0;letter-spacing:.5px}
+.ctxBody{flex:1;overflow-y:auto;padding:10px 16px 16px;font-size:13px;line-height:2}
+.ctxLine{display:flex;gap:8px;padding:2px 0;color:var(--ink2)}
+.ctxLine .n{flex:0 0 30px;color:#bda86f;font-size:10.5px;text-align:right;user-select:none}
+.ctxLine.hit{color:var(--ink);background:rgba(176,58,46,.07);border-left:3px solid var(--cinnabar);
+  border-radius:0 6px 6px 0;padding-left:5px}
+.ctxErr{font-size:12.5px;color:#8a3b2e;line-height:1.9}
+@media (max-width:720px){
+  .ctxPanel{top:auto;bottom:0;right:0;left:0;width:auto;height:auto;max-height:76vh;border-left:0;
+    border-top:1px solid var(--border);border-radius:14px 14px 0 0;transform:translateY(102%)}
+  .ctxPanel.on{transform:translateY(0)}
+  .ctxBody{max-height:52vh}
+}
 footer{font-size:11.5px;color:var(--ink2);margin-top:26px;text-align:center;line-height:1.9}
 </style>
 </head>
@@ -161,9 +187,16 @@ footer{font-size:11.5px;color:var(--ink2);margin-top:26px;text-align:center;line
     <span id="verLine"></span>
   </footer>
 </div>
+<div class="ctxMask" id="ctxMask"></div>
+<aside class="ctxPanel" id="ctxPanel" role="dialog" aria-modal="true" aria-label="原文上下文" aria-hidden="true">
+  <div class="ctxHead"><b>原文上下文</b><button id="ctxClose" aria-label="关闭原文面板">✕</button></div>
+  <div class="ctxMeta" id="ctxMeta"></div>
+  <div class="ctxBody" id="ctxBody"></div>
+</aside>
 <div class="toast" id="toast"></div>
 
 <script src="lib/mx-store.js"></script>
+<script src="lib/mx-evidence.js"></script>
 <script>
 (function(){
 "use strict";
@@ -383,10 +416,15 @@ function renderSolution(){
       var bo = document.createElement("div"); bo.className = "lab";
       bo.textContent = "适用边界：" + (x.boundary || "—");
       d.appendChild(src); d.appendChild(q); d.appendChild(r); d.appendChild(it); d.appendChild(bo);
+      var ctxBtn = document.createElement("button");
+      ctxBtn.className = "btn ghost small"; ctxBtn.style.marginTop = "6px";
+      ctxBtn.textContent = "查看原文上下文";
+      ctxBtn.onclick = function(){ openContext(x); };
+      d.appendChild(ctxBtn);
       cl.appendChild(d);
     });
     var note = document.createElement("div"); note.className = "hint";
-    note.textContent = "引用已按原文逐字校验；「AI 对原文的理解」是模型解释，可点击引用 id 到原文页核对上下文。";
+    note.textContent = "引用已按原文逐字校验；「AI 对原文的理解」是模型解释，点「查看原文上下文」可回到原文核对。";
     cl.appendChild(note);
   }
   el("metaLine").textContent = "模型 " + (s.model || "?") + " · 经典依据 " +
@@ -490,6 +528,48 @@ el("saveBtn").onclick = function(){
     alert("研究卡保存失败：" + (out.error || "本地存储不可用"));
   }
 };
+
+/* ---------- 原文上下文面板（R52：mx-evidence 定位，正文服务异常时如实报因） ---------- */
+var loadText = MXEvidence.createTextLoader();
+function openContext(cit){
+  var aid = MXEvidence.articleIdOf(cit);
+  el("ctxMask").className = "ctxMask on";
+  el("ctxPanel").className = "ctxPanel on";
+  el("ctxPanel").setAttribute("aria-hidden", "false");
+  var src = "《" + (cit.articleTitle || TITLES[aid] || aid) + "》";
+  el("ctxMeta").textContent = src + " · 定位中……";
+  el("ctxBody").innerHTML = "";
+  loadText(aid).then(function(r){
+    if (!r.ok) {
+      el("ctxMeta").textContent = src;
+      el("ctxBody").innerHTML = '<div class="ctxErr">' + esc(r.message || MXEvidence.describeFailure(r.code)) + '</div>';
+      return;
+    }
+    var linesByArticle = {}; linesByArticle[aid] = r.lines;
+    var grp = MXEvidence.groupCitations([cit], linesByArticle)[0];
+    var blk = grp && grp.blocks && grp.blocks[0];
+    if (!blk || !blk.located) {
+      el("ctxMeta").textContent = src;
+      el("ctxBody").innerHTML = '<div class="ctxErr">这段引文未能定位到当前正文本（可能存在版本差异），请以全文页为准。</div>';
+      return;
+    }
+    el("ctxMeta").textContent = src + " · " + MXEvidence.segLabel(blk) + " · " +
+      (blk.match === "exact" ? "逐字命中" : "按标点归一命中");
+    var h = "";
+    MXEvidence.context(r.lines, blk.zeroFrom, blk.zeroTo, 2).forEach(function(row){
+      h += '<div class="ctxLine' + (row.hit ? " hit" : "") + '"><span class="n">' + row.n +
+        '</span><span>' + esc(row.text) + '</span></div>';
+    });
+    el("ctxBody").innerHTML = h;
+  });
+}
+function closeContext(){
+  el("ctxMask").className = "ctxMask";
+  el("ctxPanel").className = "ctxPanel";
+  el("ctxPanel").setAttribute("aria-hidden", "true");
+}
+el("ctxClose").onclick = closeContext;
+el("ctxMask").onclick = closeContext;
 
 var curReq = 0;
 el("verLine").textContent = "带着问题读经典 · solve-r1 · AI 归纳，仅供参考";
