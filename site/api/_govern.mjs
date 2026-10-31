@@ -145,7 +145,8 @@ const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST
 
 export function kvConfigured() { return !!(KV_URL && KV_TOKEN); }
 
-async function kvCmd(args) {
+// R53: 导出给 visit/stats 等非关键统计模块复用（调用方自行决定 fail-open/fail-closed）
+export async function kvCmd(args) {
   const r = await fetch(KV_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${KV_TOKEN}`, 'Content-Type': 'application/json' },

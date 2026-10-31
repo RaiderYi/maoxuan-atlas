@@ -1,7 +1,8 @@
 // A07: /api/status — 读者可见的服务状态（不含任何配置细节/密钥）
 // 前端在提问前读取本接口：ai.enabled=false 时禁用提问并说明原因与替代路径。
 import { Budget, loadProviderConfig } from './_lib.mjs';
-import { kvConfigured, makeCnyBudget } from './_govern.mjs';
+import { kvCmd, kvConfigured, makeCnyBudget, readUsage } from './_govern.mjs';
+import { readVisitStats, dayKeyOf } from './_visit.mjs';
 
 export const config = { runtime: 'nodejs' };
 
@@ -25,10 +26,30 @@ export default async function handler(req, res) {
   else if (spent) { reasonCode = 'ai_quota_reached'; reason = '本次试用额度已用完，AI 问答暂时关闭。阅读与笔记不受影响。'; }
   else if (!providerOk) { reasonCode = 'ai_unavailable'; reason = 'AI 服务当前不可用。阅读与笔记不受影响。'; }
 
+  // R53: 观测性最小版 —— 匿名访问计数与当日 AI 调用量（聚合数字，不含任何用户内容）
+  const [visitToday, aiToday] = await Promise.all([
+    readVisitStats({ day: dayKeyOf(), kvCmd, kvOk: kvConfigured() }),
+    readUsage(dayKeyOf()),
+  ]);
+  const stats = {
+    visitToday: {
+      persisted: !!visitToday.persisted,
+      pv: visitToday.today?.pv ?? 0,
+      uv: visitToday.today?.uv ?? 0,
+    },
+    aiToday: {
+      persisted: !!aiToday.persisted,
+      calls: Number(aiToday.calls ?? 0) || 0,
+      costCny: aiToday.cost != null ? Number(aiToday.cost) : null,
+      unknownCostCalls: Number(aiToday.unknownCostCalls ?? 0) || 0,
+    },
+  };
+
   res.status(200).json({
     schemaVersion: '0.1',
     ok: true,
     checkedAt: new Date().toISOString(),
+    stats,
     ai: {
       enabled,
       reasonCode,

@@ -21,6 +21,8 @@ const SUITES = [
   { name: '三级限流 (B03)', file: 'tests/api/test-b03.mjs' },
   { name: 'AI 离线断言', file: 'tests/api/test-wp07-offline.mjs' },
   { name: '退役端点契约 (R44)', file: 'tests/api/test-retired.mjs' },
+  { name: '问题解决管线 (R49/R50)', file: 'tests/api/test-solve.mjs' },
+  { name: '访问统计 (R53)', file: 'tests/api/test-visit.mjs' },
 ];
 
 const only = process.argv.slice(2).filter(a => !a.startsWith('-'));

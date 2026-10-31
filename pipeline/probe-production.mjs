@@ -95,13 +95,24 @@ async function probeLegacyPath() {
 }
 
 async function probePages() {
-  for (const p of ['/', '/quiz.html']) {
+  for (const p of ['/', '/quiz.html', '/solve.html']) {
     try {
       const r = await getText(p);
       const ok = r.status === 200 && /<html/i.test(r.text);
-      record(`页面 ${p}`, ok, ok ? 'HTML 200' : 'HTTP ' + r.status);
+      const extra = p === '/solve.html' && ok ? (r.text.includes('openContext') ? '（含上下文面板）' : '（缺上下文面板脚本!）') : '';
+      record(`页面 ${p}`, ok, ok ? 'HTML 200' + extra : 'HTTP ' + r.status);
     } catch (e) { record(`页面 ${p}`, false, String(e.message)); }
   }
+}
+
+/* R53: 统计口探测 —— 聚合数字可读即通过（persisted=false 只是 KV 未配置，不算失败） */
+async function probeStats() {
+  try {
+    const s = await getJson('/api/stats');
+    const ok = s.status === 200 && s.body?.ok === true;
+    record('统计口 /api/stats', ok,
+      ok ? `今日 PV ${s.body.visit?.today?.pv ?? '?'} · UV ${s.body.visit?.today?.uv ?? '?'} · AI ${s.body.ai?.calls ?? '?'} 次` : 'HTTP ' + s.status);
+  } catch (e) { record('统计口 /api/stats', false, String(e.message)); }
 }
 
 if (WAIT_S > 0) {
@@ -125,6 +136,7 @@ await probeTextService();
 await probeTexts();
 await probeLegacyPath();
 await probePages();
+await probeStats();
 
 const failed = rows.filter(r => !r.ok);
 console.log(`\n===== 线上探测 =====  ${BASE}`);

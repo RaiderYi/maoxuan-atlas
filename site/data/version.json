@@ -1,7 +1,7 @@
 {
  "product": "AIBIGPLAYER V2",
- "releaseTag": "R1.7.0-solve-loop",
- "builtAt": "2026-10-29T23:10:00",
+ "releaseTag": "R1.7.1-hardening-observability",
+ "builtAt": "2026-10-31T22:30:00",
  "sourceCommit": "see /api/version",
  "note": "sourceCommit 由 Vercel 注入，线上以 /api/version 为准；本文件只描述打包时的功能集合",
  "features": {

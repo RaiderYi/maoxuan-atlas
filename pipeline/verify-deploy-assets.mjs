@@ -215,7 +215,7 @@ try {
 } catch (e) { bad('vercel.json 无法解析: ' + e.message); }
 
 const apiDir = path.join(SITE, 'api');
-const prodEndpoints = new Set(['_ask.mjs', '_govern.mjs', '_lib.mjs', '_solve.mjs', 'ask.mjs', 'feedback.mjs', 'ping.mjs', 'research.mjs', 'solve.mjs', 'status.mjs', 'text.mjs', 'version.mjs']);
+const prodEndpoints = new Set(['_ask.mjs', '_govern.mjs', '_lib.mjs', '_solve.mjs', '_visit.mjs', 'ask.mjs', 'feedback.mjs', 'ping.mjs', 'research.mjs', 'solve.mjs', 'stats.mjs', 'status.mjs', 'text.mjs', 'version.mjs', 'visit.mjs']);
 const strays = fs.readdirSync(apiDir).filter(f => !prodEndpoints.has(f));
 if (strays.length) bad('api/ 存在非生产入口（测试/诊断会变成公开函数）: ' + strays.join('、'));
 else ok('api/ 只有 ' + prodEndpoints.size + ' 个受控入口');

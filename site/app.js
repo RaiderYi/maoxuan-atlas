@@ -2,6 +2,9 @@
 (function(){
 "use strict";
 
+/* R53: 匿名访问上报（只记页面名，fire-and-forget，失败静默） */
+try{fetch("api/visit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({page:"index"}),keepalive:true})}catch(e){}
+
 /* ---------- A05: HTML escape helper (all dynamic text goes through this) ---------- */
 function esc(s){
   return String(s==null?"":s)
