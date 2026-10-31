@@ -214,8 +214,20 @@ try {
   if (/includeFiles/.test(includes)) ok('vercel.json 为正文接口声明了 includeFiles'); else warn('vercel.json 未声明 includeFiles，函数可能拿不到内容包（依赖 nft 静态追踪）');
 } catch (e) { bad('vercel.json 无法解析: ' + e.message); }
 
+/* R56: 全量语料包（可选存在 —— 存在即校验结构与规模，防止把空包/损坏包发上生产） */
+const corpusPackPath = path.join(SITE, 'data', 'corpus-full.pack.json');
+if (fs.existsSync(corpusPackPath)) {
+  try {
+    const cp = JSON.parse(fs.readFileSync(corpusPackPath, 'utf8'));
+    const structOk = cp.algo === 'aes-256-gcm+gzip' && cp.blob && cp.articleCount === 217
+      && cp.paragraphCount >= 3000 && cp.paragraphCount <= 12000 && typeof cp.sha256 === 'string' && cp.sha256.length === 64;
+    structOk ? ok(`全量语料包: ${cp.articleCount} 篇 / ${cp.paragraphCount} 段 / ${(cp.totalChars ?? 0).toLocaleString()} 字`)
+             : bad(`全量语料包结构异常: algo=${cp.algo} articles=${cp.articleCount} paras=${cp.paragraphCount}`);
+  } catch (e) { bad('全量语料包无法解析: ' + e.message); }
+}
+
 const apiDir = path.join(SITE, 'api');
-const prodEndpoints = new Set(['_ask.mjs', '_govern.mjs', '_lib.mjs', '_retrieval.mjs', '_solve.mjs', '_visit.mjs', 'ask.mjs', 'feedback.mjs', 'ping.mjs', 'research.mjs', 'solve.mjs', 'stats.mjs', 'status.mjs', 'text.mjs', 'version.mjs', 'visit.mjs']);
+const prodEndpoints = new Set(['_ask.mjs', '_corpus.mjs', '_govern.mjs', '_lib.mjs', '_retrieval.mjs', '_solve.mjs', '_visit.mjs', 'ask.mjs', 'feedback.mjs', 'ping.mjs', 'research.mjs', 'solve.mjs', 'stats.mjs', 'status.mjs', 'text.mjs', 'version.mjs', 'visit.mjs']);
 const strays = fs.readdirSync(apiDir).filter(f => !prodEndpoints.has(f));
 if (strays.length) bad('api/ 存在非生产入口（测试/诊断会变成公开函数）: ' + strays.join('、'));
 else ok('api/ 只有 ' + prodEndpoints.size + ' 个受控入口');

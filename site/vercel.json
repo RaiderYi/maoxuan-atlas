@@ -14,11 +14,11 @@
       "maxDuration": 10
     },
     "api/ask.mjs": {
-      "includeFiles": "data/{sample-topic.json,topic-jgs.json}",
+      "includeFiles": "data/{sample-topic.json,topic-jgs.json,corpus-full.pack.json}",
       "maxDuration": 60
     },
     "api/solve.mjs": {
-      "includeFiles": "data/{sample-topic.json,topic-jgs.json}",
+      "includeFiles": "data/{sample-topic.json,topic-jgs.json,corpus-full.pack.json}",
       "maxDuration": 60
     }
   },

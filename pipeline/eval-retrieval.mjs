@@ -29,8 +29,26 @@ function firstExisting(list) {
   for (const p of list) if (fs.existsSync(p)) return p;
   throw new Error('required data file not found: ' + list[0]);
 }
-const raw = JSON.parse(fs.readFileSync(firstExisting(CORPUS_CANDIDATES), 'utf8'));
-const corpus = loadCorpus(raw);
+function firstExistingQuiet(list) {
+  for (const p of list) if (fs.existsSync(p)) return p;
+  return null;
+}
+// R56: 优先全量语料（本机有 corpuspack 密钥时解密使用），否则回落 2 篇样本
+let corpus = null, corpusLabel = '';
+const fullPackPath = firstExistingQuiet([path.join(ROOT, 'site', 'data', 'corpus-full.pack.json')]);
+const fullKeyPath = path.join(ROOT, 'data', '.corpuspack.key');
+if (fullPackPath && fs.existsSync(fullKeyPath)) {
+  try {
+    const { loadCorpusFull } = await import('../site/api/_corpus.mjs');
+    const full = loadCorpusFull({ packPath: fullPackPath, keyB64: fs.readFileSync(fullKeyPath, 'utf8') });
+    if (full) { corpus = full.corpus; corpusLabel = `full(${full.articleCount}篇/${full.paragraphCount}段)`; }
+  } catch { /* fall through */ }
+}
+if (!corpus) {
+  const raw = JSON.parse(fs.readFileSync(firstExisting(CORPUS_CANDIDATES), 'utf8'));
+  corpus = loadCorpus(raw);
+  corpusLabel = `sample(${corpus.length}段)`;
+}
 const conceptMap = JSON.parse(fs.readFileSync(firstExisting(CONCEPT_CANDIDATES), 'utf8')).groups ?? [];
 const qset = JSON.parse(fs.readFileSync(qsetPath, 'utf8')).questions ?? [];
 if (!qset.length) { console.error('qset is empty'); process.exit(2); }

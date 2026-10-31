@@ -11,6 +11,7 @@ import { loadCorpus, PROMPT_VERSION } from './_ask.mjs';
 import { SOLVE_PROMPT_VERSION, decomposePipeline, solvePipeline } from './_solve.mjs';
 import { retrieveHybrid, RETRIEVAL_VERSION } from './_retrieval.mjs';
 import { recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny, summarizeAttempts } from './_govern.mjs';
+import { loadCorpusFull } from './_corpus.mjs';
 
 export const config = { runtime: 'nodejs' };
 
@@ -45,9 +46,17 @@ function retrievalInfo() {
   return { mode: RETRIEVAL_MODE, version: RETRIEVAL_MODE === 'legacy' ? 'wp07-bigram' : RETRIEVAL_VERSION };
 }
 
-let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null;
+let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null, CORPUS_MODE = 'sample', CORPUS_AVG = 200;
 function corpus() {
   if (CORPUS) return CORPUS;
+  // R56: 优先全量语料（217 篇，需 CORPUS_PACK_KEY）；否则回退样本（与 ask.mjs 同口径）
+  const full = loadCorpusFull();
+  if (full) {
+    CORPUS = full.corpus; ARTICLE_META = full.articleMeta;
+    CORPUS_VERSION = full.corpusVersion; CORPUS_MODE = 'full'; CORPUS_AVG = full.avgParaChars;
+    console.log(JSON.stringify({ t: 'corpus_loaded', mode: 'full', paras: CORPUS.length, version: CORPUS_VERSION }));
+    return CORPUS;
+  }
   for (const p of CANDIDATES) {
     try {
       const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -57,11 +66,16 @@ function corpus() {
       for (const [aid, a] of Object.entries(raw.articles)) {
         ARTICLE_META[aid] = { title: a.title, date: a.date?.raw ?? '' };
       }
-      console.log(JSON.stringify({ t: 'corpus_loaded', path: p, paras: CORPUS.length, version: CORPUS_VERSION }));
+      CORPUS_MODE = 'sample';
+      CORPUS_AVG = Math.max(1, Math.round(CORPUS.reduce((n, x) => n + x.text.length, 0) / CORPUS.length));
+      console.log(JSON.stringify({ t: 'corpus_loaded', mode: 'sample', path: p, paras: CORPUS.length, version: CORPUS_VERSION }));
       return CORPUS;
     } catch { /* try next */ }
   }
   throw new Error('sample-topic.json not found');
+}
+function corpusInfo() {
+  return { mode: CORPUS_MODE, version: CORPUS_VERSION, paragraphs: CORPUS?.length ?? 0 };
 }
 function buildCorpusVersion(raw) {
   const hash = crypto.createHash('sha256');
@@ -165,7 +179,7 @@ export default async function handler(req, res) {
   const CHAR_TO_TOKEN = Math.max(1, Number(process.env.ASK_TOKEN_CHAR_FACTOR ?? 1.2) || 1.2);
   // decompose 无语料输入；solve 的证据是检索后的少量段落（按 top 段估），不是全语料
   const inputChars = stage === 'solve'
-    ? Math.min(c.length, 24) * 200 + problem.length + 1500
+    ? CORPUS_AVG * 24 + problem.length + 1500      // R56: 按证据规模（均值段×top8+邻段）估算
     : problem.length + 900;
   const RESERVE_CNY = estimateReserveCny({
     inputChars, maxOutputTokens: MAX_OUTPUT_TOKENS, attempts: MAX_ATTEMPTS, charToTokenFactor: CHAR_TO_TOKEN,
@@ -238,7 +252,7 @@ export default async function handler(req, res) {
       schemaVersion: '0.4', ok: true, requestId, stage,
       model: out.model, promptVersion: SOLVE_PROMPT_VERSION, pipelineVersion: PROMPT_VERSION,
       corpusVersion: CORPUS_VERSION,
-      retrieval: retrievalInfo(),
+      retrieval: retrievalInfo(), corpus: corpusInfo(),
       basis: out.basis, judgment: out.judgment,
       breakdown: out.breakdown, actions: out.actions, example: out.example,
       classics: (out.classics ?? []).map(x => ({

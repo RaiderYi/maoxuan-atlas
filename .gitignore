@@ -8,6 +8,10 @@ data/.key
 data/.textpack.key
 *.textpack.key
 
+# H2(R56): 语料包密钥与明文暂存（授权后产线使用，绝不入库）
+data/.corpuspack.key
+data/corpus-source/
+
 # Terrain tiles (Esri/NatGeo copyrighted, rebuilt by pipeline/dl_tiles.py)
 site/assets/tiles/
 

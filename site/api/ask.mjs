@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.mjs';
 import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.mjs';
 import { retrieveHybrid, RETRIEVAL_VERSION } from './_retrieval.mjs';
+import { loadCorpusFull } from './_corpus.mjs';
 import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny, summarizeAttempts } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
@@ -48,9 +49,17 @@ const TOPIC_CANDIDATES = [
   '/var/task/data/topic-jgs.json',
 ];
 
-let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null, TOPICS = {};
+let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null, CORPUS_MODE = 'sample', CORPUS_AVG = 200, TOPICS = {};
 function corpus() {
   if (CORPUS) return CORPUS;
+  // R56: 优先全量语料（217 篇，需 CORPUS_PACK_KEY）；缺失/解密失败/完整性不符 → 回退样本并如实标注
+  const full = loadCorpusFull();
+  if (full) {
+    CORPUS = full.corpus; ARTICLE_META = full.articleMeta;
+    CORPUS_VERSION = full.corpusVersion; CORPUS_MODE = 'full'; CORPUS_AVG = full.avgParaChars;
+    console.log(JSON.stringify({ t: 'corpus_loaded', mode: 'full', paras: CORPUS.length, version: CORPUS_VERSION }));
+    return CORPUS;
+  }
   for (const p of CANDIDATES) {
     try {
       const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -60,11 +69,16 @@ function corpus() {
       for (const [aid, a] of Object.entries(raw.articles)) {
         ARTICLE_META[aid] = { title: a.title, date: a.date?.raw ?? '' };
       }
-      console.log(JSON.stringify({ t: 'corpus_loaded', path: p, paras: CORPUS.length, version: CORPUS_VERSION }));
+      CORPUS_MODE = 'sample';
+      CORPUS_AVG = Math.max(1, Math.round(CORPUS.reduce((n, x) => n + x.text.length, 0) / CORPUS.length));
+      console.log(JSON.stringify({ t: 'corpus_loaded', mode: 'sample', path: p, paras: CORPUS.length, version: CORPUS_VERSION }));
       return CORPUS;
     } catch { /* try next */ }
   }
   throw new Error('sample-topic.json not found');
+}
+function corpusInfo() {
+  return { mode: CORPUS_MODE, version: CORPUS_VERSION, paragraphs: CORPUS?.length ?? 0 };
 }
 function topics() {
   if (Object.keys(TOPICS).length) return TOPICS;
@@ -172,7 +186,9 @@ export default async function handler(req, res) {
   const MAX_RETRIES = Math.max(0, parseInt(process.env.ASK_MAX_RETRIES ?? '1', 10));
   const MAX_ATTEMPTS = 1 + MAX_RETRIES;
   const CHAR_TO_TOKEN = Math.max(1, Number(process.env.ASK_TOKEN_CHAR_FACTOR ?? 1.2) || 1.2);
-  const inputChars = scopedCorpus.reduce((n, p) => n + String(p.text ?? '').length, 0) + q.length + 1200;
+  // R56: 预留按【证据规模】估算（检索后仅 top8+邻段进模型），不再随语料全量线性放大 ——
+  // 217 篇全量语料若按旧口径（全库字符数）预留，单请求会虚高到数元并瞬间耗尽预算
+  const inputChars = CORPUS_AVG * 24 + q.length + 1200;
   const RESERVE_CNY = estimateReserveCny({
     inputChars, maxOutputTokens: MAX_OUTPUT_TOKENS, attempts: MAX_ATTEMPTS, charToTokenFactor: CHAR_TO_TOKEN,
   });
@@ -237,7 +253,7 @@ export default async function handler(req, res) {
       schemaVersion: '0.4', ok: true, requestId,
       model: out.model,
       promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION, corpusVersion: CORPUS_VERSION,
-      retrieval: retrievalInfo(),
+      retrieval: retrievalInfo(), corpus: corpusInfo(),
       status: out.status,
       answer: out.answer,
       citations: out.citations.map(c2 => ({
