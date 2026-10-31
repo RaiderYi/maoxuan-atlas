@@ -175,7 +175,9 @@ export async function askPipeline(question, opts, log) {
   const t0 = Date.now();
 
   // 1) 检索 (命中段 + 原文 seq 邻段扩展)
-  const { evidence, bestScore, hits } = retrieve(question, corpus, { top: opts.top ?? 8 });
+  // R55: 检索器可注入 —— 缺省 legacy bigram；handler 按环境传入 hybrid（RETRIEVAL_MODE=hybrid）
+  const retrieveFn = opts.retrieveFn ?? retrieve;
+  const { evidence, bestScore, hits } = retrieveFn(question, corpus, { top: opts.top ?? 8 });
   ret.evidenceIds = evidence.map(e => e.id);
   ret.hitIds = hits;
   ret.bestScore = bestScore;

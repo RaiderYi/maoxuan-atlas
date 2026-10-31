@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, Budget, logCall } from './_lib.mjs';
 import { loadCorpus, askPipeline, PROMPT_VERSION, PIPELINE_VERSION } from './_ask.mjs';
+import { retrieveHybrid, RETRIEVAL_VERSION } from './_retrieval.mjs';
 import { resolveScope, scopeParagraphs, ScopeError, rateLimit, recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny, summarizeAttempts } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
@@ -17,6 +18,30 @@ const CANDIDATES = [
   path.join(__dirname, '..', 'data', 'sample-topic.json'),
   '/var/task/data/sample-topic.json',
 ];
+const CONCEPT_CANDIDATES = [
+  path.join(__dirname, '..', 'site', 'data', 'concept-map.json'),
+  path.join(__dirname, '..', 'data', 'concept-map.json'),
+  '/var/task/data/concept-map.json',
+];
+
+// R55: 检索模式开关 —— hybrid(默认) = IDF加权+概念扩展；legacy = 原 bigram 计数（回滚用）
+const RETRIEVAL_MODE = (process.env.RETRIEVAL_MODE ?? 'hybrid').toLowerCase() === 'legacy' ? 'legacy' : 'hybrid';
+let CONCEPT_MAP = null;
+function conceptMap() {
+  if (CONCEPT_MAP) return CONCEPT_MAP;
+  for (const p of CONCEPT_CANDIDATES) {
+    try { CONCEPT_MAP = JSON.parse(fs.readFileSync(p, 'utf8')).groups ?? []; return CONCEPT_MAP; } catch { /* next */ }
+  }
+  CONCEPT_MAP = [];   // 映射缺失时安全退化为纯 IDF 加权检索
+  return CONCEPT_MAP;
+}
+function pickRetrieveFn() {
+  if (RETRIEVAL_MODE === 'legacy') return null;
+  return (q, corpus, opts) => retrieveHybrid(q, corpus, { ...opts, conceptMap: conceptMap() });
+}
+function retrievalInfo() {
+  return { mode: RETRIEVAL_MODE, version: RETRIEVAL_MODE === 'legacy' ? 'wp07-bigram' : RETRIEVAL_VERSION };
+}
 const TOPIC_CANDIDATES = [
   path.join(__dirname, '..', 'site', 'data', 'topic-jgs.json'),
   path.join(__dirname, '..', 'data', 'topic-jgs.json'),
@@ -159,6 +184,7 @@ export default async function handler(req, res) {
   try {
     const out = await askPipeline(q, {
       provider, corpus: scopedCorpus,
+      retrieveFn: pickRetrieveFn(),
       timeoutMs: provider.timeoutMs, maxRetries: MAX_RETRIES, maxTokens: MAX_OUTPUT_TOKENS,
       budget: null,     // CNY 预算已在入口预留/结算，管线内不再做次数预占
     }, e => console.log(JSON.stringify({ t: 'ask_' + e.t, requestId, ...e })));
@@ -211,6 +237,7 @@ export default async function handler(req, res) {
       schemaVersion: '0.4', ok: true, requestId,
       model: out.model,
       promptVersion: PROMPT_VERSION, pipelineVersion: PIPELINE_VERSION, corpusVersion: CORPUS_VERSION,
+      retrieval: retrievalInfo(),
       status: out.status,
       answer: out.answer,
       citations: out.citations.map(c2 => ({

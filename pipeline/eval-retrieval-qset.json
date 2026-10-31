@@ -1,0 +1,30 @@
+{
+ "version": "eval-r1",
+ "note": "检索评测题集：问题用现代工作/生活口径（产品的真实使用方式）。expectArticles 为按语料主题的人工判定；expectTerms 均经全库词频验证存在。允许 expect 为 null 的题只记录不参与通过判定。",
+ "questions": [
+  {"id": "q01", "q": "跨部门项目大家开会都口头支持，会后却没人落实，怎么办？", "expectArticles": ["v1n03", "v1n04"], "expectTerms": ["群众", "政权"]},
+  {"id": "q02", "q": "定了目标却总是推进不动，先该查什么？", "expectArticles": ["v1n03"], "expectTerms": ["工农武装割据", "政权"]},
+  {"id": "q03", "q": "项目遭遇重大挫折，怎么复盘教训？", "expectArticles": ["v1n04"], "expectTerms": ["八月失败"]},
+  {"id": "q04", "q": "对手很强势，弱小一方如何生存并逐步发展？", "expectArticles": ["v1n03"], "expectTerms": ["白色政权", "军阀"]},
+  {"id": "q05", "q": "资源有限时怎么选主攻方向？", "expectArticles": ["v1n04"], "expectTerms": ["红军"]},
+  {"id": "q06", "q": "新团队的组织和制度应该怎么建起来？", "expectArticles": ["v1n04"], "expectTerms": ["党的组织", "苏维埃"]},
+  {"id": "q07", "q": "怎么判断当前外部环境对我是有利还是不利？", "expectArticles": ["v1n03"], "expectTerms": ["统治阶级", "破裂"]},
+  {"id": "q08", "q": "扩张太急会出什么问题，应该用什么节奏推进？", "expectArticles": ["v1n04"], "expectTerms": ["游击"]},
+  {"id": "q09", "q": "负责人有责任但缺实权和抓手，事情推不动怎么办？", "expectArticles": ["v1n03"], "expectTerms": ["领导权"]},
+  {"id": "q10", "q": "行业整体形势很差，还要不要继续投入？", "expectArticles": ["v1n03"], "expectTerms": ["统治阶级", "白色政权"]},
+  {"id": "q11", "q": "怎么争取一线人员的真心参与而不是表面应付？", "expectArticles": ["v1n04"], "expectTerms": ["群众"]},
+  {"id": "q12", "q": "核心骨干人手太少，队伍怎么带？", "expectArticles": ["v1n04"], "expectTerms": ["红军", "赤卫队"]},
+  {"id": "q13", "q": "各方利益冲突激烈，分歧怎么处理？", "expectArticles": ["v1n03"], "expectTerms": ["统治阶级", "破裂"]},
+  {"id": "q14", "q": "治理流程和议事规则怎么起步建设？", "expectArticles": ["v1n04"], "expectTerms": ["苏维埃", "政权"]},
+  {"id": "q15", "q": "执行落地需要什么样的保障条件？", "expectArticles": ["v1n03"], "expectTerms": ["红军", "政权"]},
+  {"id": "q16", "q": "根据地式的发展策略有什么经验可借鉴？", "expectArticles": ["v1n03", "v1n04"], "expectTerms": ["根据地"]},
+  {"id": "q17", "q": "利益分配机制怎么做才能调动积极性？", "expectArticles": ["v1n04"], "expectTerms": ["土地革命", "分田"]},
+  {"id": "q18", "q": "竞争对手内乱了，该不该趁机行动？", "expectArticles": ["v1n03"], "expectTerms": ["军阀", "破裂"]},
+  {"id": "q19", "q": "队伍成分复杂、水平参差，怎么管理和训练？", "expectArticles": ["v1n04"], "expectTerms": ["红军", "赤卫队"]},
+  {"id": "q20", "q": "边缘业务要不要坚守？", "expectArticles": ["v1n04"], "expectTerms": ["边界"]},
+  {"id": "q21", "q": "做形势判断应该看哪些关键信号？", "expectArticles": ["v1n03"], "expectTerms": ["统治阶级"]},
+  {"id": "q22", "q": "小团队怎么和大玩家抗衡？", "expectArticles": ["v1n03", "v1n04"], "expectTerms": ["游击", "红军"]},
+  {"id": "q23", "q": "开会讨论总是议而不决，决策机制怎么改进？", "expectArticles": ["v1n04"], "expectTerms": ["民主集中", "党的组织"]},
+  {"id": "q24", "q": "项目没有稳定的资源来源，怎么解决？", "expectArticles": ["v1n03"], "expectTerms": ["根据地"]}
+ ]
+}

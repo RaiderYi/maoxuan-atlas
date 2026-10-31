@@ -203,7 +203,9 @@ export async function solvePipeline(brief, opts, log) {
   const t0 = Date.now();
   // 检索查询 = 原问题 + 用户回答（提高召回）
   const query = [brief.problem].concat((brief.answers ?? []).map(a => a.question + ' ' + a.answer)).join(' ');
-  const { evidence, bestScore, hits } = retrieve(query, opts.corpus, { top: opts.top ?? 8 });
+  // R55: 检索器可注入（缺省 legacy bigram；handler 按 RETRIEVAL_MODE 传入 hybrid）
+  const retrieveFn = opts.retrieveFn ?? retrieve;
+  const { evidence, bestScore, hits } = retrieveFn(query, opts.corpus, { top: opts.top ?? 8 });
   ret.evidenceIds = evidence.map(e => e.id);
   ret.hitIds = hits;
   ret.bestScore = bestScore;

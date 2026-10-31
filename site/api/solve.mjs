@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { jsonError, getClientIp, sessionOf, loadProviderConfig, logCall } from './_lib.mjs';
 import { loadCorpus, PROMPT_VERSION } from './_ask.mjs';
 import { SOLVE_PROMPT_VERSION, decomposePipeline, solvePipeline } from './_solve.mjs';
+import { retrieveHybrid, RETRIEVAL_VERSION } from './_retrieval.mjs';
 import { recordUsage, newRequestId, kvConfigured, makeCnyBudget, costOfUsage, estimateReserveCny, summarizeAttempts } from './_govern.mjs';
 
 export const config = { runtime: 'nodejs' };
@@ -19,6 +20,30 @@ const CANDIDATES = [
   path.join(__dirname, '..', 'data', 'sample-topic.json'),
   '/var/task/data/sample-topic.json',
 ];
+const CONCEPT_CANDIDATES = [
+  path.join(__dirname, '..', 'site', 'data', 'concept-map.json'),
+  path.join(__dirname, '..', 'data', 'concept-map.json'),
+  '/var/task/data/concept-map.json',
+];
+
+// R55: 检索模式开关（与 ask.mjs 同口径）：hybrid 默认；legacy 回滚用
+const RETRIEVAL_MODE = (process.env.RETRIEVAL_MODE ?? 'hybrid').toLowerCase() === 'legacy' ? 'legacy' : 'hybrid';
+let CONCEPT_MAP = null;
+function conceptMap() {
+  if (CONCEPT_MAP) return CONCEPT_MAP;
+  for (const p of CONCEPT_CANDIDATES) {
+    try { CONCEPT_MAP = JSON.parse(fs.readFileSync(p, 'utf8')).groups ?? []; return CONCEPT_MAP; } catch { /* next */ }
+  }
+  CONCEPT_MAP = [];
+  return CONCEPT_MAP;
+}
+function pickRetrieveFn() {
+  if (RETRIEVAL_MODE === 'legacy') return null;
+  return (q, corpus, opts) => retrieveHybrid(q, corpus, { ...opts, conceptMap: conceptMap() });
+}
+function retrievalInfo() {
+  return { mode: RETRIEVAL_MODE, version: RETRIEVAL_MODE === 'legacy' ? 'wp07-bigram' : RETRIEVAL_VERSION };
+}
 
 let CORPUS = null, ARTICLE_META = null, CORPUS_VERSION = null;
 function corpus() {
@@ -152,7 +177,8 @@ export default async function handler(req, res) {
 
   try {
     const out = stage === 'solve'
-      ? await solvePipeline(brief, { provider, corpus: c, timeoutMs: provider.timeoutMs,
+      ? await solvePipeline(brief, { provider, corpus: c, retrieveFn: pickRetrieveFn(),
+          timeoutMs: provider.timeoutMs,
           maxRetries: MAX_RETRIES, maxTokens: MAX_OUTPUT_TOKENS, budget: null },
           e => console.log(JSON.stringify({ t: 'solve_' + e.t, requestId, ...e })))
       : await decomposePipeline(problem, { provider, timeoutMs: provider.timeoutMs,
@@ -212,6 +238,7 @@ export default async function handler(req, res) {
       schemaVersion: '0.4', ok: true, requestId, stage,
       model: out.model, promptVersion: SOLVE_PROMPT_VERSION, pipelineVersion: PROMPT_VERSION,
       corpusVersion: CORPUS_VERSION,
+      retrieval: retrievalInfo(),
       basis: out.basis, judgment: out.judgment,
       breakdown: out.breakdown, actions: out.actions, example: out.example,
       classics: (out.classics ?? []).map(x => ({

@@ -23,6 +23,7 @@ const SUITES = [
   { name: '退役端点契约 (R44)', file: 'tests/api/test-retired.mjs' },
   { name: '问题解决管线 (R49/R50)', file: 'tests/api/test-solve.mjs' },
   { name: '访问统计 (R53)', file: 'tests/api/test-visit.mjs' },
+  { name: '混合检索 (R55)', file: 'tests/api/test-retrieval.mjs' },
 ];
 
 const only = process.argv.slice(2).filter(a => !a.startsWith('-'));
