@@ -196,3 +196,20 @@ node pipeline/build-content-pack.mjs      → 217/217 篇，明文 1,115,856 字
 | R52b 移动端入口 | DONE（待视觉签收） | index 底栏 tabbar 新增第 6 项「解 · 问题」→ solve.html（桌面导航此前已有） |
 
 **剩余遗留**（承接批次二 3/4/5 条）：移动端与弱网系统回归（R24）、追问/示例真人观察（R39）、语料扩容前的权利处置决策（RIGHTS_LEDGER #1，Stop gate）。
+
+## 2026-10-31 批次四/五：R53/R54 观测加固 + R55 混合检索（2fe6fd1 → 2df9d8f）
+
+背景：架构盘点发现三类短板——①无访问统计（纯阅读用户无感）；②vercel.json 未显式声明 solve 函数配置（此前靠依赖追踪运气）；③检索为词面 bigram，现代口径问题漏召回严重（"检索不足≠文集没有答案"的量化证明）。
+
+| ID | 状态 | 证据 / 说明 |
+|---|---|---|
+| R53 访问统计（A 方案） | DONE | `/api/visit`（PV=页面加载、UV=当日去重 mx_sid，只记页面名，fail-open）+ `/api/stats` 聚合口 + index/research/solve 三页上报；`/api/status` 新增 stats 块（今日 PV/UV + AI 调用/费用）。上线即计数：部署当日 PV 2·UV 2（探测自己）。`tests/api/test-visit.mjs` 12 例 |
+| R54 工程加固 | DONE | vercel.json 给 solve.mjs 显式 includeFiles+maxDuration:60（原靠 tracing）；README 全文重写为现状口径（原为舆图时代描述）；probe 新增 /solve.html 内容标记 + /api/stats 检查（17/17） |
+| R55 混合检索（r2-hybrid） | DONE | `_retrieval.mjs`：IDF 加权 bigram + 概念映射查询扩展（concept-map.json 14 组，扩展词全经词频验证）+ 原邻段/节标题增强；**离线评测（24 题现代口径）：hit@8 33.3%→95.8%、MRR 0.306→0.856、期望词覆盖 10.3%→64.1%，逐题 0 退化**（`docs/RETRIEVAL_EVAL_20261031.md`，守卫脚本 `pipeline/eval-retrieval.mjs` 差于 legacy 即退出 1）；ask/solve 默认启用，`RETRIEVAL_MODE=legacy` 可回滚；响应暴露 retrieval{mode,version}。线上实证：hybrid 生效、insufficient 时 0 引用（诚实拒答不编造）。**Stop gate 遵守：语料未扩容，仅改造现有 2 篇检索** |
+
+**新增已知缺口（如实记录）**：
+1. q09 类问题（"负责人缺实权"）legacy/hybrid 均未命中——"领导权"全库仅 2 次，正解是语料扩容而非调参；
+2. hybrid 期望词覆盖 64.1%，剩余缺口是跨段语义关联（bigram 天花板）；未来若接 embedding 供应商，须以同一评测框架对比验证后替换（需新供应商凭据，BLOCKED 用户）；
+3. 概念映射为人工策划词表，扩场景须同步扩映射并复跑评测。
+
+**权利处置提醒（未变，仍然挡在扩容与推广前面）**：RIGHTS_LEDGER #1 待产品负责人在 A/B/C/D 四选项中拍板。
